@@ -4,6 +4,7 @@ import Solutions from './components/Solutions'
 import Visibility from './components/Visibility'
 import ThreeDStory from './components/ThreeDStory'
 import Vitrine from './components/Vitrine'
+import CTA from './components/CTA'
 import Growth from './components/Growth'
 import Pricing from './components/Pricing'
 import FAQ from './components/FAQ'
@@ -20,6 +21,7 @@ export default function App() {
         <Visibility />
         <ThreeDStory />
         <Vitrine />
+        <CTA />
         <Growth />
         <Pricing />
         <FAQ />
