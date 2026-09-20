@@ -3,6 +3,7 @@ import Needs from './components/Needs'
 import Solutions from './components/Solutions'
 import Visibility from './components/Visibility'
 import ThreeDStory from './components/ThreeDStory'
+import Vitrine from './components/Vitrine'
 import Growth from './components/Growth'
 import Pricing from './components/Pricing'
 import FAQ from './components/FAQ'
@@ -14,21 +15,14 @@ export default function App() {
     <>
       <main>
         <Hero />
-
         <Needs />
-
         <Solutions />
-
         <Visibility />
-
         <ThreeDStory />
-
+        <Vitrine />
         <Growth />
-
         <Pricing />
-
         <FAQ />
-
         <Contact />
       </main>
 
