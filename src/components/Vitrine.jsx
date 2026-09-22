@@ -1,56 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 
 const categories = [
-  {
-    id: 'all',
-    label: 'TODOS',
-  },
-  {
-    id: 'landing',
-    label: 'LANDING PAGE',
-  },
-  {
-    id: 'store',
-    label: 'LOJA VIRTUAL',
-  },
-  {
-    id: 'catalog',
-    label: 'CATÁLOGO',
-  },
-  {
-    id: 'booking',
-    label: 'AGENDAMENTO',
-  },
-  {
-    id: 'system',
-    label: 'SISTEMAS',
-  },
-  {
-    id: 'dashboard',
-    label: 'DASHBOARDS',
-  },
+  { id: 'all', label: 'TODOS' },
+  { id: 'landing', label: 'LANDING PAGE' },
+  { id: 'store', label: 'LOJA VIRTUAL' },
+  { id: 'catalog', label: 'CATÁLOGO' },
+  { id: 'booking', label: 'AGENDAMENTO' },
+  { id: 'system', label: 'SISTEMAS' },
+  { id: 'dashboard', label: 'DASHBOARDS' },
 ]
 
-/**
- * Adicione os projetos reais aqui.
- *
- * video:
- *   caminho do vídeo dentro de /public
- *   exemplo:
- *   '/assets/videos/restaurante.mp4'
- *
- * link:
- *   URL do projeto publicado
- *   exemplo:
- *   'https://seusite.com'
- *
- * Enquanto o projeto ainda não tiver vídeo/link,
- * deixe a string vazia.
- */
 const projects = [
   {
     id: 'restaurante',
-    number: '01',
     category: 'landing',
     categoryLabel: 'LANDING PAGE',
     segment: 'RESTAURANTE',
@@ -63,7 +25,6 @@ const projects = [
 
   {
     id: 'barbearia',
-    number: '02',
     category: 'landing',
     categoryLabel: 'LANDING PAGE',
     segment: 'BARBEARIA',
@@ -76,7 +37,6 @@ const projects = [
 
   {
     id: 'doceria',
-    number: '03',
     category: 'landing',
     categoryLabel: 'LANDING PAGE',
     segment: 'DOCERIA',
@@ -89,7 +49,6 @@ const projects = [
 
   {
     id: 'tenis',
-    number: '04',
     category: 'store',
     categoryLabel: 'LOJA VIRTUAL',
     segment: 'TÊNIS',
@@ -102,7 +61,6 @@ const projects = [
 
   {
     id: 'autopecas',
-    number: '05',
     category: 'store',
     categoryLabel: 'LOJA VIRTUAL',
     segment: 'AUTOPEÇAS',
@@ -115,7 +73,6 @@ const projects = [
 
   {
     id: 'catalogo-moda',
-    number: '06',
     category: 'catalog',
     categoryLabel: 'CATÁLOGO',
     segment: 'MODA',
@@ -128,7 +85,6 @@ const projects = [
 
   {
     id: 'salao',
-    number: '07',
     category: 'booking',
     categoryLabel: 'AGENDAMENTO',
     segment: 'SALÃO',
@@ -141,7 +97,6 @@ const projects = [
 
   {
     id: 'gestao',
-    number: '08',
     category: 'system',
     categoryLabel: 'SISTEMA',
     segment: 'GESTÃO',
@@ -154,7 +109,6 @@ const projects = [
 
   {
     id: 'vendas',
-    number: '09',
     category: 'dashboard',
     categoryLabel: 'DASHBOARD',
     segment: 'VENDAS',
@@ -166,500 +120,313 @@ const projects = [
   },
 ]
 
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max)
+const clamp = (value, min, max) =>
+  Math.max(min, Math.min(max, value))
+
+function Preview({
+  item,
+  offset,
+  active,
+  total,
+  index,
+  onSelect,
+}) {
+  const distance = Math.abs(offset)
+
+  if (distance > 3) {
+    return null
+  }
+
+  return (
+    <article
+      className={`solution-preview ${
+        active ? 'is-active' : ''
+      }`}
+      style={{
+        '--offset': offset,
+        '--abs': distance,
+      }}
+      aria-hidden={!active}
+      onClick={() => {
+        if (!active) {
+          onSelect(index)
+        }
+      }}
+    >
+      <div className="preview-window">
+        {item.video ? (
+          <video
+            src={item.video}
+            muted
+            loop
+            playsInline
+            autoPlay={active}
+            preload={active ? 'auto' : 'none'}
+          />
+        ) : (
+          <div className="demo-art">
+            <span>{item.categoryLabel}</span>
+            <i>ROUXINOL</i>
+          </div>
+        )}
+      </div>
+
+      {active && (
+        <div className="preview-copy">
+          <span className="solution-count">
+            {String(index + 1).padStart(2, '0')} /{' '}
+            {String(total).padStart(2, '0')} · {item.segment}
+          </span>
+
+          <h3>{item.title}</h3>
+
+          <p>{item.description}</p>
+
+          {item.link ? (
+            <a
+              className="text-cta"
+              href={item.link}
+              onClick={(event) => event.stopPropagation()}
+            >
+              VER MODELO
+              <span>→</span>
+            </a>
+          ) : (
+            <span className="text-cta is-disabled">
+              LINK DO PROJETO
+              <span>→</span>
+            </span>
+          )}
+        </div>
+      )}
+    </article>
+  )
 }
 
+const VH_PER_PROJECT = 46
+const VH_BASE = 92
+const VH_MIN = 190
+
 export default function Vitrine() {
-  const stageRef = useRef(null)
-  const dragStartRef = useRef(null)
+  const root = useRef(null)
+  const touch = useRef(null)
 
-  const [activeCategory, setActiveCategory] = useState('all')
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
+  const [category, setCategory] = useState('all')
+  const [active, setActive] = useState(0)
 
-  const filteredProjects =
-    activeCategory === 'all'
+  const items =
+    category === 'all'
       ? projects
       : projects.filter(
-          (project) =>
-            project.category === activeCategory,
+          (project) => project.category === category,
         )
 
-  const activeProject =
-    filteredProjects[
-      clamp(
-        activeIndex,
-        0,
-        Math.max(
-          filteredProjects.length - 1,
-          0,
-        ),
-      )
-    ]
+  const safeActive = clamp(
+    active,
+    0,
+    Math.max(items.length - 1, 0),
+  )
+
+  const sectionHeight = Math.max(
+    (items.length - 1) * VH_PER_PROJECT + VH_BASE,
+    VH_MIN,
+  )
 
   useEffect(() => {
-    setActiveIndex(0)
-  }, [activeCategory])
+    setActive(0)
+  }, [category])
 
   useEffect(() => {
-    const element = stageRef.current
+    const onScroll = () => {
+      if (!root.current || !items.length) {
+        return
+      }
 
-    if (!element) {
-      return undefined
-    }
+      const rect = root.current.getBoundingClientRect()
 
-    const observer =
-      new IntersectionObserver(
-        ([entry]) => {
-          setIsVisible(entry.isIntersecting)
-        },
-        {
-          threshold: 0.18,
-        },
+      const viewportHeight = window.innerHeight
+
+      const startOffset = viewportHeight * 0.35
+
+      const usableHeight = Math.max(
+        rect.height -
+          viewportHeight -
+          startOffset,
+        1,
       )
 
-    observer.observe(element)
+      const scrolled =
+        -rect.top - startOffset
 
-    return () => observer.disconnect()
-  }, [])
+      const progress = clamp(
+        scrolled / usableHeight,
+        0,
+        1,
+      )
 
-  function goToProject(index) {
-    if (!filteredProjects.length) {
-      return
+      const nextIndex = Math.round(
+        progress *
+          Math.max(
+            items.length - 1,
+            0,
+          ),
+      )
+
+      setActive(nextIndex)
     }
 
-    setActiveIndex(
+    onScroll()
+
+    window.addEventListener(
+      'scroll',
+      onScroll,
+      {
+        passive: true,
+      },
+    )
+
+    window.addEventListener(
+      'resize',
+      onScroll,
+    )
+
+    return () => {
+      window.removeEventListener(
+        'scroll',
+        onScroll,
+      )
+
+      window.removeEventListener(
+        'resize',
+        onScroll,
+      )
+    }
+  }, [items.length])
+
+  const move = (direction) => {
+    setActive((value) =>
       clamp(
-        index,
+        value + direction,
         0,
-        filteredProjects.length - 1,
+        items.length - 1,
       ),
     )
   }
 
-  function nextProject() {
-    if (!filteredProjects.length) {
-      return
-    }
-
-    setActiveIndex(
-      (current) =>
-        (current + 1) %
-        filteredProjects.length,
+  const goTo = (index) => {
+    setActive(
+      clamp(
+        index,
+        0,
+        items.length - 1,
+      ),
     )
-  }
-
-  function previousProject() {
-    if (!filteredProjects.length) {
-      return
-    }
-
-    setActiveIndex(
-      (current) =>
-        (current - 1 + filteredProjects.length) %
-        filteredProjects.length,
-    )
-  }
-
-  function handlePointerDown(event) {
-    dragStartRef.current = event.clientX
-    setIsDragging(true)
-  }
-
-  function handlePointerMove(event) {
-    if (dragStartRef.current === null) {
-      return
-    }
-
-    const distance =
-      event.clientX -
-      dragStartRef.current
-
-    if (Math.abs(distance) < 70) {
-      return
-    }
-
-    if (distance < 0) {
-      nextProject()
-    } else {
-      previousProject()
-    }
-
-    dragStartRef.current = null
-  }
-
-  function handlePointerUp() {
-    dragStartRef.current = null
-    setIsDragging(false)
   }
 
   function handleKeyDown(event) {
     if (event.key === 'ArrowRight') {
       event.preventDefault()
-      nextProject()
+      move(1)
     }
 
     if (event.key === 'ArrowLeft') {
       event.preventDefault()
-      previousProject()
+      move(-1)
     }
   }
 
-  function getRelativePosition(index) {
-    if (!filteredProjects.length) {
-      return 0
-    }
-
-    const total = filteredProjects.length
-
-    let difference =
-      index - activeIndex
-
-    if (difference > total / 2) {
-      difference -= total
-    }
-
-    if (difference < -total / 2) {
-      difference += total
-    }
-
-    return difference
-  }
-
-  if (!activeProject) {
+  if (!items.length) {
     return null
   }
 
   return (
     <section
-      className={`vitrine ${
-        isVisible ? 'is-visible' : ''
-      }`}
+      className="solutions"
+      ref={root}
       id="vitrine"
-      ref={stageRef}
-      aria-labelledby="vitrine-title"
       tabIndex="0"
       onKeyDown={handleKeyDown}
+      style={{
+        height: `${sectionHeight}vh`,
+      }}
     >
-      <div
-        className="vitrine__background"
-        aria-hidden="true"
-      >
-        <div className="vitrine__orb vitrine__orb--one" />
-        <div className="vitrine__orb vitrine__orb--two" />
-      </div>
-
-      <div className="vitrine__header">
-        <div className="vitrine__header-copy">
-          <span className="vitrine__eyebrow">
-            UM POUCO DO QUE PODE SER FEITO
-          </span>
-
-          <h2
-            className="vitrine__title"
-            id="vitrine-title"
-          >
-            E se você
-            <span>
-              visse na prática?
-            </span>
-          </h2>
+      <div className="solutions-sticky">
+        <div className="section-kicker">
+          UM POUCO DO QUE PODE SER FEITO
         </div>
 
-        <p className="vitrine__intro">
-          Algumas ideias ficam melhores
-          quando você pode vê-las
-          funcionando.
-        </p>
-      </div>
+        <div className="solutions-head">
+          <h2>
+            E SE VOCÊ
+            <br />
+            <span>VISSE NA PRÁTICA?</span>
+          </h2>
 
-      <div className="vitrine__filters">
-        <div className="vitrine__filter-label">
-          ENCONTRE UMA IDEIA
+          <p>
+            Algumas ideias ficam melhores
+            quando você pode vê-las
+            funcionando.
+          </p>
         </div>
 
         <div
-          className="vitrine__filter-list"
+          className="solutions-filters"
           role="tablist"
           aria-label="Categorias de projetos"
         >
-          {categories.map((category) => (
+          {categories.map((categoryItem) => (
             <button
-              key={category.id}
+              key={categoryItem.id}
               type="button"
               role="tab"
               aria-selected={
-                activeCategory === category.id
+                category === categoryItem.id
               }
-              className={`vitrine__filter ${
-                activeCategory === category.id
+              className={
+                category === categoryItem.id
                   ? 'is-active'
                   : ''
-              }`}
+              }
               onClick={() =>
-                setActiveCategory(
-                  category.id,
-                )
+                setCategory(categoryItem.id)
               }
             >
-              {category.label}
+              {categoryItem.label}
             </button>
           ))}
         </div>
-      </div>
-
-      <div className="vitrine__stage-wrap">
-        <button
-          type="button"
-          className="vitrine__nav vitrine__nav--previous"
-          onClick={previousProject}
-          aria-label="Projeto anterior"
-        >
-          <span>←</span>
-        </button>
 
         <div
-          className={`vitrine__stage ${
-            isDragging ? 'is-dragging' : ''
-          }`}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onPointerLeave={
-            isDragging
-              ? handlePointerUp
-              : undefined
-          }
+          className="roulette"
+          onTouchStart={(event) => {
+            touch.current =
+              event.touches[0].clientX
+          }}
+          onTouchEnd={(event) => {
+            const x =
+              event.changedTouches[0].clientX
+
+            const start =
+              touch.current ?? x
+
+            if (Math.abs(x - start) > 40) {
+              move(x < start ? 1 : -1)
+            }
+
+            touch.current = null
+          }}
         >
-          {filteredProjects.map(
-            (project, index) => {
-              const relative =
-                getRelativePosition(index)
-
-              const absolute =
-                Math.abs(relative)
-
-              const isActive =
-                relative === 0
-
-              const x =
-                relative === 0
-                  ? 0
-                  : relative < 0
-                    ? -52
-                    : 52
-
-              const scale =
-                isActive
-                  ? 1
-                  : Math.max(
-                      0.72,
-                      0.88 -
-                        (absolute - 1) *
-                          0.05,
-                    )
-
-              const opacity =
-                absolute > 2
-                  ? 0
-                  : isActive
-                    ? 1
-                    : Math.max(
-                        0.18,
-                        0.62 -
-                          (absolute - 1) *
-                            0.18,
-                      )
-
-              const rotate =
-                relative === 0
-                  ? 0
-                  : relative < 0
-                    ? -2.5
-                    : 2.5
-
-              const zIndex =
-                50 -
-                absolute * 10
-
-              return (
-                <article
-                  key={project.id}
-                  className={`vitrine__project ${
-                    isActive
-                      ? 'is-active'
-                      : ''
-                  }`}
-                  style={{
-                    '--project-x': `${x}%`,
-                    '--project-scale': scale,
-                    '--project-opacity': opacity,
-                    '--project-rotate': `${rotate}deg`,
-                    zIndex,
-                  }}
-                  aria-hidden={!isActive}
-                >
-                  <div className="vitrine__media">
-                    {project.video ? (
-                      <video
-                        src={project.video}
-                        autoPlay={isActive}
-                        muted
-                        loop
-                        playsInline
-                        preload={
-                          isActive
-                            ? 'auto'
-                            : 'none'
-                        }
-                        aria-label={`Prévia em vídeo de ${project.title}`}
-                      />
-                    ) : (
-                      <div className="vitrine__media-placeholder">
-                        <span className="vitrine__media-index">
-                          {project.number}
-                        </span>
-
-                        <div className="vitrine__media-center">
-                          <span>
-                            VÍDEO DO PROJETO
-                          </span>
-
-                          <strong>
-                            PREVIEW
-                          </strong>
-                        </div>
-
-                        <span className="vitrine__media-note">
-                          /assets/videos/
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="vitrine__media-overlay" />
-
-                    <span className="vitrine__media-corner">
-                      {project.categoryLabel}
-                    </span>
-
-                    <span className="vitrine__media-status">
-                      {project.video
-                        ? 'REPRODUZINDO'
-                        : 'AGUARDANDO VÍDEO'}
-                    </span>
-                  </div>
-
-                  {isActive && (
-                    <div className="vitrine__project-info">
-                      <div className="vitrine__project-meta">
-                        <span>
-                          {project.categoryLabel}
-                        </span>
-
-                        <span>
-                          {project.segment}
-                        </span>
-
-                        <span>
-                          {project.number}
-                          {' '}
-                          /
-                          {' '}
-                          {String(
-                            filteredProjects.length,
-                          ).padStart(2, '0')}
-                        </span>
-                      </div>
-
-                      <h3>
-                        {project.title}
-                      </h3>
-
-                      <p>
-                        {project.description}
-                      </p>
-
-                      <div className="vitrine__project-action">
-                        {project.link ? (
-                          <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            onPointerDown={(event) =>
-                              event.stopPropagation()
-                            }
-                          >
-                            VER MODELO
-                            <span>↗</span>
-                          </a>
-                        ) : (
-                          <span className="is-disabled">
-                            LINK DO PROJETO
-                            <span>↗</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </article>
-              )
-            },
-          )}
-        </div>
-
-        <button
-          type="button"
-          className="vitrine__nav vitrine__nav--next"
-          onClick={nextProject}
-          aria-label="Próximo projeto"
-        >
-          <span>→</span>
-        </button>
-      </div>
-
-      <div className="vitrine__footer">
-        <div className="vitrine__counter">
-          <strong>
-            {String(
-              activeIndex + 1,
-            ).padStart(2, '0')}
-          </strong>
-
-          <span />
-
-          <small>
-            {String(
-              filteredProjects.length,
-            ).padStart(2, '0')}
-          </small>
-        </div>
-
-        <span className="vitrine__gesture">
-          ARRASTE PARA EXPLORAR
-          <b>↔</b>
-        </span>
-
-        <div className="vitrine__dots">
-          {filteredProjects.map(
-            (project, index) => (
-              <button
-                key={project.id}
-                type="button"
-                className={
-                  index === activeIndex
-                    ? 'is-active'
-                    : ''
-                }
-                onClick={() =>
-                  goToProject(index)
-                }
-                aria-label={`Ir para projeto ${index + 1}`}
-              />
-            ),
-          )}
+          {items.map((item, index) => (
+            <Preview
+              key={item.id}
+              item={item}
+              offset={index - safeActive}
+              active={index === safeActive}
+              total={items.length}
+              index={index}
+              onSelect={goTo}
+            />
+          ))}
         </div>
       </div>
     </section>
