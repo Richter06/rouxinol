@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+:root {
+  --purple: #5b21b6;
+  --purple-dark: #35106f;
+  --purple-deep: #22083f;
+  --yellow: #f4d72f;
+  --cream: #f5f0e6;
+  --ink: #110b1a;
+
+  font-family: 'DM Sans', sans-serif;
+  color: var(--cream);
+  background: var(--purple-deep);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
