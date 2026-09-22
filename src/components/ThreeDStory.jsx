@@ -1,64 +1,56 @@
 import { Suspense, useEffect, useState } from 'react'
 import '../styles/three-story.css'
+
 import { Canvas } from '@react-three/fiber'
 import {
-  Bounds,
   Center,
   Environment,
   OrbitControls,
   useGLTF,
 } from '@react-three/drei'
 
-/* =========================================================
-   CAMINHOS DOS MODELOS 3D
-   ========================================================= */
-
 const DESKTOP_MODEL = '/assets/3d/desktop.glb'
 const MOBILE_MODEL = '/assets/3d/phone.glb'
 const MICROWAVE_MODEL = '/assets/3d/microwave.glb'
 
-/* =========================================================
-   CONFIGURAÇÃO DOS MODELOS
-   ========================================================= */
-
 const slides = [
   {
     id: 'desktop',
-    eyebrow: 'SUA IDENTIDADE',
-    title: 'EM QUALQUER LUGAR.',
+    number: '01',
+    eyebrow: 'PRESENÇA',
+    title: 'COMEÇA NA TELA.',
     description:
-      'Sua presença digital precisa funcionar onde seus clientes estiverem.',
-    modelLabel: 'MODELO 3D — DESKTOP',
+      'Seu negócio precisa de um lugar onde as pessoas possam chegar, entender e lembrar de você.',
+    modelLabel: 'DESKTOP',
     modelPath: DESKTOP_MODEL,
     scale: 1,
+    accent: 'purple',
   },
-
   {
     id: 'mobile',
-    eyebrow: 'SUA IDENTIDADE',
-    title: 'EM QUALQUER FORMATO.',
+    number: '02',
+    eyebrow: 'CONTINUIDADE',
+    title: 'CONTINUA COM ELAS.',
     description:
-      'Do computador ao celular, sua marca continua sendo reconhecida.',
-    modelLabel: 'MODELO 3D — CELULAR',
+      'Porque hoje seu cliente pode conhecer sua marca no computador e terminar tudo pelo celular.',
+    modelLabel: 'CELULAR',
     modelPath: MOBILE_MODEL,
     scale: 0.55,
+    accent: 'yellow',
   },
-
   {
     id: 'microwave',
-    eyebrow: '',
-    title: 'QUALQUER MESMO.',
+    number: '03',
+    eyebrow: 'OK.',
+    title: 'QUASE QUALQUER LUGAR.',
     description:
-      'Ok. Talvez não literalmente qualquer lugar.',
-    modelLabel: 'MODELO 3D — MICRO-ONDAS',
+      'Não, a Rouxinol não vai colocar seu site no micro ondas.',
+    modelLabel: 'MICRO ONDAS',
     modelPath: MICROWAVE_MODEL,
     scale: 1,
+    accent: 'purple',
   },
 ]
-
-/* =========================================================
-   MODELO
-   ========================================================= */
 
 function Model({ path, scale }) {
   const { scene } = useGLTF(path)
@@ -73,16 +65,12 @@ function Model({ path, scale }) {
   )
 }
 
-/* =========================================================
-   CENA 3D
-   ========================================================= */
-
 function ModelScene({ path, scale }) {
   return (
     <Canvas
       camera={{
         position: [0, 0, 5],
-        fov: 38,
+        fov: 35,
         near: 0.1,
         far: 1000,
       }}
@@ -92,51 +80,32 @@ function ModelScene({ path, scale }) {
         alpha: true,
       }}
     >
-      {/* =================================================
-          ILUMINAÇÃO
-          ================================================= */}
-
-      <ambientLight intensity={1.5} />
+      <ambientLight intensity={1.4} />
 
       <directionalLight
         position={[4, 5, 6]}
-        intensity={3}
+        intensity={2.8}
       />
 
       <directionalLight
         position={[-4, 2, -3]}
-        intensity={1.5}
+        intensity={1.2}
       />
 
-      {/* =================================================
-          MODELO
-          ================================================= */}
-
       <Suspense fallback={null}>
-        <Bounds
-          fit
-          clip
-          observe
-          margin={1.05}
-        >
-          <Model
-            path={path}
-            scale={scale}
-          />
-        </Bounds>
+        <Model
+          path={path}
+          scale={scale}
+        />
 
         <Environment preset="studio" />
       </Suspense>
-
-      {/* =================================================
-          ROTAÇÃO
-          ================================================= */}
 
       <OrbitControls
         enableZoom={false}
         enablePan={false}
         autoRotate
-        autoRotateSpeed={1}
+        autoRotateSpeed={0.8}
         minPolarAngle={Math.PI / 2.5}
         maxPolarAngle={Math.PI / 1.8}
       />
@@ -144,19 +113,15 @@ function ModelScene({ path, scale }) {
   )
 }
 
-/* =========================================================
-   COMPONENTE PRINCIPAL
-   ========================================================= */
+useGLTF.preload(DESKTOP_MODEL)
+useGLTF.preload(MOBILE_MODEL)
+useGLTF.preload(MICROWAVE_MODEL)
 
 export default function ThreeDStory() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
   const activeSlide = slides[activeIndex]
-
-  /* =======================================================
-     NAVEGAÇÃO
-     ======================================================= */
 
   function goToSlide(index) {
     const normalizedIndex =
@@ -173,13 +138,9 @@ export default function ThreeDStory() {
     goToSlide(activeIndex - 1)
   }
 
-  /* =======================================================
-     AUTOPLAY
-     ======================================================= */
-
   useEffect(() => {
     if (isPaused) {
-      return
+      return undefined
     }
 
     const interval = setInterval(() => {
@@ -187,14 +148,10 @@ export default function ThreeDStory() {
         (current) =>
           (current + 1) % slides.length,
       )
-    }, 6500)
+    }, 7000)
 
     return () => clearInterval(interval)
   }, [isPaused])
-
-  /* =======================================================
-     TECLADO
-     ======================================================= */
 
   function handleKeyDown(event) {
     if (event.key === 'ArrowRight') {
@@ -208,108 +165,56 @@ export default function ThreeDStory() {
     }
   }
 
-  /* =======================================================
-     RENDER
-     ======================================================= */
-
   return (
     <section
-      className="three-story"
+      className={`three-story three-story--${activeSlide.accent}`}
       id="experiencia"
       aria-labelledby="three-story-title"
+      tabIndex="0"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
       onKeyDown={handleKeyDown}
-      tabIndex="0"
     >
+      <div className="three-story__background" />
+
       <div className="three-story__inner">
-
-        {/* =================================================
-            TEXTO
-            ================================================= */}
-
-        <div className="three-story__copy">
-
-          <span className="three-story__kicker">
-            UMA IDEIA, VÁRIOS FORMATOS
-          </span>
-
-          <h2
-            className="three-story__title"
-            id="three-story-title"
-          >
-            Imagine seu negócio
-            <span>
-              em vários formatos.
+        <header className="three-story__header">
+          <div className="three-story__meta">
+            <span className="three-story__section-label">
+              UMA IDEIA, VÁRIOS FORMATOS
             </span>
-          </h2>
 
-          <p className="three-story__description">
-            Seu negócio não precisa ficar preso a um único lugar.
-            A Rouxinol cria experiências que acompanham a forma
-            como seus clientes encontram, conhecem e usam sua marca.
-          </p>
-
-          {/* =================================================
-              FRASES LATERAIS
-              ================================================= */}
-
-          <div className="three-story__statement">
-
-            <div className="three-story__statement-item">
-              <span className="three-story__statement-mark">
-                /
-              </span>
-
-              <p>
-                Uma presença digital que faz sentido
-                <strong>
-                  {' '}onde ela aparece.
-                </strong>
-              </p>
-            </div>
-
-            <div className="three-story__statement-item">
-              <span className="three-story__statement-mark">
-                /
-              </span>
-
-              <p>
-                Uma marca que continua sendo
-                <strong>
-                  {' '}reconhecida em qualquer formato.
-                </strong>
-              </p>
-            </div>
-
-            <div className="three-story__statement-item">
-              <span className="three-story__statement-mark">
-                /
-              </span>
-
-              <p>
-                Uma experiência pensada para
-                <strong>
-                  {' '}acompanhar o seu negócio.
-                </strong>
-              </p>
-            </div>
-
+            <span className="three-story__counter">
+              {activeSlide.number}
+              <span>/</span>
+              03
+            </span>
           </div>
-        </div>
 
-        {/* =================================================
-            VITRINE
-            ================================================= */}
+          <div className="three-story__heading">
+            <p className="three-story__intro">
+              Seu negócio não precisa ficar preso
+              a um único lugar.
+            </p>
 
-        <div className="three-story__showcase">
+            <h2
+              id="three-story-title"
+              className="three-story__title"
+            >
+              A mesma ideia.
+              <span>Outros lugares.</span>
+            </h2>
+          </div>
+        </header>
 
-          <div className="three-story__stage">
+        <div className="three-story__stage">
+          <div className="three-story__stage-line" />
 
+          <div className="three-story__model">
             <div
-              className="three-story__model"
+              className="three-story__model-inner"
               key={activeSlide.id}
             >
               <ModelScene
@@ -317,119 +222,99 @@ export default function ThreeDStory() {
                 scale={activeSlide.scale}
               />
             </div>
-
-            <div className="three-story__stage-glow" />
-
           </div>
 
-          {/* =================================================
-              INFORMAÇÕES DO SLIDE
-              ================================================= */}
+          <div className="three-story__object-label">
+            <span>
+              {activeSlide.number}
+            </span>
 
-          <div className="three-story__slide-info">
+            <span>
+              {activeSlide.modelLabel}
+            </span>
+          </div>
 
-            <div
-              className="three-story__slide-copy"
-              key={activeSlide.id}
-            >
-
-              {/* =============================================
-                  EYEBROW
-                  ============================================= */}
-
-              {activeSlide.eyebrow && (
-                <span className="three-story__slide-eyebrow">
-                  {activeSlide.eyebrow}
-                </span>
-              )}
-
-              <h3 className="three-story__slide-title">
-                {activeSlide.title}
-              </h3>
-
-              <p className="three-story__slide-description">
-                {activeSlide.description}
-              </p>
-
-              {/* =============================================
-                  COMPLEMENTO DO MICRO-ONDAS
-                  ============================================= */}
-
-              {activeSlide.id === 'microwave' && (
-                <div
-                  className="three-story__microwave-joke"
-                  key="microwave-joke"
-                >
-                  <span className="three-story__microwave-joke-label">
-                    MAS VOCÊ ENTENDEU.
-                  </span>
-
-                  <p>
-                    Seu negócio precisa estar
-                    <strong>
-                      {' '}onde seus clientes estão.
-                    </strong>
-                  </p>
-                </div>
-              )}
-
-            </div>
-
-            {/* =================================================
-                CONTROLES
-                ================================================= */}
-
-            <div className="three-story__controls">
-
-              <button
-                type="button"
-                className="three-story__arrow"
-                onClick={previousSlide}
-                aria-label="Modelo anterior"
-              >
-                ←
-              </button>
-
-              <div
-                className="three-story__dots"
-                role="tablist"
-                aria-label="Selecionar formato"
-              >
-                {slides.map((slide, index) => (
-                  <button
-                    key={slide.id}
-                    type="button"
-                    className={
-                      index === activeIndex
-                        ? 'three-story__dot is-active'
-                        : 'three-story__dot'
-                    }
-                    onClick={() => goToSlide(index)}
-                    role="tab"
-                    aria-selected={
-                      index === activeIndex
-                    }
-                    aria-label={
-                      `Mostrar ${slide.modelLabel.toLowerCase()}`
-                    }
-                  />
-                ))}
-              </div>
-
-              <button
-                type="button"
-                className="three-story__arrow"
-                onClick={nextSlide}
-                aria-label="Próximo modelo"
-              >
-                →
-              </button>
-
-            </div>
-
+          <div className="three-story__orbit-mark">
+            <span />
+            <span />
+            <span />
           </div>
         </div>
 
+        <div className="three-story__bottom">
+          <div className="three-story__statement">
+            <span className="three-story__eyebrow">
+              {activeSlide.eyebrow}
+            </span>
+
+            <h3
+              key={activeSlide.id}
+              className="three-story__slide-title"
+            >
+              {activeSlide.title}
+            </h3>
+          </div>
+
+          <div className="three-story__description">
+            <p key={activeSlide.id}>
+              {activeSlide.description}
+            </p>
+
+            {activeSlide.id === 'microwave' && (
+              <span className="three-story__joke">
+                MAS VOCÊ ENTENDEU.
+              </span>
+            )}
+          </div>
+
+          <div className="three-story__controls">
+            <button
+              type="button"
+              className="three-story__arrow"
+              onClick={previousSlide}
+              aria-label="Modelo anterior"
+            >
+              ←
+            </button>
+
+            <div
+              className="three-story__dots"
+              role="tablist"
+              aria-label="Selecionar formato"
+            >
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  className={
+                    index === activeIndex
+                      ? 'three-story__dot is-active'
+                      : 'three-story__dot'
+                  }
+                  onClick={() => goToSlide(index)}
+                  role="tab"
+                  aria-selected={
+                    index === activeIndex
+                  }
+                  aria-label={`Mostrar ${slide.modelLabel.toLowerCase()}`}
+                >
+                  <span>
+                    {slide.number}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="three-story__arrow"
+              onClick={nextSlide}
+              aria-label="Próximo modelo"
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   )
