@@ -1,0 +1,756 @@
+/* =========================================================
+   3D STORY / SHOWCASE
+   ========================================================= */
+
+.three-story {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding: 9rem 5vw 7rem;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 252, 246, 0.96) 0%,
+      rgba(255, 252, 246, 0.82) 38%,
+      rgba(255, 252, 246, 0.58) 68%,
+      rgba(255, 252, 246, 0.42) 100%
+    ),
+    url('/assets/threedstory-background.jpg')
+      center / cover
+      no-repeat;
+
+  color: var(--ink);
+  outline: none;
+}
+
+.three-story::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0) 35%,
+      rgba(255, 255, 255, 0.14) 100%
+    );
+}
+
+.three-story::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(
+      circle at 78% 48%,
+      rgba(255, 255, 255, 0.38),
+      transparent 34%
+    );
+}
+
+.three-story:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: -3px;
+}
+
+.three-story__inner {
+  position: relative;
+  z-index: 2;
+
+  width: min(1380px, 100%);
+  min-height: 78vh;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(500px, 1.22fr);
+  gap: clamp(3rem, 7vw, 9rem);
+  align-items: center;
+}
+
+
+/* ---------------------------------------------------------
+   LEFT — COPY
+   --------------------------------------------------------- */
+
+.three-story__copy {
+  max-width: 510px;
+}
+
+.three-story__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+
+  color: var(--purple);
+}
+
+.three-story__kicker::before {
+  content: '';
+
+  width: 28px;
+  height: 2px;
+
+  background: var(--yellow);
+}
+
+.three-story__title {
+  margin: 0;
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 5vw, 5.8rem);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.three-story__title span {
+  display: block;
+  margin-left: clamp(1.5rem, 4vw, 4rem);
+
+  color: var(--purple);
+}
+
+.three-story__description {
+  max-width: 430px;
+  margin: 2.2rem 0 0;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+
+  color: rgba(17, 11, 26, 0.7);
+}
+
+.three-story__statement {
+  max-width: 430px;
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+
+  border-top: 1px solid rgba(91, 33, 182, 0.22);
+}
+
+.three-story__statement-item {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  column-gap: 0.8rem;
+  align-items: start;
+}
+
+.three-story__statement-item + .three-story__statement-item {
+  margin-top: 1.25rem;
+}
+
+.three-story__statement-mark {
+  display: block;
+
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.three-story__statement-item p {
+  margin: 0;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.55;
+
+  color: rgba(17, 11, 26, 0.65);
+}
+
+.three-story__statement-item strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   RIGHT — SHOWCASE
+   --------------------------------------------------------- */
+
+.three-story__showcase {
+  min-width: 0;
+}
+
+.three-story__stage {
+  position: relative;
+
+  min-height: clamp(430px, 55vh, 650px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  isolation: isolate;
+}
+
+
+/*
+   Soft architectural depth behind the 3D object.
+   Much more subtle than the previous purple blob.
+*/
+
+.three-story__stage::before {
+  content: '';
+
+  position: absolute;
+
+  width: 76%;
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.38) 42%,
+      transparent 72%
+    );
+
+  filter: blur(18px);
+
+  z-index: -2;
+}
+
+.three-story__stage::after {
+  content: '';
+
+  position: absolute;
+
+  width: 72%;
+  height: 1px;
+
+  left: 14%;
+  bottom: 12%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(91, 33, 182, 0.24),
+      rgba(244, 215, 47, 0.2),
+      rgba(91, 33, 182, 0.24),
+      transparent
+    );
+
+  z-index: -1;
+}
+
+.three-story__stage-glow {
+  position: absolute;
+
+  width: 38%;
+  height: 38%;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+  opacity: 0.08;
+
+  filter: blur(70px);
+
+  z-index: -1;
+
+  transform: translate(20%, 10%);
+}
+
+.three-story__model {
+  position: relative;
+
+  width: min(100%, 650px);
+  height: 100%;
+  min-height: 420px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: three-story-model-in 0.7s ease both;
+}
+
+@keyframes three-story-model-in {
+  from {
+    opacity: 0;
+    transform: translateX(35px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   PLACEHOLDER DO MODELO
+   --------------------------------------------------------- */
+
+.three-story__placeholder {
+  position: relative;
+
+  width: min(82%, 520px);
+  aspect-ratio: 4 / 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(91, 33, 182, 0.18);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(91, 33, 182, 0.05),
+      rgba(244, 215, 47, 0.05)
+    ),
+    rgba(255, 255, 255, 0.36);
+
+  box-shadow:
+    18px 18px 0 rgba(91, 33, 182, 0.07),
+    -12px -12px 0 rgba(244, 215, 47, 0.08);
+}
+
+.three-story__placeholder-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(91, 33, 182, 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(91, 33, 182, 0.06) 1px,
+      transparent 1px
+    );
+
+  background-size: 32px 32px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black 25%,
+      black 75%,
+      transparent
+    );
+}
+
+.three-story__placeholder-object {
+  position: relative;
+
+  width: 45%;
+  aspect-ratio: 1.35;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--purple);
+
+  transform:
+    perspective(500px)
+    rotateX(8deg)
+    rotateY(-8deg);
+
+  box-shadow:
+    14px 14px 0 rgba(91, 33, 182, 0.1),
+    inset 0 0 0 8px rgba(244, 215, 47, 0.22);
+}
+
+.three-story__placeholder-object::before {
+  content: '';
+
+  position: absolute;
+
+  width: 62%;
+  height: 60%;
+
+  background: var(--purple);
+  opacity: 0.1;
+}
+
+.three-story__placeholder-object span {
+  position: absolute;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+}
+
+.three-story__placeholder-object span:nth-child(1) {
+  top: 12px;
+  left: 12px;
+}
+
+.three-story__placeholder-object span:nth-child(2) {
+  top: 12px;
+  right: 12px;
+}
+
+.three-story__placeholder-object span:nth-child(3) {
+  bottom: 12px;
+  left: 50%;
+}
+
+.three-story__placeholder-label {
+  position: absolute;
+
+  right: 1rem;
+  bottom: 1rem;
+
+  padding: 0.5rem 0.7rem;
+
+  background: var(--ink);
+  color: var(--yellow);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+}
+
+
+/* ---------------------------------------------------------
+   SLIDE INFO
+   --------------------------------------------------------- */
+
+.three-story__slide-info {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  margin-top: -1rem;
+  padding: 0 1rem;
+}
+
+.three-story__slide-copy {
+  max-width: 470px;
+}
+
+.three-story__slide-eyebrow {
+  display: block;
+
+  margin-bottom: 0.45rem;
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+
+  color: var(--purple);
+}
+
+.three-story__slide-title {
+  margin: 0;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.three-story__slide-description {
+  max-width: 380px;
+
+  margin: 0.9rem 0 0;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.55;
+
+  color: rgba(17, 11, 26, 0.58);
+}
+
+.three-story__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  flex-shrink: 0;
+}
+
+.three-story__arrow {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(91, 33, 182, 0.25);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.3);
+  color: var(--purple);
+
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease,
+    border-color 180ms ease;
+}
+
+.three-story__arrow:hover {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: var(--yellow);
+
+  transform: translateY(-2px);
+}
+
+.three-story__arrow:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.three-story__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.three-story__dot {
+  width: 7px;
+  height: 7px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(91, 33, 182, 0.22);
+
+  cursor: pointer;
+
+  transition:
+    width 220ms ease,
+    border-radius 220ms ease,
+    background 220ms ease;
+}
+
+.three-story__dot.is-active {
+  width: 28px;
+
+  border-radius: 10px;
+
+  background: var(--purple);
+}
+
+.three-story__dot:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+
+/* ---------------------------------------------------------
+   COMPLEMENTO DO MICRO-ONDAS
+   --------------------------------------------------------- */
+
+.three-story__microwave-joke {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+
+  border-top: 1px solid rgba(91, 33, 182, 0.18);
+
+  animation: three-story-joke-in 0.55s ease both;
+}
+
+.three-story__microwave-joke-label {
+  display: block;
+
+  margin-bottom: 0.65rem;
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+
+  color: var(--purple);
+}
+
+.three-story__microwave-joke p {
+  max-width: 650px;
+
+  margin: 0;
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 3vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+
+  color: var(--ink);
+}
+
+.three-story__microwave-joke strong {
+  color: var(--purple);
+  font-weight: 500;
+}
+
+@keyframes three-story-joke-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .three-story {
+    padding: 7rem 5vw 5rem;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 252, 246, 0.94) 0%,
+        rgba(255, 252, 246, 0.74) 45%,
+        rgba(255, 252, 246, 0.66) 100%
+      ),
+      url('/assets/threedstory-background.jpg')
+        center / cover
+        no-repeat;
+  }
+
+  .three-story__inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .three-story__copy {
+    max-width: 720px;
+  }
+
+  .three-story__description {
+    max-width: 560px;
+  }
+
+  .three-story__statement {
+    margin-top: 2rem;
+  }
+
+  .three-story__stage {
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 650px) {
+  .three-story {
+    padding: 5rem 1.25rem 4rem;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 252, 246, 0.97) 0%,
+        rgba(255, 252, 246, 0.82) 48%,
+        rgba(255, 252, 246, 0.74) 100%
+      ),
+      url('/assets/threedstory-background.jpg')
+        center / cover
+        no-repeat;
+  }
+
+  .three-story__title {
+    font-size: clamp(2.8rem, 14vw, 4.4rem);
+  }
+
+  .three-story__title span {
+    margin-left: 1rem;
+  }
+
+  .three-story__stage {
+    min-height: 350px;
+  }
+
+  .three-story__model {
+    min-height: 330px;
+  }
+
+  .three-story__placeholder {
+    width: 88%;
+  }
+
+  .three-story__placeholder-object {
+    width: 52%;
+  }
+
+  .three-story__slide-info {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    padding: 0;
+  }
+
+  .three-story__controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .three-story__dots {
+    margin: 0 auto;
+  }
+
+  .three-story__microwave-joke {
+    margin-top: 1.5rem;
+  }
+
+  .three-story__microwave-joke p {
+    font-size: clamp(1.7rem, 9vw, 2.7rem);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .three-story__model,
+  .three-story__microwave-joke {
+    animation: none;
+  }
+
+  .three-story__arrow,
+  .three-story__dot {
+    transition: none;
+  }
+}
