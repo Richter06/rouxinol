@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import '../styles/vitrine.css'
 
 const categories = [
   { id: 'all', label: 'TODOS' },
@@ -139,7 +140,7 @@ function Preview({
 
   return (
     <article
-      className={`solution-preview ${
+      className={`vitrine-preview ${
         active ? 'is-active' : ''
       }`}
       style={{
@@ -153,7 +154,7 @@ function Preview({
         }
       }}
     >
-      <div className="preview-window">
+      <div className="vitrine-preview-window">
         {item.video ? (
           <video
             src={item.video}
@@ -164,7 +165,7 @@ function Preview({
             preload={active ? 'auto' : 'none'}
           />
         ) : (
-          <div className="demo-art">
+          <div className="vitrine-demo-art">
             <span>{item.categoryLabel}</span>
             <i>ROUXINOL</i>
           </div>
@@ -172,8 +173,8 @@ function Preview({
       </div>
 
       {active && (
-        <div className="preview-copy">
-          <span className="solution-count">
+        <div className="vitrine-preview-copy">
+          <span className="vitrine-count">
             {String(index + 1).padStart(2, '0')} /{' '}
             {String(total).padStart(2, '0')} · {item.segment}
           </span>
@@ -184,7 +185,7 @@ function Preview({
 
           {item.link ? (
             <a
-              className="text-cta"
+              className="vitrine-text-cta"
               href={item.link}
               onClick={(event) => event.stopPropagation()}
             >
@@ -192,7 +193,7 @@ function Preview({
               <span>→</span>
             </a>
           ) : (
-            <span className="text-cta is-disabled">
+            <span className="vitrine-text-cta is-disabled">
               LINK DO PROJETO
               <span>→</span>
             </span>
@@ -341,7 +342,7 @@ export default function Vitrine() {
 
   return (
     <section
-      className="solutions"
+      className="vitrine"
       ref={root}
       id="vitrine"
       tabIndex="0"
@@ -350,12 +351,12 @@ export default function Vitrine() {
         height: `${sectionHeight}vh`,
       }}
     >
-      <div className="solutions-sticky">
+      <div className="vitrine-sticky">
         <div className="section-kicker">
           UM POUCO DO QUE PODE SER FEITO
         </div>
 
-        <div className="solutions-head">
+        <div className="vitrine-head">
           <h2>
             E SE VOCÊ
             <br />
@@ -370,7 +371,7 @@ export default function Vitrine() {
         </div>
 
         <div
-          className="solutions-filters"
+          className="vitrine-filters"
           role="tablist"
           aria-label="Categorias de projetos"
         >
@@ -397,7 +398,7 @@ export default function Vitrine() {
         </div>
 
         <div
-          className="roulette"
+          className="vitrine-roulette"
           onTouchStart={(event) => {
             touch.current =
               event.touches[0].clientX
