@@ -352,7 +352,7 @@ export default function Vitrine() {
       }}
     >
       <div className="vitrine-sticky">
-        <div className="section-kicker">
+        <div className="vitrine-kicker">
           UM POUCO DO QUE PODE SER FEITO
         </div>
 
