@@ -4,10 +4,10 @@
 
 .growth {
   position: relative;
+
   background: var(--cream);
   color: var(--ink);
 }
-
 
 /* =========================================================
    STORY
@@ -15,20 +15,23 @@
 
 .growth__story {
   position: relative;
-  height: 300vh;
+
+  height: 260vh;
 }
 
 .growth__story-sticky {
   position: sticky;
   top: 0;
+
   width: 100%;
   height: 100vh;
   min-height: 620px;
+
   overflow: hidden;
+
   background: var(--ink);
   color: var(--cream);
 }
-
 
 /* =========================================================
    STORY BACKGROUND
@@ -36,42 +39,105 @@
 
 .growth__story-background {
   position: absolute;
-  inset: 0;
+  inset: -2%;
 
   background:
-    linear-gradient(
-      90deg,
-      rgba(17, 11, 26, 0.72) 0%,
-      rgba(17, 11, 26, 0.48) 50%,
-      rgba(17, 11, 26, 0.34) 100%
-    ),
     url('/assets/growth-background.jpg')
       center / cover
       no-repeat;
 
-  transform: scale(1.03);
-  transition: transform 1.8s
-    cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1.06);
+
+  transition:
+    transform 2.2s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
 }
 
-.growth.is-visible .growth__story-background {
+.growth.is-visible
+.growth__story-background {
   transform: scale(1);
 }
 
-.growth__story-background::after {
-  content: '';
+.growth__story-overlay {
   position: absolute;
   inset: 0;
 
   background:
     linear-gradient(
+      90deg,
+      rgba(17, 11, 26, 0.86) 0%,
+      rgba(17, 11, 26, 0.62) 48%,
+      rgba(17, 11, 26, 0.42) 100%
+    ),
+    linear-gradient(
       180deg,
-      rgba(17, 11, 26, 0.2),
-      transparent 40%,
+      rgba(17, 11, 26, 0.16),
+      transparent 45%,
       rgba(17, 11, 26, 0.3)
     );
+
+  pointer-events: none;
 }
 
+/* =========================================================
+   STORY META
+   ========================================================= */
+
+.growth__story-meta {
+  position: absolute;
+
+  top: clamp(1.5rem, 4vw, 3.5rem);
+  left: clamp(1.25rem, 5vw, 5rem);
+  right: clamp(1.25rem, 5vw, 5rem);
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color:
+    rgba(245, 240, 230, 0.58);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.15em;
+}
+
+.growth__story-meta span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.growth__story-meta span:first-child::before {
+  content: '';
+
+  width: 26px;
+  height: 1px;
+
+  background: var(--yellow);
+}
+
+.growth__story-meta span:last-child {
+  display: inline-flex;
+  gap: 0.35rem;
+
+  color:
+    rgba(245, 240, 230, 0.42);
+}
+
+.growth__story-meta i {
+  color:
+    rgba(245, 240, 230, 0.2);
+
+  font-style: normal;
+}
 
 /* =========================================================
    MESSAGES
@@ -81,8 +147,13 @@
   position: relative;
   z-index: 2;
 
-  width: min(1200px, calc(100% - 10vw));
+  width: min(
+    1280px,
+    calc(100% - 10vw)
+  );
+
   height: 100%;
+
   margin: 0 auto;
 
   display: flex;
@@ -92,7 +163,6 @@
   text-align: center;
 }
 
-
 /* =========================================================
    MESSAGE
    ========================================================= */
@@ -101,25 +171,45 @@
   position: absolute;
 
   width: 100%;
-  max-width: 1100px;
+  max-width: 1150px;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
   opacity: 0;
+
   transform:
-    translate3d(0, 80px, 0)
+    translate3d(0, 70px, 0)
     scale(0.94);
 
-  filter: blur(12px);
+  filter: blur(14px);
 
   pointer-events: none;
 
   transition:
-    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 800ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    transform 1100ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    filter 900ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
 }
 
 .growth__message.is-active {
@@ -134,20 +224,145 @@
   pointer-events: auto;
 }
 
+.growth__message-number {
+  display: block;
+
+  margin-bottom: 1.2rem;
+
+  color: var(--yellow);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+}
+
 .growth__message h2 {
   margin: 0;
 
-  max-width: 1050px;
+  max-width: 1100px;
 
   font-family: 'Playfair Display', serif;
-  font-size: clamp(4rem, 8vw, 9rem);
+  font-size: clamp(
+    4rem,
+    8vw,
+    9rem
+  );
+
   font-weight: 500;
-  line-height: 0.9;
+  line-height: 0.88;
+
   letter-spacing: -0.065em;
 
   text-wrap: balance;
 }
 
+/* =========================================================
+   STORY PROGRESS
+   ========================================================= */
+
+.growth__story-progress {
+  position: absolute;
+
+  left: clamp(
+    1.25rem,
+    5vw,
+    5rem
+  );
+
+  bottom: clamp(
+    1.5rem,
+    4vw,
+    3.5rem
+  );
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.35rem;
+}
+
+.growth__story-progress span {
+  display: block;
+
+  width: 18px;
+  height: 2px;
+
+  background:
+    rgba(245, 240, 230, 0.2);
+
+  transition:
+    width 500ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    background-color 400ms ease;
+}
+
+.growth__story-progress span.is-active {
+  width: 44px;
+
+  background: var(--yellow);
+}
+
+/* =========================================================
+   STORY SCROLL
+   ========================================================= */
+
+.growth__story-scroll {
+  position: absolute;
+
+  right: clamp(
+    1.25rem,
+    5vw,
+    5rem
+  );
+
+  bottom: clamp(
+    1.5rem,
+    4vw,
+    3.5rem
+  );
+
+  z-index: 3;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  color:
+    rgba(245, 240, 230, 0.35);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.43rem;
+  letter-spacing: 0.14em;
+}
+
+.growth__story-scroll > span {
+  color: var(--yellow);
+
+  font-size: 0.75rem;
+
+  animation:
+    growth-scroll 1.8s
+    ease-in-out infinite;
+}
+
+@keyframes growth-scroll {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+}
 
 /* =========================================================
    MAINTENANCE
@@ -157,7 +372,7 @@
   position: relative;
 
   padding:
-    clamp(6rem, 11vw, 10rem)
+    clamp(7rem, 12vw, 12rem)
     6vw
     clamp(5rem, 9vw, 8rem);
 
@@ -166,9 +381,9 @@
 
 .growth__maintenance-inner {
   width: min(1380px, 100%);
+
   margin: 0 auto;
 }
-
 
 /* =========================================================
    MAINTENANCE HEADER
@@ -179,13 +394,14 @@
 
   grid-template-columns:
     minmax(0, 1.35fr)
-    minmax(220px, 0.65fr);
+    minmax(240px, 0.65fr);
 
   gap: 5rem;
 
   align-items: end;
 
-  margin-bottom: clamp(4rem, 7vw, 6rem);
+  margin-bottom:
+    clamp(4rem, 7vw, 6.5rem);
 }
 
 .growth__maintenance-eyebrow {
@@ -215,21 +431,33 @@
 .growth__maintenance-header h2 {
   margin: 0;
 
-  max-width: 750px;
+  max-width: 850px;
 
   font-family: 'Playfair Display', serif;
-  font-size: clamp(3.2rem, 6vw, 6.8rem);
+  font-size: clamp(
+    3.2rem,
+    6vw,
+    6.8rem
+  );
+
   font-weight: 500;
-  line-height: 0.9;
+  line-height: 0.88;
+
   letter-spacing: -0.06em;
 }
 
 .growth__maintenance-header h2 span {
   display: block;
 
-  margin-left: clamp(1.5rem, 5vw, 5rem);
+  margin-left:
+    clamp(
+      1.5rem,
+      5vw,
+      5rem
+    );
 
   color: var(--purple);
+
   font-style: italic;
 }
 
@@ -238,12 +466,12 @@
 
   margin: 0 0 0 auto;
 
-  color: rgba(17, 11, 26, 0.55);
+  color:
+    rgba(17, 11, 26, 0.55);
 
-  font-size: 0.88rem;
-  line-height: 1.7;
+  font-size: 0.84rem;
+  line-height: 1.75;
 }
-
 
 /* =========================================================
    PLANS
@@ -253,55 +481,161 @@
   display: grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
 
-  gap: 1.2rem;
+  gap: 0;
 }
 
 .growth__plan {
   position: relative;
 
-  min-height: 410px;
+  min-height: 430px;
 
-  padding: 2rem 2rem 1.8rem;
+  padding:
+    1.5rem
+    clamp(
+      1.5rem,
+      2.5vw,
+      2.5rem
+    )
+    1.8rem;
 
   display: flex;
   flex-direction: column;
 
-  border: 1px solid rgba(17, 11, 26, 0.14);
-  border-radius: 18px;
+  border-top:
+    1px solid
+    rgba(17, 11, 26, 0.16);
 
-  background: rgba(255, 252, 246, 0.42);
+  border-bottom:
+    1px solid
+    rgba(17, 11, 26, 0.16);
+
+  border-left:
+    1px solid
+    rgba(17, 11, 26, 0.12);
+
+  background:
+    rgba(
+      255,
+      252,
+      246,
+      0.18
+    );
 
   transition:
-    transform 400ms cubic-bezier(
-      0.22,
-      1,
-      0.36,
-      1
-    ),
-    border-color 300ms ease,
-    background-color 300ms ease;
+    transform 500ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    background-color 400ms ease,
+    border-color 400ms ease;
+}
+
+.growth__plan:last-child {
+  border-right:
+    1px solid
+    rgba(17, 11, 26, 0.12);
 }
 
 .growth__plan:hover {
-  transform: translateY(-4px);
+  z-index: 2;
 
-  border-color: rgba(17, 11, 26, 0.28);
+  transform:
+    translateY(-8px);
 
-  background: rgba(255, 252, 246, 0.72);
+  background:
+    rgba(
+      255,
+      252,
+      246,
+      0.72
+    );
 }
 
 .growth__plan.is-featured {
-  border-color: rgba(91, 33, 182, 0.65);
+  z-index: 1;
 
-  background: rgba(91, 33, 182, 0.035);
+  min-height: 455px;
+
+  margin-top: -12px;
+
+  border:
+    1px solid
+    var(--purple);
+
+  border-radius: 2px;
+
+  background:
+    var(--purple);
+
+  color: var(--cream);
+
+  box-shadow:
+    0 28px 70px
+    rgba(
+      17,
+      11,
+      26,
+      0.16
+    );
 }
 
 .growth__plan.is-featured:hover {
-  border-color: var(--purple);
+  transform:
+    translateY(-12px);
 }
 
+/* =========================================================
+   PLAN INDEX
+   ========================================================= */
+
+.growth__plan-index {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 3rem;
+
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.3
+    );
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 0.12em;
+}
+
+.growth__plan-index span:first-child {
+  color: var(--purple);
+}
+
+.growth__plan.is-featured
+.growth__plan-index {
+  color:
+    rgba(
+      245,
+      240,
+      230,
+      0.45
+    );
+}
+
+.growth__plan.is-featured
+.growth__plan-index
+span:first-child {
+  color: var(--yellow);
+}
 
 /* =========================================================
    PLAN TOP
@@ -309,7 +643,6 @@
 
 .growth__plan-top {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
 
@@ -320,8 +653,13 @@
   color: var(--purple);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.56rem;
+  font-size: 0.58rem;
   letter-spacing: 0.15em;
+}
+
+.growth__plan.is-featured
+.growth__plan-name {
+  color: var(--yellow);
 }
 
 .growth__plan-tag {
@@ -329,18 +667,36 @@
     0.3rem
     0.5rem;
 
-  border: 1px solid rgba(17, 11, 26, 0.12);
-  border-radius: 999px;
+  border:
+    1px solid
+    rgba(
+      17,
+      11,
+      26,
+      0.15
+    );
 
-  background: transparent;
+  border-radius: 999px;
 
   color: var(--ink);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.44rem;
+  font-size: 0.4rem;
   letter-spacing: 0.08em;
 }
 
+.growth__plan.is-featured
+.growth__plan-tag {
+  border-color:
+    rgba(
+      245,
+      240,
+      230,
+      0.2
+    );
+
+  color: var(--cream);
+}
 
 /* =========================================================
    PRICE
@@ -348,7 +704,6 @@
 
 .growth__plan-price {
   display: flex;
-
   align-items: baseline;
 
   margin-top: 3.4rem;
@@ -356,8 +711,11 @@
 
 .growth__plan-price strong {
   font-family: 'Playfair Display', serif;
-
-  font-size: clamp(3.2rem, 4vw, 4.5rem);
+  font-size: clamp(
+    3.2rem,
+    4vw,
+    4.5rem
+  );
 
   font-weight: 400;
   line-height: 0.95;
@@ -368,30 +726,63 @@
 .growth__plan-price span {
   margin-left: 0.4rem;
 
-  color: rgba(17, 11, 26, 0.42);
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.42
+    );
 
   font-family: 'DM Mono', monospace;
   font-size: 0.56rem;
   letter-spacing: 0.04em;
 }
 
+.growth__plan.is-featured
+.growth__plan-price span {
+  color:
+    rgba(
+      245,
+      240,
+      230,
+      0.48
+    );
+}
 
 /* =========================================================
    PLAN CONTENT
    ========================================================= */
 
 .growth__plan-description {
-  max-width: 270px;
+  max-width: 280px;
 
   margin:
     1.4rem
     0
     2rem;
 
-  color: rgba(17, 11, 26, 0.55);
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.55
+    );
 
   font-size: 0.76rem;
   line-height: 1.65;
+}
+
+.growth__plan.is-featured
+.growth__plan-description {
+  color:
+    rgba(
+      245,
+      240,
+      230,
+      0.64
+    );
 }
 
 .growth__plan-list {
@@ -408,14 +799,30 @@
 
 .growth__plan-list li {
   display: flex;
-
   align-items: center;
 
   gap: 0.65rem;
 
-  color: rgba(17, 11, 26, 0.68);
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.68
+    );
 
   font-size: 0.71rem;
+}
+
+.growth__plan.is-featured
+.growth__plan-list li {
+  color:
+    rgba(
+      245,
+      240,
+      230,
+      0.75
+    );
 }
 
 .growth__plan-list li span {
@@ -425,6 +832,10 @@
   font-size: 0.65rem;
 }
 
+.growth__plan.is-featured
+.growth__plan-list li span {
+  color: var(--yellow);
+}
 
 /* =========================================================
    PLAN LINK
@@ -432,7 +843,6 @@
 
 .growth__plan-link {
   display: inline-flex;
-
   align-items: center;
 
   gap: 0.6rem;
@@ -451,6 +861,11 @@
   text-decoration: none;
 }
 
+.growth__plan.is-featured
+.growth__plan-link {
+  color: var(--cream);
+}
+
 .growth__plan-link span {
   color: var(--purple);
 
@@ -458,6 +873,11 @@
 
   transition:
     transform 300ms ease;
+}
+
+.growth__plan.is-featured
+.growth__plan-link span {
+  color: var(--yellow);
 }
 
 .growth__plan-link:hover span {
@@ -468,16 +888,54 @@
     );
 }
 
-
 /* =========================================================
-   NOTE
+   MAINTENANCE BOTTOM
    ========================================================= */
 
-.growth__maintenance-note {
-  margin:
-    1.5rem
-    0
-    0;
+.growth__maintenance-bottom {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    minmax(
+      260px,
+      420px
+    );
+
+  align-items: start;
+
+  gap: 2rem;
+
+  margin-top: 1.8rem;
+
+  padding-top: 1.2rem;
+
+  border-top:
+    1px solid
+    rgba(
+      17,
+      11,
+      26,
+      0.1
+    );
+}
+
+.growth__maintenance-bottom > span {
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.35
+    );
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.43rem;
+  letter-spacing: 0.13em;
+}
+
+.growth__maintenance-bottom p {
+  margin: 0;
 
   color:
     rgba(
@@ -487,26 +945,22 @@
       0.38
     );
 
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   line-height: 1.6;
 }
 
-
 /* =========================================================
-   MOBILE
+   TABLET
    ========================================================= */
 
 @media (max-width: 850px) {
   .growth__story {
-    height: 320vh;
+    height: 280vh;
   }
 
   .growth__messages {
-    width: calc(100% - 2.5rem);
-  }
-
-  .growth__message {
-    width: 100%;
+    width:
+      calc(100% - 2.5rem);
   }
 
   .growth__message h2 {
@@ -549,16 +1003,33 @@
 
   .growth__plans {
     grid-template-columns: 1fr;
-
     gap: 0.8rem;
   }
 
-  .growth__plan {
+  .growth__plan,
+  .growth__plan.is-featured {
     min-height: 390px;
+
+    margin-top: 0;
 
     padding: 1.5rem;
 
-    border-radius: 18px;
+    border:
+      1px solid
+      rgba(
+        17,
+        11,
+        26,
+        0.14
+      );
+
+    border-radius: 14px;
+  }
+
+  .growth__plan.is-featured {
+    background: var(--purple);
+
+    border-color: var(--purple);
   }
 
   .growth__plan-price {
@@ -568,8 +1039,13 @@
   .growth__plan-price strong {
     font-size: 3.4rem;
   }
-}
 
+  .growth__maintenance-bottom {
+    grid-template-columns: 1fr;
+
+    gap: 0.8rem;
+  }
+}
 
 /* =========================================================
    SMALL MOBILE
@@ -577,7 +1053,19 @@
 
 @media (max-width: 480px) {
   .growth__story {
-    height: 300vh;
+    height: 260vh;
+  }
+
+  .growth__story-meta {
+    top: 1.25rem;
+    left: 1rem;
+    right: 1rem;
+
+    font-size: 0.4rem;
+  }
+
+  .growth__story-meta span:first-child::before {
+    width: 18px;
   }
 
   .growth__message h2 {
@@ -589,8 +1077,80 @@
 
     line-height: 0.91;
   }
-}
 
+  .growth__message-number {
+    margin-bottom: 0.9rem;
+
+    font-size: 0.42rem;
+  }
+
+  .growth__story-progress {
+    left: 1rem;
+    bottom: 1.25rem;
+  }
+
+  .growth__story-progress span {
+    width: 12px;
+  }
+
+  .growth__story-progress span.is-active {
+    width: 28px;
+  }
+
+  .growth__story-scroll {
+    right: 1rem;
+    bottom: 1.25rem;
+
+    font-size: 0.38rem;
+  }
+
+  .growth__maintenance {
+    padding:
+      5rem
+      1rem
+      3.5rem;
+  }
+
+  .growth__maintenance-header h2 {
+    font-size: 2.8rem;
+  }
+
+  .growth__maintenance-eyebrow {
+    font-size: 0.48rem;
+  }
+
+  .growth__maintenance-header p {
+    font-size: 0.72rem;
+  }
+
+  .growth__plan {
+    min-height: 370px;
+  }
+
+  .growth__plan.is-featured {
+    min-height: 390px;
+  }
+
+  .growth__plan-price strong {
+    font-size: 3rem;
+  }
+
+  .growth__plan-description {
+    font-size: 0.7rem;
+  }
+
+  .growth__plan-list li {
+    font-size: 0.66rem;
+  }
+
+  .growth__maintenance-bottom {
+    display: block;
+  }
+
+  .growth__maintenance-bottom p {
+    margin-top: 0.8rem;
+  }
+}
 
 /* =========================================================
    REDUCED MOTION
@@ -599,6 +1159,7 @@
 @media (prefers-reduced-motion: reduce) {
   .growth__story-background,
   .growth__message,
+  .growth__story-progress span,
   .growth__plan,
   .growth__plan-link span {
     transition: none;
@@ -610,5 +1171,9 @@
 
   .growth__message {
     filter: none;
+  }
+
+  .growth__story-scroll > span {
+    animation: none;
   }
 }
