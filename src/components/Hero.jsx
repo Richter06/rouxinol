@@ -1,81 +1,27 @@
 import { useEffect, useState } from 'react'
+
 import '../styles/hero.css'
 
 const words = [
   'crescer',
-  'lucrar',
   'aparecer',
-  'desenvolver',
-  'expandir',
-]
-
-const testimonials = [
-  {
-    quote:
-      'A Rouxinol transformou uma ideia que eu tinha em algo que finalmente conseguia mostrar para meus clientes.',
-    name: 'Nome do cliente',
-    business: 'Negócio / segmento',
-  },
-  {
-    quote:
-      'Agora minha empresa tem uma presença digital que realmente representa o que eu faço.',
-    name: 'Nome do cliente',
-    business: 'Negócio / segmento',
-  },
-  {
-    quote:
-      'Eu sabia que precisava melhorar minha presença online, mas não sabia por onde começar. A Rouxinol ajudou a organizar tudo.',
-    name: 'Nome do cliente',
-    business: 'Negócio / segmento',
-  },
+  'vender',
+  'organizar',
+  'começar',
 ]
 
 const HERO_BACKGROUND = '/assets/hero-background.jpg'
 
 export default function Hero() {
   const [wordIndex, setWordIndex] = useState(0)
-  const [testimonialIndex, setTestimonialIndex] = useState(0)
-  const [mousePosition, setMousePosition] = useState({
-    x: 50,
-    y: 50,
-  })
 
   useEffect(() => {
-    const wordInterval = setInterval(() => {
+    const interval = setInterval(() => {
       setWordIndex((current) => (current + 1) % words.length)
     }, 2800)
 
-    return () => clearInterval(wordInterval)
+    return () => clearInterval(interval)
   }, [])
-
-  useEffect(() => {
-    const testimonialInterval = setInterval(() => {
-      setTestimonialIndex((current) => (current + 1) % testimonials.length)
-    }, 5000)
-
-    return () => clearInterval(testimonialInterval)
-  }, [])
-
-  function handleButtonMouseMove(event) {
-    const rect = event.currentTarget.getBoundingClientRect()
-
-    const x = ((event.clientX - rect.left) / rect.width) * 100
-    const y = ((event.clientY - rect.top) / rect.height) * 100
-
-    setMousePosition({
-      x,
-      y,
-    })
-  }
-
-  function handleButtonMouseLeave() {
-    setMousePosition({
-      x: 50,
-      y: 50,
-    })
-  }
-
-  const testimonial = testimonials[testimonialIndex]
 
   return (
     <section
@@ -101,115 +47,106 @@ export default function Hero() {
         <a
           href="/"
           className="hero__brand"
-          aria-label="Rouxinol — início"
+          aria-label="Rouxinol, início"
         >
-          ROUXINOL
+          <span className="hero__brand-mark">
+            R
+          </span>
+
+          <span className="hero__brand-name">
+            ROUXINOL
+          </span>
         </a>
+
+        <span className="hero__header-label">
+          PRESENÇA DIGITAL / SOLUÇÕES DIGITAIS
+        </span>
       </header>
 
-      <div className="hero__layout">
-        {/* ESQUERDA */}
-        <div className="hero__aside">
-          <div className="hero__testimonials">
-            <div className="hero__testimonials-header">
-              <span className="hero__testimonials-label">
-                O QUE ESTÃO DIZENDO
-              </span>
+      <div className="hero__content">
+        <div className="hero__main">
+          <div className="hero__headline">
 
-              <span className="hero__testimonials-count">
-                0{testimonialIndex + 1} / 0{testimonials.length}
-              </span>
-            </div>
+            <p className="hero__bird">
+              UM PASSARINHO
+              <span>ME CONTOU.</span>
+            </p>
 
-            <div
-              className="hero__testimonial"
-              key={testimonialIndex}
+            <h1
+              className="hero__title"
+              id="hero-title"
             >
-              <div className="hero__stars">
-                ★ ★ ★ ★ ★
-              </div>
+              <span className="hero__title-line">
+                Que seu negócio
+              </span>
 
-              <blockquote className="hero__quote">
-                “{testimonial.quote}”
-              </blockquote>
-
-              <div className="hero__author">
-                <span className="hero__author-name">
-                  {testimonial.name}
+              <span className="hero__title-line hero__title-line--accent">
+                quer
+                <span className="hero__word-slot">
+                  <span
+                    key={words[wordIndex]}
+                    className="hero__word"
+                  >
+                    {words[wordIndex]}
+                  </span>
                 </span>
-
-                <span className="hero__author-business">
-                  {testimonial.business}
+                <span className="hero__dot">
+                  .
                 </span>
-              </div>
-            </div>
+              </span>
+            </h1>
+          </div>
 
-            <div className="hero__testimonial-progress">
-              {testimonials.map((_, index) => (
-                <span
-                  key={index}
-                  className={
-                    index === testimonialIndex
-                      ? 'is-active'
-                      : ''
-                  }
-                />
-              ))}
-            </div>
+          <div className="hero__statement">
+            <p className="hero__statement-lead">
+              E, sinceramente?
+            </p>
+
+            <p className="hero__statement-text">
+              Já estava na hora.
+            </p>
+          </div>
+        </div>
+
+        <div className="hero__bottom">
+          <div className="hero__description">
+            <span className="hero__description-label">
+              ROUXINOL
+            </span>
+
+            <p>
+              Sites, lojas e soluções digitais
+              para negócios que têm alguma
+              coisa para mostrar.
+            </p>
           </div>
 
           <a
             href="#necessidades"
             className="hero__cta"
-            onMouseMove={handleButtonMouseMove}
-            onMouseLeave={handleButtonMouseLeave}
-            style={{
-              '--mouse-x': `${mousePosition.x}%`,
-              '--mouse-y': `${mousePosition.y}%`,
-            }}
           >
-            <span className="hero__cta-inner">
-              <span className="hero__cta-label">
-                QUERO COMEÇAR
-              </span>
+            <span className="hero__cta-label">
+              QUERO COMEÇAR
+            </span>
 
-              <span className="hero__cta-arrow">
-                ↗
-              </span>
+            <span
+              className="hero__cta-arrow"
+              aria-hidden="true"
+            >
+              ↗
             </span>
           </a>
-        </div>
 
-        {/* DIREITA */}
-        <div className="hero__content">
-          <h1
-            className="hero__title"
-            id="hero-title"
+          <div
+            className="hero__scroll"
+            aria-hidden="true"
           >
-            <span className="hero__title-line">
-              Um passarinho
-            </span>
+            <span className="hero__scroll-line" />
 
-            <span className="hero__title-line hero__title-line--indent">
-              me contou
+            <span className="hero__scroll-text">
+              DESCUBRA
             </span>
-
-            <span className="hero__title-line">
-              que você quer
-            </span>
-
-            <span className="hero__title-line hero__title-line--accent">
-              <span className="hero__word-slot">
-                <span
-                  key={words[wordIndex]}
-                  className="hero__word"
-                >
-                  {words[wordIndex]}
-                  <span className="hero__dot">.</span>
-                </span>
-              </span>
-            </span>
-          </h1>
+          </div>
         </div>
       </div>
     </section>

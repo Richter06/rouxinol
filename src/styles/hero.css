@@ -5,13 +5,11 @@
 .hero {
   position: relative;
   min-height: 100svh;
-
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
-
-  background: var(--purple-deep);
+  background: var(--ink);
+  color: var(--cream);
 }
 
 /* =========================================================
@@ -21,83 +19,48 @@
 .hero__background {
   position: absolute;
   inset: 0;
-
   z-index: 0;
-
   overflow: hidden;
-
   pointer-events: none;
 }
-
-/* =========================================================
-   IMAGEM
-   ========================================================= */
 
 .hero__image {
   position: absolute;
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  transform: scale(1.02);
 }
-
-/* =========================================================
-   OVERLAY
-   ========================================================= */
 
 .hero__overlay {
   position: absolute;
   inset: 0;
-
   background:
     linear-gradient(
       90deg,
-      rgba(34, 8, 63, 0.90) 0%,
-      rgba(34, 8, 63, 0.70) 30%,
-      rgba(34, 8, 63, 0.30) 58%,
-      rgba(34, 8, 63, 0.08) 100%
+      rgba(34, 8, 63, 0.96) 0%,
+      rgba(34, 8, 63, 0.84) 28%,
+      rgba(34, 8, 63, 0.52) 58%,
+      rgba(34, 8, 63, 0.16) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(17, 11, 26, 0.25) 0%,
-      transparent 45%,
-      rgba(17, 11, 26, 0.20) 100%
+      rgba(17, 11, 26, 0.34) 0%,
+      transparent 42%,
+      rgba(17, 11, 26, 0.56) 100%
     );
 }
-
-/* =========================================================
-   GRAIN
-   ========================================================= */
 
 .hero__grain {
   position: absolute;
   inset: 0;
-
-  opacity: 0.04;
-
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-
   pointer-events: none;
 }
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
-.hero {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--cream);
-}
-
 
 /* =========================================================
    HEADER
@@ -106,392 +69,310 @@
 .hero__header {
   position: relative;
   z-index: 5;
-  width: 100%;
-  padding: 30px clamp(24px, 4vw, 64px);
-}
-
-.hero__brand {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  color: var(--cream);
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-decoration: none;
-}
-
-.hero__brand::after {
-  content: '';
-  width: 24px;
-  height: 3px;
-  margin-left: 11px;
-  background: var(--yellow);
-  transform-origin: left center;
-  transition:
-    width 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.hero__brand:hover::after {
-  width: 34px;
-  transform: translateX(2px);
-}
-
-
-/* =========================================================
-   LAYOUT
-   ========================================================= */
-
-.hero__layout {
-  position: relative;
-  z-index: 3;
-  flex: 1;
-
-  display: grid;
-  grid-template-columns:
-    minmax(260px, 0.68fr)
-    minmax(600px, 1.7fr);
-
-  align-items: center;
-
-  gap: clamp(50px, 7vw, 130px);
-
-  padding:
-    3vh
-    clamp(24px, 6vw, 100px)
-    8vh;
-}
-
-
-/* =========================================================
-   LEFT / SUPPORTING CONTENT
-   ========================================================= */
-
-.hero__aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  width: 100%;
-  max-width: 370px;
-
-  justify-self: start;
-}
-
-
-/* =========================================================
-   TESTIMONIAL HEADER
-   ========================================================= */
-
-.hero__testimonials {
-  width: 100%;
-}
-
-.hero__testimonials-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
-
-  padding-bottom: 13px;
-
-  border-bottom: 1px solid
-    rgba(245, 240, 230, 0.18);
+  padding:
+    28px
+    clamp(24px, 5vw, 76px);
 }
 
-.hero__testimonials-label {
+.hero__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 190px;
+  color: var(--cream);
+  text-decoration: none;
+}
+
+.hero__brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(245, 240, 230, 0.45);
+  border-radius: 50%;
   color: var(--yellow);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.58rem;
-  font-weight: 400;
-  letter-spacing: 0.15em;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 600;
+  transition:
+    background-color 350ms ease,
+    color 350ms ease,
+    border-color 350ms ease;
 }
 
-.hero__testimonials-count {
-  color: rgba(245, 240, 230, 0.42);
+/*
+  Espaço reservado para a futura logo.
+  O "R" pode ser substituído pelo símbolo definitivo.
+*/
 
-  font-family: 'DM Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
+.hero__brand-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
 }
 
+.hero__brand:hover .hero__brand-mark {
+  border-color: var(--yellow);
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.hero__header-label {
+  color: rgba(245, 240, 230, 0.48);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.13em;
+  text-align: right;
+}
 
 /* =========================================================
-   TESTIMONIAL
+   CONTENT
    ========================================================= */
 
-.hero__testimonial {
-  min-height: 260px;
-
+.hero__content {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
   padding:
-    27px
-    0
-    20px;
+    5vh
+    clamp(24px, 6vw, 100px)
+    5vh;
+}
 
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.hero__main {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(230px, 0.32fr);
+  align-items: end;
+  gap: clamp(40px, 8vw, 150px);
+  width: 100%;
+  margin: auto 0;
+  padding:
+    5vh
+    0;
+}
+
+.hero__headline {
+  max-width: 1200px;
+}
+
+/* =========================================================
+   BIRD
+   ========================================================= */
+
+.hero__bird {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin:
+    0
+    0
+    clamp(24px, 3vw, 42px);
+  color: var(--yellow);
+  font-family:
+    'Playfair Display',
+    serif;
+  font-size:
+    clamp(1.65rem, 2.8vw, 3rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.hero__bird span {
+  margin-left: clamp(2rem, 4vw, 65px);
+  color: var(--cream);
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.hero__title {
+  max-width: 1150px;
+  margin: 0;
+  color: var(--cream);
+  font-size:
+    clamp(4rem, 8.6vw, 10.5rem);
+  font-weight: 500;
+  line-height: 0.83;
+  letter-spacing: -0.075em;
+}
+
+.hero__title-line {
+  display: block;
+}
+
+.hero__title-line--accent {
+  margin-left:
+    clamp(2rem, 8vw, 130px);
+  font-family:
+    'Playfair Display',
+    serif;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.hero__word-slot {
+  display: inline-block;
+  min-width: 4.2ch;
+  color: var(--yellow);
+}
+
+.hero__word {
+  display: inline-block;
   animation:
-    testimonialEnter
+    heroWordEnter
     700ms
     cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes testimonialEnter {
-  from {
-    opacity: 0;
-    transform:
-      translateY(14px);
-  }
-
-  to {
-    opacity: 1;
-    transform:
-      translateY(0);
-  }
-}
-
-.hero__stars {
-  margin-bottom: 20px;
-
+.hero__dot {
   color: var(--yellow);
-
-  font-size: 0.67rem;
-  letter-spacing: 0.16em;
 }
 
-.hero__quote {
+/* =========================================================
+   STATEMENT
+   ========================================================= */
+
+.hero__statement {
+  align-self: end;
+  max-width: 280px;
+  padding-bottom: 8px;
+}
+
+.hero__statement-lead {
   margin: 0;
-
-  color: var(--cream);
-
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.25rem, 1.45vw, 1.62rem);
-  font-style: italic;
-  font-weight: 500;
-
-  line-height: 1.34;
-  letter-spacing: -0.025em;
-}
-
-.hero__author {
-  display: flex;
-  flex-direction: column;
-
-  margin-top: 25px;
-}
-
-.hero__author-name {
-  color: var(--cream);
-
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
-.hero__author-business {
-  margin-top: 4px;
-
-  color: rgba(245, 240, 230, 0.42);
-
+  color: rgba(245, 240, 230, 0.62);
   font-family: 'DM Mono', monospace;
-  font-size: 0.54rem;
-  letter-spacing: 0.08em;
+  font-size: 0.61rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
+.hero__statement-text {
+  margin:
+    12px
+    0
+    0;
+  color: var(--cream);
+  font-family:
+    'Playfair Display',
+    serif;
+  font-size:
+    clamp(1.7rem, 2.5vw, 2.7rem);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
 
 /* =========================================================
-   TESTIMONIAL PROGRESS
+   BOTTOM
    ========================================================= */
 
-.hero__testimonial-progress {
-  display: flex;
-  gap: 5px;
-
+.hero__bottom {
+  display: grid;
+  grid-template-columns:
+    minmax(240px, 0.8fr)
+    auto
+    minmax(100px, 0.35fr);
+  align-items: end;
+  gap: 40px;
   width: 100%;
 }
 
-.hero__testimonial-progress span {
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.hero__description {
+  max-width: 350px;
+}
+
+.hero__description-label {
   display: block;
-
-  width: 24px;
-  height: 2px;
-
-  background:
-    rgba(245, 240, 230, 0.18);
-
-  transition:
-    width 600ms
-      cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 400ms ease;
+  margin-bottom: 14px;
+  color: rgba(245, 240, 230, 0.4);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.51rem;
+  letter-spacing: 0.13em;
 }
 
-.hero__testimonial-progress span.is-active {
-  width: 48px;
-  background: var(--yellow);
+.hero__description p {
+  max-width: 330px;
+  margin: 0;
+  color: rgba(245, 240, 230, 0.76);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
-
 
 /* =========================================================
    CTA
    ========================================================= */
 
 .hero__cta {
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-
-  position: relative;
-
-  display: block;
-
-  width: 228px;
-  height: 64px;
-
-  margin-top: 38px;
-
-  padding: 1px;
-
-  border-radius: 999px;
-
-  background:
-    linear-gradient(
-      110deg,
-      var(--yellow),
-      var(--purple) 48%,
-      var(--yellow)
-    );
-
-  isolation: isolate;
-
-  text-decoration: none;
-
-  transition:
-    transform 500ms
-      cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-
-/* =========================================================
-   CTA INNER
-   ========================================================= */
-
-.hero__cta-inner {
-  position: relative;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
-
-  width: 100%;
-  height: 100%;
-
+  width: 224px;
+  height: 62px;
   padding:
-    0
     7px
-    0
-    25px;
-
-  overflow: hidden;
-
-  border-radius: inherit;
-
-  background:
-    rgba(17, 11, 26, 0.97);
-
+    7px
+    7px
+    24px;
+  border: 1px solid rgba(246, 201, 69, 0.72);
+  border-radius: 999px;
+  background: rgba(17, 11, 26, 0.58);
   color: var(--cream);
-}
-
-
-/* =========================================================
-   CTA MOUSE LIGHT
-   ========================================================= */
-
-.hero__cta-inner::before {
-  content: '';
-
-  position: absolute;
-
-  top: var(--mouse-y);
-  left: var(--mouse-x);
-
-  width: 110px;
-  height: 110px;
-
-  border-radius: 50%;
-
-  background:
-    var(--yellow);
-
-  opacity: 0;
-
-  filter: blur(38px);
-
-  transform:
-    translate(-50%, -50%);
-
-  pointer-events: none;
-
+  text-decoration: none;
+  backdrop-filter: blur(10px);
   transition:
-    opacity 450ms ease;
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 350ms ease,
+    border-color 350ms ease;
 }
-
-
-/* =========================================================
-   CTA LABEL
-   ========================================================= */
 
 .hero__cta-label {
-  position: relative;
-  z-index: 1;
-
   font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
-  font-weight: 400;
-
-  letter-spacing: 0.14em;
+  font-size: 0.58rem;
+  letter-spacing: 0.13em;
 }
-
-
-/* =========================================================
-   CTA ARROW
-   ========================================================= */
 
 .hero__cta-arrow {
-  position: relative;
-  z-index: 1;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 46px;
   height: 46px;
-
   border-radius: 50%;
-
   background: var(--yellow);
   color: var(--ink);
-
   font-size: 1rem;
-
   transition:
-    transform 550ms
-      cubic-bezier(0.22, 1, 0.36, 1);
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-
-
-/* =========================================================
-   CTA HOVER
-   ========================================================= */
 
 .hero__cta:hover {
-  transform:
-    translateY(-4px);
-}
-
-.hero__cta:hover .hero__cta-inner::before {
-  opacity: 0.13;
+  transform: translateY(-4px);
+  border-color: var(--yellow);
+  background: rgba(17, 11, 26, 0.78);
 }
 
 .hero__cta:hover .hero__cta-arrow {
@@ -506,305 +387,262 @@
     scale(0.985);
 }
 
-
 /* =========================================================
-   MAIN CONTENT
+   SCROLL
    ========================================================= */
 
-.hero__content {
+.hero__scroll {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
-  width: 100%;
-  padding: 0;
+  gap: 13px;
+  color: rgba(245, 240, 230, 0.42);
 }
 
-.hero__title {
-  width: 100%;
-  max-width: 1120px;
-
-  margin: 0;
-
-  color: var(--cream);
-
-  font-size:
-    clamp(4rem, 7.2vw, 9rem);
-
-  font-weight: 500;
-
-  line-height: 0.86;
-
-  letter-spacing: -0.068em;
-
-  text-align: left;
+.hero__scroll-line {
+  width: 48px;
+  height: 1px;
+  background: rgba(245, 240, 230, 0.3);
 }
 
-.hero__title-line {
-  display: block;
+.hero__scroll-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.15em;
 }
-
-.hero__title-line--indent {
-  margin-left:
-    clamp(2.5vw, 5.5vw, 90px);
-
-  font-family:
-    'Playfair Display',
-    serif;
-
-  font-style: italic;
-  font-weight: 500;
-}
-
-.hero__title-line--accent {
-  margin-left:
-    clamp(5vw, 11vw, 180px);
-
-  color: var(--yellow);
-
-  font-family:
-    'Playfair Display',
-    serif;
-
-  font-style: italic;
-  font-weight: 500;
-
-  line-height: 0.98;
-}
-
 
 /* =========================================================
-   DYNAMIC WORD
+   ANIMATION
    ========================================================= */
-
-.hero__word-slot {
-  display: inline-block;
-
-  min-width: 3ch;
-}
-
-.hero__word {
-  display: inline-block;
-
-  animation:
-    heroWordEnter
-    700ms
-    cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.hero__dot {
-  margin-left: 0.035em;
-}
 
 @keyframes heroWordEnter {
   from {
     opacity: 0;
-    transform:
-      translateY(0.4em);
+    transform: translateY(0.38em);
   }
 
   to {
     opacity: 1;
-    transform:
-      translateY(0);
+    transform: translateY(0);
   }
 }
-
 
 /* =========================================================
    TABLET
    ========================================================= */
 
 @media (max-width: 1100px) {
-  .hero__layout {
-    grid-template-columns:
-      minmax(230px, 0.65fr)
-      minmax(480px, 1.35fr);
-
-    gap: 45px;
-
+  .hero__content {
     padding-left: 42px;
     padding-right: 42px;
   }
 
+  .hero__main {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(190px, 0.3fr);
+    gap: 50px;
+  }
+
   .hero__title {
     font-size:
-      clamp(3.5rem, 7.4vw, 6.5rem);
+      clamp(3.8rem, 8.5vw, 7.5rem);
   }
 
-  .hero__quote {
-    font-size: 1.25rem;
+  .hero__bottom {
+    grid-template-columns:
+      1fr
+      auto
+      auto;
   }
 }
-
 
 /* =========================================================
    SMALL TABLET
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 850px) {
   .hero__header {
-    padding: 25px 26px;
+    padding:
+      24px
+      28px;
   }
 
-  .hero__layout {
+  .hero__content {
+    padding:
+      6vh
+      28px
+      4vh;
+  }
+
+  .hero__main {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .hero__statement {
+    max-width: 400px;
+    margin-left:
+      clamp(2rem, 8vw, 100px);
+  }
+
+  .hero__bottom {
     grid-template-columns:
-      minmax(210px, 0.62fr)
-      minmax(400px, 1.38fr);
-
-    gap: 32px;
-
-    padding-left: 26px;
-    padding-right: 26px;
+      1fr
+      auto;
   }
 
-  .hero__title {
-    font-size:
-      clamp(3.25rem, 8vw, 5.8rem);
-  }
-
-  .hero__cta {
-    width: 215px;
+  .hero__scroll {
+    display: none;
   }
 }
-
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 760px) {
+@media (max-width: 650px) {
   .hero {
     min-height: 100svh;
   }
 
   .hero__header {
-    padding:
-      22px
-      20px;
+    padding: 20px;
   }
 
-  .hero__layout {
-    display: flex;
-    flex-direction: column-reverse;
+  .hero__brand {
+    min-width: auto;
+  }
 
-    justify-content: center;
-    align-items: stretch;
+  .hero__brand-mark {
+    width: 29px;
+    height: 29px;
+  }
 
-    gap: 34px;
+  .hero__brand-name {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+  }
 
-    padding:
-      4vh
-      20px
-      6vh;
+  .hero__header-label {
+    display: none;
   }
 
   .hero__content {
-    justify-content: flex-start;
+    justify-content: space-between;
+    padding:
+      4vh
+      20px
+      4vh;
+  }
+
+  .hero__main {
+    display: block;
+    margin: auto 0;
+    padding:
+      5vh
+      0;
+  }
+
+  .hero__bird {
+    margin-bottom: 26px;
+    font-size:
+      clamp(1.5rem, 7vw, 2.15rem);
+  }
+
+  .hero__bird span {
+    margin-left: 10vw;
   }
 
   .hero__title {
     font-size:
-      clamp(3.1rem, 15.2vw, 5.4rem);
-
-    line-height: 0.88;
-
-    letter-spacing: -0.075em;
-  }
-
-  .hero__title-line--indent {
-    margin-left: 7vw;
+      clamp(3.35rem, 15vw, 5.5rem);
+    line-height: 0.87;
+    letter-spacing: -0.078em;
   }
 
   .hero__title-line--accent {
-    margin-left: 15vw;
+    margin-left: 7vw;
   }
 
-  .hero__aside {
-    max-width: 100%;
-  }
-
-  .hero__testimonials {
-    max-width: 440px;
-  }
-
-  .hero__testimonial {
-    min-height: auto;
-
-    padding:
-      20px
+  .hero__statement {
+    max-width: 250px;
+    margin:
+      35px
       0
-      16px;
+      0
+      15vw;
   }
 
-  .hero__quote {
-    font-size: 1.18rem;
+  .hero__statement-text {
+    font-size: 1.9rem;
+  }
+
+  .hero__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .hero__description {
+    max-width: 310px;
+  }
+
+  .hero__description p {
+    font-size: 0.82rem;
   }
 
   .hero__cta {
-    width: 208px;
-    height: 60px;
-
-    margin-top: 24px;
-  }
-
-  .hero__cta-inner {
-    padding-left: 21px;
-  }
-
-  .hero__cta-label {
-    font-size: 0.57rem;
-  }
-
-  .hero__cta-arrow {
-    width: 43px;
-    height: 43px;
-
-    font-size: 0.92rem;
+    width: 210px;
+    height: 59px;
   }
 
   .hero__image {
-    background-position: 58% center;
+    background-position: 60% center;
   }
 
   .hero__overlay {
     background:
       linear-gradient(
         90deg,
-        rgba(34, 8, 63, 0.9) 0%,
-        rgba(34, 8, 63, 0.64) 52%,
-        rgba(34, 8, 63, 0.18) 100%
+        rgba(34, 8, 63, 0.97) 0%,
+        rgba(34, 8, 63, 0.76) 52%,
+        rgba(34, 8, 63, 0.3) 100%
       ),
       linear-gradient(
         180deg,
         rgba(17, 11, 26, 0.3) 0%,
-        transparent 45%,
-        rgba(17, 11, 26, 0.25) 100%
+        transparent 42%,
+        rgba(17, 11, 26, 0.62) 100%
       );
   }
 }
-
 
 /* =========================================================
    VERY SMALL MOBILE
    ========================================================= */
 
-@media (max-width: 430px) {
+@media (max-width: 400px) {
   .hero__title {
     font-size:
-      clamp(2.9rem, 15vw, 4.35rem);
+      clamp(3rem, 14.8vw, 4.3rem);
   }
 
-  .hero__quote {
-    font-size: 1.08rem;
+  .hero__bird {
+    font-size: 1.42rem;
   }
 
-  .hero__testimonial {
-    padding-top: 17px;
+  .hero__statement {
+    margin-top: 28px;
   }
 
-  .hero__stars {
-    margin-bottom: 16px;
+  .hero__statement-text {
+    font-size: 1.65rem;
+  }
+
+  .hero__description p {
+    font-size: 0.78rem;
   }
 
   .hero__cta {
@@ -812,26 +650,18 @@
   }
 }
 
-
 /* =========================================================
    REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .hero__word,
-  .hero__testimonial {
+  .hero__word {
     animation: none;
   }
 
-  .hero__brand::after,
+  .hero__brand-mark,
   .hero__cta,
-  .hero__cta-inner::before,
-  .hero__cta-arrow,
-  .hero__testimonial-progress span {
+  .hero__cta-arrow {
     transition: none;
   }
 }
