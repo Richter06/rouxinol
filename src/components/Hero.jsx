@@ -3,21 +3,49 @@ import { useEffect, useState } from 'react'
 import '../styles/hero.css'
 
 const words = [
-  'crescer',
   'aparecer',
+  'crescer',
   'vender',
   'organizar',
   'começar',
 ]
 
-const HERO_BACKGROUND = '/assets/hero-background.jpg'
+const services = [
+  {
+    id: 'site',
+    label: 'SITE',
+    position: 'top-left',
+  },
+  {
+    id: 'loja',
+    label: 'LOJA',
+    position: 'top-right',
+  },
+  {
+    id: 'catalogo',
+    label: 'CATÁLOGO',
+    position: 'middle-left',
+  },
+  {
+    id: 'sistema',
+    label: 'SISTEMA',
+    position: 'middle-right',
+  },
+  {
+    id: 'solucao',
+    label: 'SUA IDEIA',
+    position: 'bottom',
+  },
+]
 
 export default function Hero() {
   const [wordIndex, setWordIndex] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setWordIndex((current) => (current + 1) % words.length)
+      setWordIndex(
+        (current) => (current + 1) % words.length,
+      )
     }, 2800)
 
     return () => clearInterval(interval)
@@ -32,14 +60,7 @@ export default function Hero() {
         className="hero__background"
         aria-hidden="true"
       >
-        <div
-          className="hero__image"
-          style={{
-            backgroundImage: `url(${HERO_BACKGROUND})`,
-          }}
-        />
-
-        <div className="hero__overlay" />
+        <div className="hero__wash" />
         <div className="hero__grain" />
       </div>
 
@@ -49,10 +70,6 @@ export default function Hero() {
           className="hero__brand"
           aria-label="Rouxinol, início"
         >
-          <span className="hero__brand-mark">
-            R
-          </span>
-
           <span className="hero__brand-name">
             ROUXINOL
           </span>
@@ -64,62 +81,37 @@ export default function Hero() {
       </header>
 
       <div className="hero__content">
-        <div className="hero__main">
-          <div className="hero__headline">
+        <div className="hero__intro">
+          <p className="hero__bird">
+            UM PASSARINHO
+            <span>ME CONTOU.</span>
+          </p>
 
-            <p className="hero__bird">
-              UM PASSARINHO
-              <span>ME CONTOU.</span>
-            </p>
-
-            <h1
-              className="hero__title"
-              id="hero-title"
-            >
-              <span className="hero__title-line">
-                Que seu negócio
-              </span>
-
-              <span className="hero__title-line hero__title-line--accent">
-                quer
-                <span className="hero__word-slot">
-                  <span
-                    key={words[wordIndex]}
-                    className="hero__word"
-                  >
-                    {words[wordIndex]}
-                  </span>
-                </span>
-                <span className="hero__dot">
-                  .
+          <h1
+            className="hero__title"
+            id="hero-title"
+          >
+            Que seu negócio
+            <span className="hero__title-accent">
+              quer{' '}
+              <span className="hero__word-slot">
+                <span
+                  key={words[wordIndex]}
+                  className="hero__word"
+                >
+                  {words[wordIndex]}
                 </span>
               </span>
-            </h1>
-          </div>
-
-          <div className="hero__statement">
-            <p className="hero__statement-lead">
-              E, sinceramente?
-            </p>
-
-            <p className="hero__statement-text">
-              Já estava na hora.
-            </p>
-          </div>
-        </div>
-
-        <div className="hero__bottom">
-          <div className="hero__description">
-            <span className="hero__description-label">
-              ROUXINOL
+              .
             </span>
+          </h1>
 
-            <p>
-              Sites, lojas e soluções digitais
-              para negócios que têm alguma
-              coisa para mostrar.
-            </p>
-          </div>
+          <p className="hero__subtitle">
+            E ele provavelmente estava certo.
+            <span>
+              A gente só veio ajudar.
+            </span>
+          </p>
 
           <a
             href="#necessidades"
@@ -136,11 +128,52 @@ export default function Hero() {
               ↗
             </span>
           </a>
+        </div>
 
-          <div
-            className="hero__scroll"
-            aria-hidden="true"
-          >
+        <div
+          className="hero__network"
+          aria-hidden="true"
+        >
+          <div className="hero__network-orbit hero__network-orbit--outer" />
+          <div className="hero__network-orbit hero__network-orbit--inner" />
+
+          <div className="hero__network-line hero__network-line--one" />
+          <div className="hero__network-line hero__network-line--two" />
+          <div className="hero__network-line hero__network-line--three" />
+          <div className="hero__network-line hero__network-line--four" />
+          <div className="hero__network-line hero__network-line--five" />
+
+          {services.map((service) => (
+            <div
+              key={service.id}
+              className={`hero__service hero__service--${service.position}`}
+            >
+              <span className="hero__service-dot" />
+              <span className="hero__service-label">
+                {service.label}
+              </span>
+            </div>
+          ))}
+
+          <div className="hero__network-center">
+            <span className="hero__network-center-bird">
+              R
+            </span>
+
+            <span className="hero__network-center-name">
+              ROUXINOL
+            </span>
+          </div>
+        </div>
+
+        <div className="hero__bottom">
+          <p className="hero__description">
+            Sites, lojas e soluções digitais
+            para negócios que têm alguma
+            coisa para mostrar.
+          </p>
+
+          <div className="hero__scroll">
             <span className="hero__scroll-line" />
 
             <span className="hero__scroll-text">
