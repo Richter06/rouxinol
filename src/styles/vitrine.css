@@ -72,7 +72,7 @@
    HEADER
    ========================================================= */
 
-.section-kicker {
+.vitrine-kicker {
   display: inline-flex;
 
   align-items: center;
@@ -94,7 +94,7 @@
   flex-shrink: 0;
 }
 
-.section-kicker::before {
+.vitrine-kicker::before {
   content: '';
 
   width: 28px;
@@ -682,7 +682,7 @@
     padding-bottom: 1rem;
   }
 
-  .section-kicker {
+  .vitrine-kicker {
     margin-bottom: 0.5rem;
   }
 
@@ -752,7 +752,7 @@
       1rem;
   }
 
-  .section-kicker {
+  .vitrine-kicker {
     margin-bottom: 0.65rem;
 
     font-size: 0.56rem;
