@@ -1,0 +1,614 @@
+/* =========================================================
+   GROWTH
+   ========================================================= */
+
+.growth {
+  position: relative;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+
+/* =========================================================
+   STORY
+   ========================================================= */
+
+.growth__story {
+  position: relative;
+  height: 300vh;
+}
+
+.growth__story-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  min-height: 620px;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+
+/* =========================================================
+   STORY BACKGROUND
+   ========================================================= */
+
+.growth__story-background {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(17, 11, 26, 0.72) 0%,
+      rgba(17, 11, 26, 0.48) 50%,
+      rgba(17, 11, 26, 0.34) 100%
+    ),
+    url('/assets/growth-background.jpg')
+      center / cover
+      no-repeat;
+
+  transform: scale(1.03);
+  transition: transform 1.8s
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.growth.is-visible .growth__story-background {
+  transform: scale(1);
+}
+
+.growth__story-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 11, 26, 0.2),
+      transparent 40%,
+      rgba(17, 11, 26, 0.3)
+    );
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.growth__messages {
+  position: relative;
+  z-index: 2;
+
+  width: min(1200px, calc(100% - 10vw));
+  height: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.growth__message {
+  position: absolute;
+
+  width: 100%;
+  max-width: 1100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transform:
+    translate3d(0, 80px, 0)
+    scale(0.94);
+
+  filter: blur(12px);
+
+  pointer-events: none;
+
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.growth__message.is-active {
+  opacity: 1;
+
+  transform:
+    translate3d(0, 0, 0)
+    scale(1);
+
+  filter: blur(0);
+
+  pointer-events: auto;
+}
+
+.growth__message h2 {
+  margin: 0;
+
+  max-width: 1050px;
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4rem, 8vw, 9rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+
+  text-wrap: balance;
+}
+
+
+/* =========================================================
+   MAINTENANCE
+   ========================================================= */
+
+.growth__maintenance {
+  position: relative;
+
+  padding:
+    clamp(6rem, 11vw, 10rem)
+    6vw
+    clamp(5rem, 9vw, 8rem);
+
+  background: var(--cream);
+}
+
+.growth__maintenance-inner {
+  width: min(1380px, 100%);
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   MAINTENANCE HEADER
+   ========================================================= */
+
+.growth__maintenance-header {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(220px, 0.65fr);
+
+  gap: 5rem;
+
+  align-items: end;
+
+  margin-bottom: clamp(4rem, 7vw, 6rem);
+}
+
+.growth__maintenance-eyebrow {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  margin-bottom: 1.5rem;
+
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+}
+
+.growth__maintenance-eyebrow::before {
+  content: '';
+
+  width: 28px;
+  height: 1px;
+
+  background: var(--purple);
+}
+
+.growth__maintenance-header h2 {
+  margin: 0;
+
+  max-width: 750px;
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.2rem, 6vw, 6.8rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.growth__maintenance-header h2 span {
+  display: block;
+
+  margin-left: clamp(1.5rem, 5vw, 5rem);
+
+  color: var(--purple);
+  font-style: italic;
+}
+
+.growth__maintenance-header p {
+  max-width: 330px;
+
+  margin: 0 0 0 auto;
+
+  color: rgba(17, 11, 26, 0.55);
+
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   PLANS
+   ========================================================= */
+
+.growth__plans {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 1.2rem;
+}
+
+.growth__plan {
+  position: relative;
+
+  min-height: 410px;
+
+  padding: 2rem 2rem 1.8rem;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid rgba(17, 11, 26, 0.14);
+  border-radius: 18px;
+
+  background: rgba(255, 252, 246, 0.42);
+
+  transition:
+    transform 400ms cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    ),
+    border-color 300ms ease,
+    background-color 300ms ease;
+}
+
+.growth__plan:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(17, 11, 26, 0.28);
+
+  background: rgba(255, 252, 246, 0.72);
+}
+
+.growth__plan.is-featured {
+  border-color: rgba(91, 33, 182, 0.65);
+
+  background: rgba(91, 33, 182, 0.035);
+}
+
+.growth__plan.is-featured:hover {
+  border-color: var(--purple);
+}
+
+
+/* =========================================================
+   PLAN TOP
+   ========================================================= */
+
+.growth__plan-top {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 25px;
+}
+
+.growth__plan-name {
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.15em;
+}
+
+.growth__plan-tag {
+  padding:
+    0.3rem
+    0.5rem;
+
+  border: 1px solid rgba(17, 11, 26, 0.12);
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--ink);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.44rem;
+  letter-spacing: 0.08em;
+}
+
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+.growth__plan-price {
+  display: flex;
+
+  align-items: baseline;
+
+  margin-top: 3.4rem;
+}
+
+.growth__plan-price strong {
+  font-family: 'Playfair Display', serif;
+
+  font-size: clamp(3.2rem, 4vw, 4.5rem);
+
+  font-weight: 400;
+  line-height: 0.95;
+
+  letter-spacing: -0.045em;
+}
+
+.growth__plan-price span {
+  margin-left: 0.4rem;
+
+  color: rgba(17, 11, 26, 0.42);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+}
+
+
+/* =========================================================
+   PLAN CONTENT
+   ========================================================= */
+
+.growth__plan-description {
+  max-width: 270px;
+
+  margin:
+    1.4rem
+    0
+    2rem;
+
+  color: rgba(17, 11, 26, 0.55);
+
+  font-size: 0.76rem;
+  line-height: 1.65;
+}
+
+.growth__plan-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.65rem;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.growth__plan-list li {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.65rem;
+
+  color: rgba(17, 11, 26, 0.68);
+
+  font-size: 0.71rem;
+}
+
+.growth__plan-list li span {
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+}
+
+
+/* =========================================================
+   PLAN LINK
+   ========================================================= */
+
+.growth__plan-link {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.6rem;
+
+  width: fit-content;
+
+  margin-top: auto;
+  padding-top: 1.8rem;
+
+  color: var(--ink);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+
+  text-decoration: none;
+}
+
+.growth__plan-link span {
+  color: var(--purple);
+
+  font-size: 0.85rem;
+
+  transition:
+    transform 300ms ease;
+}
+
+.growth__plan-link:hover span {
+  transform:
+    translate(
+      2px,
+      -2px
+    );
+}
+
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.growth__maintenance-note {
+  margin:
+    1.5rem
+    0
+    0;
+
+  color:
+    rgba(
+      17,
+      11,
+      26,
+      0.38
+    );
+
+  font-size: 0.68rem;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .growth__story {
+    height: 320vh;
+  }
+
+  .growth__messages {
+    width: calc(100% - 2.5rem);
+  }
+
+  .growth__message {
+    width: 100%;
+  }
+
+  .growth__message h2 {
+    font-size: clamp(
+      3.2rem,
+      14vw,
+      5.8rem
+    );
+  }
+
+  .growth__maintenance {
+    padding:
+      5rem
+      1.25rem
+      4rem;
+  }
+
+  .growth__maintenance-header {
+    display: block;
+
+    margin-bottom: 3rem;
+  }
+
+  .growth__maintenance-header h2 {
+    font-size: clamp(
+      3rem,
+      14vw,
+      5rem
+    );
+  }
+
+  .growth__maintenance-header p {
+    max-width: 330px;
+
+    margin:
+      1.8rem
+      0
+      0;
+  }
+
+  .growth__plans {
+    grid-template-columns: 1fr;
+
+    gap: 0.8rem;
+  }
+
+  .growth__plan {
+    min-height: 390px;
+
+    padding: 1.5rem;
+
+    border-radius: 18px;
+  }
+
+  .growth__plan-price {
+    margin-top: 2.5rem;
+  }
+
+  .growth__plan-price strong {
+    font-size: 3.4rem;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .growth__story {
+    height: 300vh;
+  }
+
+  .growth__message h2 {
+    font-size: clamp(
+      2.8rem,
+      14vw,
+      4.5rem
+    );
+
+    line-height: 0.91;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .growth__story-background,
+  .growth__message,
+  .growth__plan,
+  .growth__plan-link span {
+    transition: none;
+  }
+
+  .growth__story-background {
+    transform: none;
+  }
+
+  .growth__message {
+    filter: none;
+  }
+}
