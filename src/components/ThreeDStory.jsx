@@ -17,10 +17,10 @@ const slides = [
   {
     id: 'desktop',
     number: '01',
-    eyebrow: 'PRESENÇA',
-    title: 'COMEÇA NA TELA.',
+    eyebrow: 'SUA MARCA',
+    title: 'ONDE SEU CLIENTE ESTIVER.',
     description:
-      'Seu negócio precisa de um lugar onde as pessoas possam chegar, entender e lembrar de você.',
+      'No computador, no celular, no caminho para o trabalho ou naquele momento em que ele finalmente decide procurar por você.',
     modelLabel: 'DESKTOP',
     modelPath: DESKTOP_MODEL,
     scale: 1,
@@ -29,10 +29,10 @@ const slides = [
   {
     id: 'mobile',
     number: '02',
-    eyebrow: 'CONTINUIDADE',
-    title: 'CONTINUA COM ELAS.',
+    eyebrow: 'EM QUALQUER LUGAR',
+    title: 'ONDE ELE RESOLVER PROCURAR.',
     description:
-      'Porque hoje seu cliente pode conhecer sua marca no computador e terminar tudo pelo celular.',
+      'A experiência precisa acompanhar seu cliente onde quer que ele vá',
     modelLabel: 'CELULAR',
     modelPath: MOBILE_MODEL,
     scale: 0.55,
@@ -41,10 +41,10 @@ const slides = [
   {
     id: 'microwave',
     number: '03',
-    eyebrow: 'OK.',
-    title: 'QUASE QUALQUER LUGAR.',
+    eyebrow: 'OK',
+    title: 'QUASE QUALQUER LUGAR...',
     description:
-      'Não, a Rouxinol não vai colocar seu site no micro ondas.',
+      'Não, a Rouxinol não vai colocar seu site no micro ondas. (POR ENQUANTO).',
     modelLabel: 'MICRO ONDAS',
     modelPath: MICROWAVE_MODEL,
     scale: 1,

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+
 import '../styles/visibility.css'
 
 const slides = [
@@ -6,84 +7,85 @@ const slides = [
     id: 'presence',
     number: '01',
     category: 'PRESENÇA',
-    withoutTitle:
-      'Seu potencial fica escondido.',
-    withoutDescription:
-      'Seu negócio existe, mas pode passar despercebido por quem procura exatamente o que você oferece.',
-    withTitle:
-      'Seu negócio ganha espaço para ser encontrado.',
-    withDescription:
-      'Uma presença digital própria cria um ponto de contato para sua marca aparecer, explicar e ser lembrada.',
+    question: 'As pessoas procuram pelo que você faz e não encontram.',
+    context:
+      'Seu negócio pode ser bom. O problema é que, se ele não aparece, para muita gente ele simplesmente não existe.',
+    answer:
+      'Então vamos dar um lugar para o seu negócio ser encontrado.',
+    solution:
+      'LANDING PAGE OU SITE',
+    detail:
+      'Uma presença própria para apresentar quem você é, o que oferece e por que alguém deveria escolher você.',
   },
-
   {
     id: 'organization',
     number: '02',
     category: 'ORGANIZAÇÃO',
-    withoutTitle:
-      'Informações importantes ficam espalhadas.',
-    withoutDescription:
-      'Cadastros, registros e tarefas podem acabar divididos entre planilhas, mensagens e anotações.',
-    withTitle:
-      'Seu negócio pode ter um lugar próprio para se organizar.',
-    withDescription:
-      'Uma solução personalizada pode reunir informações, cadastros e operações em um único ambiente.',
+    question: 'Você sabe que tem tudo anotado em algum lugar. Só não sabe em qual.',
+    context:
+      'Planilhas, cadernos, mensagens e aquela informação importante que está “com alguém”. Uma hora isso cobra a conta.',
+    answer:
+      'Talvez esteja na hora de parar de procurar informação dentro do próprio negócio.',
+    solution:
+      'SISTEMA',
+    detail:
+      'Uma solução feita para reunir cadastros, informações e operações em um único lugar.',
   },
-
   {
     id: 'processes',
     number: '03',
     category: 'PROCESSOS',
-    withoutTitle:
-      'Tarefas repetitivas consomem tempo.',
-    withoutDescription:
-      'Quando tudo depende de processos manuais, pequenas tarefas podem acabar tomando mais tempo do que deveriam.',
-    withTitle:
-      'Processos complicados podem ficar mais simples.',
-    withDescription:
-      'Ferramentas específicas podem transformar etapas repetitivas em fluxos mais claros e práticos.',
+    question: 'Você ainda perde tempo fazendo a mesma coisa toda semana.',
+    context:
+      'Copiar, conferir, responder, anotar, procurar, repetir. Pequenas tarefas parecem inofensivas até somarem um dia inteiro.',
+    answer:
+      'Se uma máquina pode fazer a parte chata, deixe ela fazer a parte chata.',
+    solution:
+      'AUTOMAÇÃO E FERRAMENTAS',
+    detail:
+      'Experiências pensadas para reduzir tarefas repetitivas e deixar sua rotina mais simples.',
   },
-
   {
     id: 'data',
     number: '04',
     category: 'DADOS',
-    withoutTitle:
-      'Os dados existem, mas estão difíceis de entender.',
-    withoutDescription:
-      'Informações importantes podem estar espalhadas, dificultando enxergar o que realmente está acontecendo.',
-    withTitle:
-      'Seus dados podem contar uma história mais clara.',
-    withDescription:
-      'Dashboards e relatórios ajudam a transformar informações espalhadas em uma visão mais organizada do negócio.',
+    question: 'Você tem números. Só não consegue enxergar o que eles estão dizendo.',
+    context:
+      'Vendas, clientes, pedidos e resultados existem. Mas quando tudo fica espalhado, até uma pergunta simples vira investigação.',
+    answer:
+      'Seus números não precisam parecer um interrogatório.',
+    solution:
+      'DASHBOARD',
+    detail:
+      'Uma visão mais clara das informações importantes para você entender o que está acontecendo.',
   },
-
   {
     id: 'sales',
     number: '05',
     category: 'VENDAS',
-    withoutTitle:
-      'Produtos e pedidos ficam espalhados por vários lugares.',
-    withoutDescription:
-      'Informações, produtos e contatos podem acabar divididos entre diferentes canais e conversas.',
-    withTitle:
-      'Sua operação pode ganhar um espaço próprio.',
-    withDescription:
-      'Catálogos, lojas e outras soluções podem organizar melhor a experiência de quem conhece e compra da sua marca.',
+    question: 'Você tem coisa boa para vender, mas parece que ninguém está olhando.',
+    context:
+      'O produto está lá. O preço está lá. Você está lá. E mesmo assim, parece que o cliente passou reto.',
+    answer:
+      'Talvez seu produto não precise de mais esforço. Precise de uma experiência melhor para chegar até ele.',
+    solution:
+      'CATÁLOGO OU LOJA',
+    detail:
+      'Uma experiência para apresentar produtos, facilitar a descoberta e criar um caminho mais claro até a compra.',
   },
-
   {
     id: 'custom',
     number: '06',
     category: 'IDEIA',
-    withoutTitle:
-      'Sua ideia não cabe em uma solução pronta.',
-    withoutDescription:
-      'Nem todo problema de negócio se encaixa perfeitamente em uma ferramenta que já existe.',
-    withTitle:
-      'A solução pode ser pensada em torno do seu problema.',
-    withDescription:
-      'Quando a necessidade é diferente, a Rouxinol pode construir uma solução personalizada para aquilo que você imaginou.',
+    question: 'Você tem uma ideia que não cabe em nenhuma ferramenta pronta.',
+    context:
+      'Você explica o que precisa e sempre aparece alguém dizendo que existe uma plataforma para isso. Só que nenhuma resolve exatamente o seu problema.',
+    answer:
+      'Então talvez seja a ferramenta que esteja errada para o problema.',
+    solution:
+      'PROJETO PERSONALIZADO',
+    detail:
+      'Uma solução pensada a partir daquilo que seu negócio realmente precisa fazer.',
   },
 ]
 
@@ -100,7 +102,7 @@ export default function Visibility() {
     const element = visibilityRef.current
 
     if (!element) {
-      return
+      return undefined
     }
 
     const observer = new IntersectionObserver(
@@ -111,7 +113,7 @@ export default function Visibility() {
         }
       },
       {
-        threshold: 0.25,
+        threshold: 0.15,
       },
     )
 
@@ -141,18 +143,18 @@ export default function Visibility() {
   }
 
   useEffect(() => {
-    if (isPaused) {
-      return
+    if (isPaused || !isVisible) {
+      return undefined
     }
 
     const interval = setInterval(() => {
       setActiveIndex(
         (current) => (current + 1) % slides.length,
       )
-    }, 7000)
+    }, 7500)
 
     return () => clearInterval(interval)
-  }, [isPaused])
+  }, [isPaused, isVisible])
 
   function handleKeyDown(event) {
     if (event.key === 'ArrowRight') {
@@ -181,239 +183,190 @@ export default function Visibility() {
       onBlur={() => setIsPaused(false)}
       onKeyDown={handleKeyDown}
     >
+      <div className="visibility__ambient" aria-hidden="true">
+        <span className="visibility__ambient-number">
+          {activeSlide.number}
+        </span>
+
+        <span className="visibility__ambient-word">
+          {activeSlide.category}
+        </span>
+      </div>
+
       <div className="visibility__inner">
-
-        {/* =================================================
-            CABEÇALHO
-            ================================================= */}
-
         <header className="visibility__header">
+          <div className="visibility__header-top">
+            <span className="visibility__kicker">
+              QUANDO A COISA NÃO ESTÁ FUNCIONANDO
+            </span>
 
-          <span className="visibility__kicker">
-            VISIBILIDADE
-          </span>
+            <span className="visibility__counter">
+              {activeSlide.number}
+              <span>/</span>
+              06
+            </span>
+          </div>
 
           <h2
             className="visibility__title"
             id="visibility-title"
           >
-            Seu negócio pode precisar
-            <span>
-              de mais do que uma página.
-            </span>
+            Talvez o problema
+            <span>não seja o seu negócio.</span>
           </h2>
 
           <p className="visibility__intro">
-            Pode ser presença. Pode ser organização.
-            Pode ser uma ferramenta, um sistema ou
-            uma ideia que ainda não tem nome.
+            Às vezes, o que está impedindo uma empresa de
+            crescer não é falta de esforço. É falta de uma
+            estrutura que acompanhe esse esforço.
           </p>
-
         </header>
 
-        {/* =================================================
-            LINHA / TRAJETÓRIA
-            ================================================= */}
-
         <div
-          className="visibility__trajectory"
-          aria-hidden="true"
-        >
-          <svg
-            className="visibility__trajectory-svg"
-            viewBox="0 0 1200 280"
-            preserveAspectRatio="none"
-          >
-            <path
-              className="visibility__trajectory-shadow"
-              d="
-                M -20 220
-                C 120 235, 160 190, 275 205
-                C 390 220, 390 155, 505 175
-                C 625 198, 655 110, 755 135
-                C 865 162, 875 70, 980 92
-                C 1060 108, 1130 52, 1220 45
-              "
-            />
-
-            <path
-              className="visibility__trajectory-line"
-              d="
-                M -20 220
-                C 120 235, 160 190, 275 205
-                C 390 220, 390 155, 505 175
-                C 625 198, 655 110, 755 135
-                C 865 162, 875 70, 980 92
-                C 1060 108, 1130 52, 1220 45
-              "
-            />
-          </svg>
-
-          <span className="visibility__trajectory-label visibility__trajectory-label--start">
-            SEM ROUXINOL
-          </span>
-
-          <span className="visibility__trajectory-label visibility__trajectory-label--end">
-            COM ROUXINOL
-          </span>
-        </div>
-
-        {/* =================================================
-            COMPARADOR
-            ================================================= */}
-
-        <div
-          className="visibility__comparison"
+          className="visibility__experience"
           aria-live="polite"
           aria-atomic="true"
         >
+          <div className="visibility__index">
+            <span className="visibility__index-line" />
 
-          <article
-            className="visibility__side visibility__side--without"
-            key={`without-${activeSlide.id}`}
-          >
-            <div className="visibility__side-top">
-
-              <span className="visibility__side-label">
-                SEM ROUXINOL
-              </span>
-
-              <span className="visibility__slide-number">
-                {activeSlide.number} / 06
-              </span>
-
+            <div className="visibility__index-number">
+              {activeSlide.number}
             </div>
 
-            <div className="visibility__side-content">
-
-              <span className="visibility__category">
-                {activeSlide.category}
-              </span>
-
-              <h3 className="visibility__side-title">
-                {activeSlide.withoutTitle}
-              </h3>
-
-              <p className="visibility__side-description">
-                {activeSlide.withoutDescription}
-              </p>
-
-            </div>
-          </article>
-
-          <div
-            className="visibility__divider"
-            aria-hidden="true"
-          >
-            <span />
+            <span className="visibility__index-total">
+              / 06
+            </span>
           </div>
 
           <article
-            className="visibility__side visibility__side--with"
-            key={`with-${activeSlide.id}`}
+            className="visibility__problem"
+            key={`problem-${activeSlide.id}`}
           >
-            <div className="visibility__side-top">
-
-              <span className="visibility__side-label">
-                COM ROUXINOL
-              </span>
-
-              <span className="visibility__active-mark">
-                ●
-              </span>
-
+            <div className="visibility__category">
+              {activeSlide.category}
             </div>
 
-            <div className="visibility__side-content">
+            <h3 className="visibility__question">
+              {activeSlide.question}
+            </h3>
 
-              <span className="visibility__category">
-                {activeSlide.category}
-              </span>
-
-              <h3 className="visibility__side-title">
-                {activeSlide.withTitle}
-              </h3>
-
-              <p className="visibility__side-description">
-                {activeSlide.withDescription}
-              </p>
-
-            </div>
+            <p className="visibility__context">
+              {activeSlide.context}
+            </p>
           </article>
 
+          <div className="visibility__answer">
+            <div className="visibility__answer-marker">
+              <span />
+              ROUXINOL
+            </div>
+
+            <div
+              className="visibility__answer-content"
+              key={`answer-${activeSlide.id}`}
+            >
+              <p className="visibility__answer-text">
+                {activeSlide.answer}
+              </p>
+
+              <div className="visibility__solution">
+                <span className="visibility__solution-label">
+                  TALVEZ VOCÊ PRECISE DE
+                </span>
+
+                <strong>
+                  {activeSlide.solution}
+                </strong>
+
+                <p>
+                  {activeSlide.detail}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* =================================================
-            CONTROLES
-            ================================================= */}
-
-        <div className="visibility__controls">
-
-          <button
-            type="button"
-            className="visibility__arrow"
-            onClick={previousSlide}
-            aria-label="Situação anterior"
-          >
-            ←
-          </button>
-
-          <div
-            className="visibility__dots"
-            role="tablist"
-            aria-label="Selecionar situação"
-          >
-            {slides.map((slide, index) => (
-              <button
-                key={slide.id}
-                type="button"
-                className={
-                  index === activeIndex
-                    ? 'visibility__dot is-active'
-                    : 'visibility__dot'
-                }
-                onClick={() => goToSlide(index)}
-                role="tab"
-                aria-selected={
-                  index === activeIndex
-                }
-                aria-label={
-                  `Mostrar ${slide.category.toLowerCase()}`
-                }
+        <footer className="visibility__footer">
+          <div className="visibility__progress">
+            <div className="visibility__progress-track">
+              <span
+                className="visibility__progress-fill"
+                style={{
+                  width: `${
+                    ((activeIndex + 1) /
+                      slides.length) *
+                    100
+                  }%`,
+                }}
               />
-            ))}
+            </div>
+
+            <span className="visibility__progress-label">
+              {activeSlide.number} / 06
+            </span>
           </div>
 
-          <button
-            type="button"
-            className="visibility__arrow"
-            onClick={nextSlide}
-            aria-label="Próxima situação"
-          >
-            →
-          </button>
+          <div className="visibility__controls">
+            <button
+              type="button"
+              className="visibility__arrow"
+              onClick={previousSlide}
+              aria-label="Situação anterior"
+            >
+              ←
+            </button>
 
-        </div>
+            <div
+              className="visibility__dots"
+              role="tablist"
+              aria-label="Selecionar situação"
+            >
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  className={
+                    index === activeIndex
+                      ? 'visibility__dot is-active'
+                      : 'visibility__dot'
+                  }
+                  onClick={() => goToSlide(index)}
+                  role="tab"
+                  aria-selected={
+                    index === activeIndex
+                  }
+                  aria-label={`Mostrar ${slide.category.toLowerCase()}`}
+                >
+                  <span>{slide.number}</span>
+                </button>
+              ))}
+            </div>
 
-        {/* =================================================
-            FECHAMENTO
-            ================================================= */}
+            <button
+              type="button"
+              className="visibility__arrow"
+              onClick={nextSlide}
+              aria-label="Próxima situação"
+            >
+              →
+            </button>
+          </div>
+        </footer>
 
         <div className="visibility__closing">
-
-          <span className="visibility__closing-mark">
-            /
+          <span className="visibility__closing-number">
+            06
           </span>
 
           <p>
-            Não importa o tamanho da ideia.
+            Se alguma dessas situações parece familiar,
             <strong>
-              {' '}A solução pode crescer com ela.
+              {' '}talvez esteja na hora de fazer alguma coisa
+              diferente.
             </strong>
           </p>
-
         </div>
-
       </div>
     </section>
   )
