@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useState } from 'react'
+import '../styles/three-story.css'
 import { Canvas } from '@react-three/fiber'
 import {
   Bounds,

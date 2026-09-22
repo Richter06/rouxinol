@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../styles/hero.css'
 
 const words = [
   'crescer',

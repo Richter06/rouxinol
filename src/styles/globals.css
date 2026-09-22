@@ -1,0 +1,87 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--purple-deep);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+/* =========================================================
+   ROUXINOL — CUSTOM SCROLLBAR
+   ========================================================= */
+
+@media (min-width: 761px) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--yellow) rgba(91, 33, 182, 0.16);
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(17, 11, 26, 0.96);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid rgba(17, 11, 26, 0.96);
+    border-radius: 999px;
+    background: var(--yellow);
+    transition: background-color 250ms ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ffe45c;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--ink);
+  }
+}
+
+@media (max-width: 760px) {
+  html {
+    scrollbar-width: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: auto;
+  }
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
