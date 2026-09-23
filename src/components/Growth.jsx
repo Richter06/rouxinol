@@ -2,81 +2,73 @@ import { useEffect, useRef, useState } from 'react'
 
 import '../styles/growth.css'
 
-const messages = [
+const stages = [
   {
-    number: '01',
-    text: 'Seu negócio não precisa começar grande.',
-  },
-  {
-    number: '02',
-    text: 'Precisa começar certo.',
-  },
-  {
-    number: '03',
-    text: 'E quando ele crescer, a solução pode crescer junto.',
-  },
-  {
-    number: '04',
-    text: 'Do primeiro passo ao próximo capítulo.',
-  },
-]
-
-const maintenancePlans = [
-  {
-    number: '01',
-    name: 'ANDORINHA',
-    price: 'R$ 89',
-    period: '/mês',
+    id: 'lancar',
+    label: 'Lançar',
+    title: 'Tudo começa quando vai para o ar.',
     description:
-      'Para manter sua presença digital funcionando e atualizada.',
-    items: [
-      'Pequenos ajustes',
-      'Atualizações de conteúdo',
-      'Acompanhamento básico',
+      'Seu site, catálogo ou sistema entra em funcionamento e começa a fazer parte do dia a dia do negócio.',
+    points: [
+      'Presença funcionando',
+      'Conteúdo organizado',
+      'Experiência pronta para receber pessoas',
     ],
+    visual: 'LAUNCH',
   },
   {
-    number: '02',
-    name: 'SABIÁ',
-    price: 'R$ 169',
-    period: '/mês',
+    id: 'observar',
+    label: 'Observar',
+    title: 'Depois, a gente vê o que acontece.',
     description:
-      'Para negócios que querem continuar melhorando depois do lançamento.',
-    items: [
-      'Tudo do Andorinha',
+      'O negócio muda quando pessoas começam a usar. É daí que aparecem novas necessidades, ideias e oportunidades.',
+    points: [
+      'Novas necessidades',
+      'Mudanças no negócio',
+      'Oportunidades de melhoria',
+    ],
+    visual: 'OBSERVE',
+  },
+  {
+    id: 'ajustar',
+    label: 'Ajustar',
+    title: 'O que funciona pode ficar melhor.',
+    description:
+      'Conteúdo, páginas e funcionalidades podem evoluir sem precisar começar tudo novamente.',
+    points: [
       'Novos conteúdos',
-      'Melhorias recorrentes',
-      'Acompanhamento próximo',
+      'Melhorias de experiência',
+      'Ajustes conforme a rotina',
     ],
-    featured: true,
+    visual: 'IMPROVE',
   },
   {
-    number: '03',
-    name: 'ROUXINOL',
-    price: 'R$ 299',
-    period: '/mês',
+    id: 'expandir',
+    label: 'Expandir',
+    title: 'E quando o negócio cresce, a solução acompanha.',
     description:
-      'Para transformar a presença digital em uma ferramenta de crescimento.',
-    items: [
-      'Tudo do Sabiá',
+      'Uma presença digital não precisa ficar presa ao momento em que foi criada. Ela pode ganhar novas possibilidades com o tempo.',
+    points: [
       'Novas funcionalidades',
-      'Aprimoramentos contínuos',
-      'Prioridade no atendimento',
+      'Novas áreas',
+      'Novas possibilidades',
     ],
+    visual: 'GROW',
   },
 ]
 
 export default function Growth() {
   const sectionRef = useRef(null)
-  const storyRef = useRef(null)
 
-  const [activeMessage, setActiveMessage] = useState(0)
+  const [activeStage, setActiveStage] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const section = sectionRef.current
 
-    if (!section) return undefined
+    if (!section) {
+      return undefined
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -85,7 +77,7 @@ export default function Growth() {
         }
       },
       {
-        threshold: 0.15,
+        threshold: 0.12,
       },
     )
 
@@ -94,85 +86,7 @@ export default function Growth() {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const story = storyRef.current
-
-    if (!story) return undefined
-
-    let ticking = false
-
-    const updateMessage = () => {
-      const rect = story.getBoundingClientRect()
-
-      const scrollableHeight =
-        story.offsetHeight - window.innerHeight
-
-      if (scrollableHeight <= 0) {
-        ticking = false
-        return
-      }
-
-      const progress = Math.min(
-        1,
-        Math.max(
-          0,
-          -rect.top / scrollableHeight,
-        ),
-      )
-
-      const index = Math.min(
-        messages.length - 1,
-        Math.floor(
-          progress * messages.length,
-        ),
-      )
-
-      setActiveMessage((current) =>
-        current === index
-          ? current
-          : index,
-      )
-
-      ticking = false
-    }
-
-    const handleScroll = () => {
-      if (ticking) return
-
-      ticking = true
-
-      window.requestAnimationFrame(
-        updateMessage,
-      )
-    }
-
-    updateMessage()
-
-    window.addEventListener(
-      'scroll',
-      handleScroll,
-      {
-        passive: true,
-      },
-    )
-
-    window.addEventListener(
-      'resize',
-      handleScroll,
-    )
-
-    return () => {
-      window.removeEventListener(
-        'scroll',
-        handleScroll,
-      )
-
-      window.removeEventListener(
-        'resize',
-        handleScroll,
-      )
-    }
-  }, [])
+  const active = stages[activeStage]
 
   return (
     <section
@@ -183,214 +97,242 @@ export default function Growth() {
       id="growth"
       aria-labelledby="growth-title"
     >
-      <div
-        ref={storyRef}
-        className="growth__story"
-      >
-        <div className="growth__story-sticky">
-          <div
-            className="growth__story-background"
-            aria-hidden="true"
-          />
+      <div className="growth__inner">
 
-          <div
-            className="growth__story-overlay"
-            aria-hidden="true"
-          />
+        {/* =====================================================
+            INTRO
+            ===================================================== */}
 
-          <div className="growth__story-meta">
-            <span>
-              CRESCER É CONTINUAR
-            </span>
+        <header className="growth__intro">
+          <span className="growth__eyebrow">
+            DEPOIS DO COMEÇO
+          </span>
 
-            <span>
-              {messages[activeMessage].number}
-              <i>/</i>
-              {String(messages.length).padStart(
-                2,
-                '0',
-              )}
-            </span>
-          </div>
-
-          <div
-            className="growth__messages"
-            aria-live="polite"
+          <h2
+            id="growth-title"
+            className="growth__title"
           >
-            {messages.map((message, index) => {
+            O negócio muda.
+            <span>
+              A solução também.
+            </span>
+          </h2>
+
+          <p className="growth__intro-text">
+            Colocar algo no ar é só o começo.
+            <br />
+            O que vem depois também pode evoluir.
+          </p>
+        </header>
+
+
+        {/* =====================================================
+            EXPERIENCE
+            ===================================================== */}
+
+        <div className="growth__experience">
+
+          {/* ===================================================
+              NAVIGATION
+              =================================================== */}
+
+          <nav
+            className="growth__nav"
+            aria-label="Etapas de crescimento"
+          >
+            {stages.map((stage, index) => {
               const isActive =
-                activeMessage === index
+                activeStage === index
 
               return (
-                <div
-                  key={message.number}
-                  className={`growth__message ${
+                <button
+                  key={stage.id}
+                  type="button"
+                  className={`growth__nav-item ${
                     isActive
                       ? 'is-active'
                       : ''
                   }`}
-                  aria-hidden={!isActive}
+                  onClick={() =>
+                    setActiveStage(index)
+                  }
+                  aria-selected={isActive}
+                  role="tab"
                 >
-                  <span className="growth__message-number">
-                    {message.number}
+                  <span className="growth__nav-line">
+                    <span />
                   </span>
 
-                  <h2
-                    id={
-                      index === 0
-                        ? 'growth-title'
-                        : undefined
-                    }
-                  >
-                    {message.text}
-                  </h2>
-                </div>
+                  <span className="growth__nav-label">
+                    {stage.label}
+                  </span>
+                </button>
               )
             })}
-          </div>
+          </nav>
 
-          <div className="growth__story-progress">
-            {messages.map(
-              (message, index) => (
-                <span
-                  key={message.number}
-                  className={
-                    activeMessage === index
-                      ? 'is-active'
-                      : ''
-                  }
-                />
-              ),
-            )}
-          </div>
 
-          <span className="growth__story-scroll">
-            CONTINUE
-            <span aria-hidden="true">
-              ↓
-            </span>
-          </span>
-        </div>
-      </div>
+          {/* ===================================================
+              CONTENT
+              =================================================== */}
 
-      <section className="growth__maintenance">
-        <div className="growth__maintenance-inner">
-          <header className="growth__maintenance-header">
-            <div>
-              <span className="growth__maintenance-eyebrow">
-                DEPOIS DO COMEÇO
+          <div className="growth__content">
+
+            <div
+              className="growth__copy"
+              key={active.id}
+            >
+              <span className="growth__copy-label">
+                {active.label}
               </span>
 
-              <h2>
-                O negócio muda.
-                <span>
-                  A solução também.
-                </span>
-              </h2>
+              <h3>
+                {active.title}
+              </h3>
+
+              <p>
+                {active.description}
+              </p>
+
+              <ul>
+                {active.points.map((point) => (
+                  <li key={point}>
+                    <span aria-hidden="true">
+                      +
+                    </span>
+
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <p>
-              Sua presença digital não precisa
-              ficar parada depois do lançamento.
-              Ela pode acompanhar o momento do
-              seu negócio.
-            </p>
-          </header>
 
-          <div className="growth__plans">
-            {maintenancePlans.map(
-              (plan, index) => (
-                <article
-                  key={plan.name}
-                  className={`growth__plan ${
-                    plan.featured
-                      ? 'is-featured'
-                      : ''
-                  }`}
+            {/* =================================================
+                PRODUCT VISUAL
+                ================================================= */}
+
+            <div
+              className="growth__visual"
+              key={active.visual}
+              aria-hidden="true"
+            >
+              <div className="growth__visual-window">
+
+                <div className="growth__visual-top">
+                  <span className="growth__visual-dot" />
+                  <span className="growth__visual-dot" />
+                  <span className="growth__visual-dot" />
+
+                  <span className="growth__visual-address">
+                    rouxinol.digital
+                  </span>
+                </div>
+
+
+                <div className="growth__visual-body">
+
+                  <div className="growth__visual-heading">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+
+                  <div className="growth__visual-columns">
+
+                    <div className="growth__visual-main">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+
+                    <div className="growth__visual-side">
+                      <span />
+                      <span />
+                    </div>
+
+                  </div>
+
+                  <div className="growth__visual-footer">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+
+                </div>
+
+
+                <div
+                  className={`growth__visual-status growth__visual-status--${activeStage}`}
                 >
-                  <div className="growth__plan-index">
-                    <span>
-                      {plan.number}
-                    </span>
+                  <span className="growth__visual-status-dot" />
 
-                    <span>
-                      {plan.featured
-                        ? 'CONTINUIDADE'
-                        : index === 0
-                          ? 'MANUTENÇÃO'
-                          : 'EVOLUÇÃO'}
-                    </span>
-                  </div>
+                  {active.label}
 
-                  <div className="growth__plan-top">
-                    <span className="growth__plan-name">
-                      {plan.name}
-                    </span>
+                  <strong>
+                    {activeStage === 0 &&
+                      'Pronto para começar'}
 
-                    {plan.featured && (
-                      <span className="growth__plan-tag">
-                        MAIS ESCOLHIDO
-                      </span>
-                    )}
-                  </div>
+                    {activeStage === 1 &&
+                      'Entendendo o momento'}
 
-                  <div className="growth__plan-price">
-                    <strong>
-                      {plan.price}
-                    </strong>
+                    {activeStage === 2 &&
+                      'Melhorando a experiência'}
 
-                    <span>
-                      {plan.period}
-                    </span>
-                  </div>
+                    {activeStage === 3 &&
+                      'Pronto para crescer'}
+                  </strong>
+                </div>
 
-                  <p className="growth__plan-description">
-                    {plan.description}
-                  </p>
+              </div>
+            </div>
 
-                  <ul className="growth__plan-list">
-                    {plan.items.map(
-                      (item) => (
-                        <li key={item}>
-                          <span aria-hidden="true">
-                            +
-                          </span>
-
-                          {item}
-                        </li>
-                      ),
-                    )}
-                  </ul>
-
-                  <a
-                    href="#contact"
-                    className="growth__plan-link"
-                  >
-                    CONHECER
-
-                    <span aria-hidden="true">
-                      ↗
-                    </span>
-                  </a>
-                </article>
-              ),
-            )}
           </div>
 
-          <div className="growth__maintenance-bottom">
-            <span>
-              03 CAMINHOS DE CONTINUIDADE
+        </div>
+
+
+        {/* =====================================================
+            BOTTOM STATEMENT
+            ===================================================== */}
+
+        <div className="growth__bottom">
+
+          <div className="growth__bottom-line">
+            <span />
+          </div>
+
+          <div className="growth__bottom-copy">
+            <span className="growth__bottom-label">
+              CONTINUIDADE
             </span>
 
             <p>
-              Planos e valores ilustrativos.
-              A manutenção pode ser adaptada
-              ao momento e às necessidades de
-              cada negócio.
+              Você não precisa decidir tudo agora.
+              Quando chegar a hora de mudar,
+              a gente muda junto.
             </p>
           </div>
+
+          <a
+            href="#contact"
+            className="growth__bottom-link"
+          >
+            <span>
+              CONVERSAR SOBRE O PRÓXIMO PASSO
+            </span>
+
+            <span
+              className="growth__bottom-arrow"
+              aria-hidden="true"
+            >
+              ↗
+            </span>
+          </a>
+
         </div>
-      </section>
+
+      </div>
     </section>
   )
 }
