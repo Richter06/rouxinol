@@ -4,1338 +4,650 @@
 
 .pricing {
   position: relative;
-
-  /*
-   * 8 soluções em uma sequência mais compacta
-   * para reduzir a distância de scroll entre os cards.
-   */
-  height: 650vh;
-
-  background: var(--cream);
-  color: var(--ink);
-}
-
-/* =========================================================
-   STICKY
-   ========================================================= */
-
-.pricing__sticky {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  min-height: 680px;
   overflow: hidden;
-
-  transition:
-    background-color 700ms ease,
-    color 700ms ease;
+  background: var(--cream, #f7f5ef);
+  color: var(--ink, #110b1a);
 }
-
-/* =========================================================
-   COLOR STATES
-   ========================================================= */
-
-.pricing--purple .pricing__sticky {
-  background: var(--cream);
-}
-
-.pricing--yellow .pricing__sticky {
-  background: #f5efe2;
-}
-
-/* =========================================================
-   BACKGROUND
-   ========================================================= */
-
-.pricing__sticky::before {
-  content: '';
-  position: absolute;
-  width: 55vw;
-  height: 55vw;
-  top: -22vw;
-  right: -15vw;
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(91, 33, 182, 0.13) 0%,
-      rgba(91, 33, 182, 0.055) 42%,
-      transparent 70%
-    );
-
-  pointer-events: none;
-
-  transition:
-    transform 900ms
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      ),
-    opacity 700ms ease;
-}
-
-.pricing--yellow .pricing__sticky::before {
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 211, 38, 0.2) 0%,
-      rgba(255, 211, 38, 0.06) 44%,
-      transparent 70%
-    );
-}
-
-.pricing__sticky::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 28%;
-
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      180deg,
-      transparent,
-      rgba(91, 33, 182, 0.035)
-    );
-}
-
-.pricing__noise {
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  opacity: 0.025;
-
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-
-  mix-blend-mode: multiply;
-}
-
-/* =========================================================
-   INNER
-   ========================================================= */
 
 .pricing__inner {
   position: relative;
   z-index: 2;
-
-  width: min(1480px, 100%);
-  height: 100%;
-
+  width: min(1280px, calc(100% - 4rem));
   margin: 0 auto;
-
-  padding:
-    clamp(2rem, 5vh, 4rem)
-    clamp(1.25rem, 5vw, 5rem)
-    1.5rem;
-
-  display: flex;
-  flex-direction: column;
+  padding: clamp(7rem, 11vw, 10rem) 0 3rem;
 }
+
 
 /* =========================================================
    HEADER
    ========================================================= */
 
 .pricing__header {
-  flex: 0 0 auto;
+  margin-bottom: clamp(4rem, 7vw, 6rem);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 800ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pricing__header-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-bottom:
-    clamp(0.8rem, 1.5vh, 1.4rem);
+.pricing.is-visible .pricing__header {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .pricing__eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-
+  margin-bottom: 1.7rem;
   color: var(--purple);
-
   font-family: 'DM Mono', monospace;
-  font-size: 0.56rem;
+  font-size: 0.6rem;
+  font-weight: 500;
   letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .pricing__eyebrow::before {
   content: '';
-
-  width: 30px;
+  width: 24px;
   height: 1px;
-
+  margin-right: 0.65rem;
   background: var(--purple);
 }
 
-.pricing__counter {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-
-  color:
-    rgba(17, 11, 26, 0.34);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.52rem;
-  letter-spacing: 0.08em;
-}
-
-.pricing__counter span {
-  color:
-    rgba(17, 11, 26, 0.15);
-}
-
-.pricing__heading-row {
+.pricing__heading {
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(230px, 330px);
-
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  gap: clamp(3rem, 10vw, 9rem);
   align-items: end;
-
-  gap: clamp(2rem, 7vw, 9rem);
 }
 
-.pricing__heading-row h2 {
-  max-width: 900px;
-
+.pricing__heading h2 {
+  max-width: 850px;
   margin: 0;
-
   font-family: 'Playfair Display', serif;
-  font-size: clamp(3.4rem, 5.3vw, 6.5rem);
+  font-size: clamp(3.4rem, 6.2vw, 6.8rem);
   font-weight: 500;
-  line-height: 0.87;
+  line-height: 0.88;
   letter-spacing: -0.065em;
 }
 
-.pricing__heading-row h2 span {
+.pricing__heading h2 span {
   display: block;
-
-  margin-left:
-    clamp(1.5rem, 6vw, 7rem);
-
+  margin-left: clamp(1rem, 5vw, 5rem);
   color: var(--purple);
   font-style: italic;
 }
 
-.pricing__heading-row > p {
-  max-width: 330px;
-
-  margin: 0 0 0 auto;
-
-  color:
-    rgba(17, 11, 26, 0.52);
-
-  font-size: 0.77rem;
-  line-height: 1.75;
+.pricing__intro {
+  padding-bottom: 0.2rem;
 }
 
-/* =========================================================
-   SOLUTIONS AREA
-   ========================================================= */
-
-.pricing__solutions {
-  flex: 1 1 auto;
-
-  min-height: 0;
-
-  display: grid;
-
-  grid-template-columns:
-    minmax(230px, 0.42fr)
-    minmax(0, 1.58fr);
-
-  gap: clamp(2rem, 5vw, 6rem);
-
-  margin-top:
-    clamp(1.2rem, 2.5vh, 2.5rem);
-}
-
-/* =========================================================
-   NAV
-   ========================================================= */
-
-.pricing__nav {
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.pricing__nav-item {
-  position: relative;
-
-  width: 100%;
-  min-height: 0;
-
-  padding:
-    0.62rem
-    0;
-
-  display: grid;
-
-  grid-template-columns:
-    32px
-    minmax(0, 1fr)
-    20px;
-
-  align-items: center;
-
-  gap: 0.7rem;
-
-  border: 0;
-  border-bottom: 1px solid
-    rgba(17, 11, 26, 0.1);
-
-  background: transparent;
-
-  color:
-    rgba(17, 11, 26, 0.35);
-
-  font: inherit;
-  text-align: left;
-
-  cursor: pointer;
-
-  transition:
-    color 300ms ease,
-    padding 300ms ease;
-}
-
-.pricing__nav-item:first-child {
-  border-top: 1px solid
-    rgba(17, 11, 26, 0.1);
-}
-
-.pricing__nav-item::before {
-  content: '';
-
-  position: absolute;
-
-  top: 0;
-  bottom: 0;
-  left: -1.2rem;
-
-  width: 3px;
-
-  background: var(--yellow);
-
-  transform:
-    scaleY(0);
-
-  transform-origin: center;
-
-  transition:
-    transform 400ms
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      );
-}
-
-.pricing__nav-item:hover {
-  padding-left: 0.5rem;
-
-  color:
-    rgba(17, 11, 26, 0.72);
-}
-
-.pricing__nav-item.is-active {
-  padding-left: 0.7rem;
-
-  color: var(--ink);
-}
-
-.pricing__nav-item.is-active::before {
-  transform: scaleY(1);
-}
-
-.pricing__nav-number {
-  color:
-    rgba(17, 11, 26, 0.25);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.48rem;
-}
-
-.pricing__nav-item.is-active
-.pricing__nav-number {
-  color: var(--purple);
-}
-
-.pricing__nav-name {
-  overflow: hidden;
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.53rem;
-  font-weight: 500;
-  letter-spacing: 0.075em;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.pricing__nav-arrow {
-  justify-self: end;
-
-  color: var(--purple);
-
-  font-size: 0.85rem;
-
-  opacity: 0;
-
-  transform:
-    translate(-6px, 6px);
-
-  transition:
-    opacity 300ms ease,
-    transform 300ms ease;
-}
-
-.pricing__nav-item:hover
-.pricing__nav-arrow,
-.pricing__nav-item.is-active
-.pricing__nav-arrow {
-  opacity: 1;
-
-  transform:
-    translate(0, 0);
-}
-
-/* =========================================================
-   MAIN FEATURE
-   ========================================================= */
-
-.pricing__main {
-  position: relative;
-
-  min-width: 0;
-  min-height: 0;
-
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  padding:
-    clamp(1.5rem, 3vw, 3rem);
-
-  border-radius: 28px;
-
-  background: var(--purple);
-  color: var(--cream);
-
-  box-shadow:
-    0 25px 80px
-    rgba(17, 11, 26, 0.12);
-
-  animation:
-    pricing-main-in 650ms
-      cubic-bezier(
-        0.22,
-        1,
-        0.36,
-        1
-      );
-}
-
-.pricing--yellow .pricing__main {
-  background: var(--yellow);
-  color: var(--ink);
-}
-
-.pricing__main::before {
-  content: '';
-
-  position: absolute;
-
-  width: 32rem;
-  height: 32rem;
-
-  right: -13rem;
-  bottom: -17rem;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 222, 58, 0.3),
-      transparent 68%
-    );
-
-  pointer-events: none;
-}
-
-.pricing--yellow .pricing__main::before {
-  background:
-    radial-gradient(
-      circle,
-      rgba(91, 33, 182, 0.13),
-      transparent 68%
-    );
-}
-
-.pricing__main::after {
-  content: '';
-
-  position: absolute;
-
-  top: 0;
-  right: 0;
-
-  width: 40%;
-  height: 2px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      var(--yellow)
-    );
-}
-
-.pricing--yellow .pricing__main::after {
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      var(--purple)
-    );
-}
-
-@keyframes pricing-main-in {
-  from {
-    opacity: 0;
-
-    transform:
-      translateY(18px)
-      scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-}
-
-/* =========================================================
-   BIG NUMBER
-   ========================================================= */
-
-.pricing__main-number {
-  position: absolute;
-
-  top: 0.4rem;
-  right: 1.5rem;
-
-  color:
-    rgba(245, 240, 230, 0.11);
-
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(8rem, 15vw, 16rem);
-  font-weight: 500;
-  line-height: 0.72;
-  letter-spacing: -0.1em;
-
-  pointer-events: none;
-}
-
-.pricing--yellow .pricing__main-number {
-  color:
-    rgba(17, 11, 26, 0.07);
-}
-
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
-
-.pricing__main-content {
-  position: relative;
-  z-index: 2;
-
-  max-width: 800px;
-
-  margin: auto 0;
-}
-
-.pricing__main-label {
-  display: flex;
-  align-items: center;
-
-  gap: 0.7rem;
-
-  margin-bottom: 0.8rem;
-
-  color:
-    rgba(245, 240, 230, 0.48);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.48rem;
-  letter-spacing: 0.13em;
-}
-
-.pricing--yellow .pricing__main-label {
-  color:
-    rgba(17, 11, 26, 0.45);
-}
-
-.pricing__main-line {
-  width: 25px;
-  height: 1px;
-
-  background: var(--yellow);
-}
-
-.pricing--yellow .pricing__main-line {
-  background: var(--purple);
-}
-
-/* =========================================================
-   PROJECT TYPE
-   ========================================================= */
-
-.pricing__main-type {
-  display: block;
-
-  margin-bottom: 0.8rem;
-
-  color: var(--yellow);
-
-  font-family: 'DM Mono', monospace;
-
-  /*
-   * Um pouco maior e mais pesado para que
-   * o tipo do projeto seja identificado
-   * imediatamente no primeiro olhar.
-   */
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-.pricing--yellow .pricing__main-type {
-  color: var(--purple);
-}
-
-.pricing__main h3 {
-  max-width: 760px;
-
-  margin: 0;
-
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.6rem, 4.4vw, 5.2rem);
-  font-weight: 500;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
-}
-
-.pricing__main-description {
-  max-width: 560px;
-
-  margin:
-    clamp(1rem, 2vw, 1.5rem)
-    0
-    0;
-
-  color:
-    rgba(245, 240, 230, 0.67);
-
-  font-size: 0.76rem;
+.pricing__intro p {
+  max-width: 300px;
+  margin: 0 0 1.1rem;
+  color: rgba(17, 11, 26, 0.6);
+  font-size: 0.82rem;
   line-height: 1.7;
 }
 
-.pricing--yellow .pricing__main-description {
-  color:
-    rgba(17, 11, 26, 0.6);
+.pricing__intro p:last-child {
+  margin-bottom: 0;
 }
+
 
 /* =========================================================
-   EXAMPLES
+   GRID
    ========================================================= */
 
-.pricing__examples {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 0.4rem;
-
-  margin-top: 1rem;
+.pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  border-top: 1px solid rgba(17, 11, 26, 0.14);
+  border-bottom: 1px solid rgba(17, 11, 26, 0.14);
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 850ms ease 120ms,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
 }
 
-.pricing__examples span {
-  padding:
-    0.35rem
-    0.62rem;
-
-  border: 1px solid
-    rgba(245, 240, 230, 0.16);
-
-  border-radius: 999px;
-
-  color:
-    rgba(245, 240, 230, 0.5);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.42rem;
-  letter-spacing: 0.06em;
+.pricing.is-visible .pricing__grid {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.pricing--yellow .pricing__examples span {
-  border-color:
-    rgba(17, 11, 26, 0.15);
-
-  color:
-    rgba(17, 11, 26, 0.48);
-}
 
 /* =========================================================
-   MAIN BOTTOM
+   CARD
    ========================================================= */
 
-.pricing__main-bottom {
+.pricing__card {
+  --card-ink: var(--ink, #110b1a);
+  --card-muted: rgba(17, 11, 26, 0.62);
+  --card-soft: rgba(17, 11, 26, 0.44);
+  --card-line: rgba(17, 11, 26, 0.12);
+  --card-accent: var(--purple);
+  --card-cream: var(--cream, #f7f5ef);
+
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid rgba(17, 11, 26, 0.12);
+  background: #ffffff;
+  isolation: isolate;
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 350ms ease;
+}
+
+.pricing__card:last-child {
+  border-right: 0;
+}
+
+.pricing__card:hover,
+.pricing__card:focus-within {
+  --card-ink: var(--cream, #f7f5ef);
+  --card-muted: rgba(247, 245, 239, 0.82);
+  --card-soft: rgba(247, 245, 239, 0.62);
+  --card-line: rgba(247, 245, 239, 0.2);
+  --card-accent: var(--yellow);
+}
+
+.pricing__card:hover {
+  transform: translateY(-5px);
+}
+
+
+/* =========================================================
+   PURPLE FILL
+   ========================================================= */
+
+.pricing__card-fill {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--purple);
+  transform: translateY(101%);
+  transition:
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pricing__card:hover .pricing__card-fill,
+.pricing__card:focus-within .pricing__card-fill {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
+
+.pricing__card-content {
   position: relative;
   z-index: 2;
-
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-
-  gap: 2rem;
-
-  padding-top: 1rem;
-
-  border-top: 1px solid
-    rgba(245, 240, 230, 0.14);
-}
-
-.pricing--yellow .pricing__main-bottom {
-  border-color:
-    rgba(17, 11, 26, 0.13);
-}
-
-.pricing__price {
+  min-height: 590px;
   display: flex;
   flex-direction: column;
-}
-
-.pricing__price span {
-  margin-bottom: 0.25rem;
-
-  color:
-    rgba(245, 240, 230, 0.42);
-
-  font-family: 'DM Mono', monospace;
-  font-size: 0.42rem;
-  letter-spacing: 0.12em;
-}
-
-.pricing--yellow .pricing__price span {
-  color:
-    rgba(17, 11, 26, 0.42);
-}
-
-.pricing__price strong {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.4rem, 3.7vw, 4rem);
-  font-weight: 400;
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-}
-
-.pricing__cta {
-  display: inline-flex;
-  align-items: center;
-
-  gap: 0.65rem;
-
   padding:
-    0.8rem
-    1rem;
+    1.5rem
+    clamp(1.3rem, 2vw, 2rem)
+    1.8rem;
 
-  border: 1px solid
-    rgba(245, 240, 230, 0.28);
+  color: var(--card-ink);
 
-  border-radius: 999px;
+  transition:
+    color 300ms ease;
+}
 
-  color: var(--cream);
+
+/* =========================================================
+   CARD TOP
+   ========================================================= */
+
+.pricing__card-top {
+  min-height: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.pricing__card-eyebrow {
+  color: var(--card-soft);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  transition:
+    color 280ms ease;
+}
+
+
+/* =========================================================
+   CARD HEADING
+   ========================================================= */
+
+.pricing__card-heading {
+  margin-top: 4rem;
+}
+
+.pricing__card-heading h3 {
+  margin: 0;
+  color: var(--card-ink);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+
+  transition:
+    color 280ms ease;
+}
+
+.pricing__card-heading p {
+  max-width: 285px;
+  margin: 1.35rem 0 0;
+  color: var(--card-muted);
+  font-size: 0.82rem;
+  line-height: 1.7;
+
+  transition:
+    color 280ms ease;
+}
+
+
+/* =========================================================
+   PROJECTS
+   ========================================================= */
+
+.pricing__projects {
+  margin-top: 3.5rem;
+}
+
+.pricing__projects-label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--card-soft);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.48rem;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  transition:
+    color 280ms ease;
+}
+
+.pricing__project {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 0;
+
+  border-top: 1px solid var(--card-line);
+
+  transition:
+    border-color 280ms ease;
+}
+
+.pricing__project:last-child {
+  border-bottom: 1px solid var(--card-line);
+}
+
+.pricing__project-name {
+  color: var(--card-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+
+  transition:
+    color 280ms ease;
+}
+
+.pricing__project-price {
+  flex-shrink: 0;
+  color: var(--card-accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-align: right;
+
+  transition:
+    color 280ms ease;
+}
+
+
+/* =========================================================
+   CTA
+   ========================================================= */
+
+.pricing__card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-top: auto;
+  padding-top: 2rem;
+
+  color: var(--card-muted);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.45rem;
-  letter-spacing: 0.09em;
-
+  font-size: 0.52rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
   text-decoration: none;
 
   transition:
-    background-color 300ms ease,
-    color 300ms ease,
-    border-color 300ms ease,
-    gap 300ms ease,
-    transform 300ms ease;
+    color 280ms ease,
+    gap 240ms ease;
 }
 
-.pricing--yellow .pricing__cta {
-  border-color:
-    rgba(17, 11, 26, 0.25);
+.pricing__card-cta span:last-child {
+  color: var(--card-accent);
+  font-size: 1rem;
 
-  color: var(--ink);
+  transition:
+    color 280ms ease;
 }
 
-.pricing__cta > span:last-child {
-  color: var(--yellow);
-
-  font-size: 0.8rem;
+.pricing__card-cta:hover {
+  gap: 1.15rem;
 }
 
-.pricing--yellow
-.pricing__cta > span:last-child {
-  color: var(--purple);
-}
-
-.pricing__cta:hover {
-  gap: 0.9rem;
-
-  border-color: var(--yellow);
-
-  background: var(--yellow);
-
-  color: var(--ink);
-
-  transform:
-    translateY(-2px);
-}
-
-.pricing--yellow .pricing__cta:hover {
-  border-color: var(--purple);
-
-  background: var(--purple);
-
-  color: var(--cream);
-}
-
-.pricing--yellow
-.pricing__cta:hover
-> span:last-child {
-  color: var(--yellow);
-}
 
 /* =========================================================
    FOOTER
    ========================================================= */
 
 .pricing__footer {
-  flex: 0 0 auto;
-
-  min-height: 24px;
-
-  margin-top:
-    clamp(0.8rem, 1.5vh, 1.3rem);
-
   display: grid;
-
-  grid-template-columns:
-    1fr
-    auto
-    1fr;
-
+  grid-template-columns: auto minmax(180px, 1fr) auto;
   align-items: center;
-
   gap: 2rem;
-}
+  padding-top: 1.2rem;
 
-.pricing__progress {
-  display: flex;
-  align-items: center;
-
-  gap: 0.3rem;
-}
-
-.pricing__progress button {
-  width: 18px;
-  height: 2px;
-
-  padding: 0;
-
-  border: 0;
-
-  background:
-    rgba(17, 11, 26, 0.14);
-
-  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
 
   transition:
-    width 300ms ease,
-    background-color 300ms ease;
+    opacity 700ms ease 300ms,
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 300ms;
 }
 
-.pricing__progress button:hover {
-  background:
-    rgba(91, 33, 182, 0.45);
+.pricing.is-visible .pricing__footer {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.pricing__progress button.is-active {
-  width: 40px;
+.pricing__footer-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 
-  background: var(--purple);
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.46rem;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+}
+
+.pricing__footer-label span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--yellow);
 }
 
 .pricing__footer p {
-  margin: 0;
+  max-width: 380px;
+  margin: 0 auto;
 
-  color:
-    rgba(17, 11, 26, 0.3);
+  color: rgba(17, 11, 26, 0.48);
 
-  font-size: 0.55rem;
-  line-height: 1.5;
-
+  font-size: 0.68rem;
+  line-height: 1.6;
   text-align: center;
 }
 
-.pricing__scroll {
-  justify-self: end;
-
+.pricing__footer a {
   display: inline-flex;
   align-items: center;
+  gap: 0.55rem;
 
-  gap: 0.5rem;
-
-  color:
-    rgba(17, 11, 26, 0.3);
+  color: rgba(17, 11, 26, 0.58);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.44rem;
-  letter-spacing: 0.12em;
+  font-size: 0.46rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+
+  transition:
+    color 220ms ease,
+    gap 220ms ease;
 }
 
-.pricing__scroll span {
+.pricing__footer a span {
   color: var(--purple);
-
-  font-size: 0.8rem;
-
-  animation:
-    pricing-scroll 1.8s
-    ease-in-out infinite;
+  font-size: 0.9rem;
 }
 
-@keyframes pricing-scroll {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(4px);
-  }
+.pricing__footer a:hover {
+  gap: 0.8rem;
+  color: var(--purple);
 }
+
 
 /* =========================================================
    TABLET
    ========================================================= */
 
-@media (max-width: 1000px) {
-  .pricing__heading-row {
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(200px, 280px);
-
-    gap: 3rem;
+@media (max-width: 1050px) {
+  .pricing__inner {
+    width: min(calc(100% - 3rem), 920px);
   }
 
-  .pricing__solutions {
-    grid-template-columns:
-      minmax(190px, 0.42fr)
-      minmax(0, 1.58fr);
-
-    gap: 2.5rem;
+  .pricing__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .pricing__nav-name {
-    font-size: 0.48rem;
+  .pricing__card:nth-child(2) {
+    border-right: 0;
   }
 
-  .pricing__main {
-    padding: 1.7rem;
+  .pricing__card:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(17, 11, 26, 0.12);
   }
 
-  .pricing__main-type {
-    font-size: 0.64rem;
-  }
-
-  .pricing__main h3 {
-    font-size: clamp(
-      2.4rem,
-      4.4vw,
-      4.5rem
-    );
+  .pricing__card-content {
+    min-height: 560px;
   }
 }
+
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
 @media (max-width: 760px) {
-  .pricing {
-    height: 650vh;
-  }
-
-  .pricing__sticky {
-    min-height: 620px;
-  }
-
   .pricing__inner {
-    padding:
-      1.4rem
-      1rem
-      1rem;
+    width: calc(100% - 2rem);
+    padding: 5rem 0 2.5rem;
   }
 
-  .pricing__heading-row {
+  .pricing__header {
+    margin-bottom: 3.5rem;
+  }
+
+  .pricing__heading {
     display: block;
   }
 
-  .pricing__heading-row h2 {
-    font-size: clamp(
-      2.8rem,
-      11vw,
-      4rem
-    );
+  .pricing__heading h2 {
+    font-size: clamp(2.8rem, 11vw, 4rem);
   }
 
-  .pricing__heading-row h2 span {
-    margin-left: 0.8rem;
+  .pricing__heading h2 span {
+    margin-left: 0.7rem;
   }
 
-  .pricing__heading-row > p {
-    max-width: 440px;
-
-    margin:
-      0.9rem
-      0
-      0;
-
-    font-size: 0.68rem;
-    line-height: 1.55;
+  .pricing__intro {
+    margin-top: 1.8rem;
   }
 
-  .pricing__solutions {
+  .pricing__intro p {
+    max-width: 390px;
+    font-size: 0.78rem;
+  }
+
+  .pricing__grid {
     display: flex;
     flex-direction: column;
-
-    gap: 0.7rem;
-
-    margin-top: 0.8rem;
+    border-bottom: 0;
   }
 
-  .pricing__nav {
-    flex: 0 0 auto;
-
-    width: 100%;
-
-    display: flex;
-    flex-direction: row;
-
-    overflow-x: auto;
-
-    justify-content: flex-start;
-
-    scrollbar-width: none;
+  .pricing__card {
+    border-right: 0;
+    border-bottom: 1px solid rgba(17, 11, 26, 0.13);
   }
 
-  .pricing__nav::-webkit-scrollbar {
-    display: none;
+  .pricing__card:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(17, 11, 26, 0.13);
   }
 
-  .pricing__nav-item {
-    flex: 0 0 auto;
-
-    width: 112px;
-    min-height: 52px;
-
-    padding:
-      0.55rem
-      0.65rem;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: flex-start;
-    justify-content: center;
-
-    gap: 0.25rem;
-
-    border:
-      1px solid
-      rgba(17, 11, 26, 0.1);
-
-    border-radius: 10px;
-
-    background:
-      rgba(255, 252, 246, 0.35);
+  .pricing__card:last-child {
+    border-bottom: 0;
   }
 
-  .pricing__nav-item:first-child {
-    border-top:
-      1px solid
-      rgba(17, 11, 26, 0.1);
+  .pricing__card-content {
+    min-height: 500px;
+    padding: 1.5rem 0 2rem;
   }
 
-  .pricing__nav-item::before {
-    top: auto;
-
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    width: auto;
-    height: 2px;
-
-    transform:
-      scaleX(0);
-
-    transform-origin: left;
+  .pricing__card-heading {
+    margin-top: 3rem;
   }
 
-  .pricing__nav-item.is-active {
-    padding-left: 0.65rem;
-
-    border-color:
-      rgba(91, 33, 182, 0.25);
+  .pricing__card-heading h3 {
+    font-size: clamp(2.3rem, 9vw, 3rem);
   }
 
-  .pricing__nav-item.is-active::before {
-    transform:
-      scaleX(1);
+  .pricing__card-heading p {
+    max-width: 420px;
+    font-size: 0.84rem;
+    line-height: 1.7;
   }
 
-  .pricing__nav-arrow {
-    display: none;
+  .pricing__projects {
+    margin-top: 2.8rem;
   }
 
-  .pricing__nav-number {
-    font-size: 0.42rem;
+  .pricing__project-name {
+    font-size: 0.8rem;
   }
 
-  .pricing__nav-name {
-    max-width: 100%;
-
-    font-size: 0.4rem;
-
-    white-space: normal;
-  }
-
-  .pricing__main {
-    flex: 1 1 auto;
-
-    min-height: 0;
-
-    padding: 1.2rem;
-
-    border-radius: 20px;
-  }
-
-  .pricing__main-number {
-    top: 0.4rem;
-    right: 1rem;
-
-    font-size: 8rem;
-  }
-
-  .pricing__main-content {
-    max-width: 100%;
-  }
-
-  .pricing__main-label {
-    font-size: 0.42rem;
-  }
-
-  .pricing__main-type {
-    /*
-     * Mantém o destaque também no celular,
-     * sem ficar grande demais para a área disponível.
-     */
-    font-size: 0.56rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-  }
-
-  .pricing__main h3 {
-    font-size: clamp(
-      2.1rem,
-      8.5vw,
-      3.5rem
-    );
-  }
-
-  .pricing__main-description {
-    max-width: 100%;
-
-    font-size: 0.66rem;
-    line-height: 1.6;
-  }
-
-  .pricing__examples span {
-    padding:
-      0.3rem
-      0.5rem;
-
-    font-size: 0.39rem;
-  }
-
-  .pricing__main-bottom {
-    gap: 1rem;
-  }
-
-  .pricing__price strong {
-    font-size: 2.2rem;
-  }
-
-  .pricing__cta {
-    padding:
-      0.65rem
-      0.75rem;
-
-    font-size: 0.39rem;
+  .pricing__project-price {
+    font-size: 0.52rem;
   }
 
   .pricing__footer {
-    grid-template-columns:
-      1fr
-      auto;
-
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
   }
 
   .pricing__footer p {
-    display: none;
-  }
-
-  .pricing__scroll {
-    display: none;
+    margin: 0;
+    text-align: left;
+    font-size: 0.68rem;
   }
 }
+
 
 /* =========================================================
    SMALL MOBILE
    ========================================================= */
 
 @media (max-width: 430px) {
-  .pricing__sticky {
-    min-height: 600px;
-  }
-
-  .pricing__header-meta {
-    margin-bottom: 0.6rem;
+  .pricing__inner {
+    width: calc(100% - 1.4rem);
+    padding-top: 3.8rem;
   }
 
   .pricing__eyebrow {
-    font-size: 0.48rem;
+    font-size: 0.52rem;
   }
 
-  .pricing__heading-row h2 {
+  .pricing__heading h2 {
     font-size: 2.55rem;
   }
 
-  .pricing__heading-row > p {
-    display: none;
+  .pricing__intro p {
+    font-size: 0.74rem;
   }
 
-  .pricing__solutions {
-    margin-top: 0.7rem;
+  .pricing__card-content {
+    min-height: 470px;
   }
 
-  .pricing__nav-item {
-    width: 100px;
-    min-height: 48px;
+  .pricing__card-eyebrow {
+    font-size: 0.44rem;
   }
 
-  .pricing__main {
-    padding: 1rem;
+  .pricing__card-heading h3 {
+    font-size: 2.15rem;
   }
 
-  .pricing__main-number {
-    font-size: 7rem;
+  .pricing__card-heading p {
+    font-size: 0.78rem;
+    line-height: 1.7;
   }
 
-  .pricing__main-type {
-    font-size: 0.52rem;
-    font-weight: 600;
+  .pricing__project-name {
+    font-size: 0.76rem;
   }
 
-  .pricing__main h3 {
-    font-size: 2rem;
+  .pricing__project-price {
+    font-size: 0.48rem;
   }
 
-  .pricing__main-description {
+  .pricing__card-cta {
+    font-size: 0.46rem;
+  }
+
+  .pricing__footer-label {
+    font-size: 0.4rem;
+  }
+
+  .pricing__footer p {
     font-size: 0.62rem;
   }
 
-  .pricing__examples {
-    display: none;
-  }
-
-  .pricing__main-bottom {
-    padding-top: 0.7rem;
-  }
-
-  .pricing__price span {
-    font-size: 0.38rem;
-  }
-
-  .pricing__price strong {
-    font-size: 2rem;
-  }
-
-  .pricing__cta {
-    font-size: 0.35rem;
-  }
-
-  .pricing__progress button {
-    width: 13px;
-  }
-
-  .pricing__progress button.is-active {
-    width: 28px;
+  .pricing__footer a {
+    font-size: 0.42rem;
   }
 }
+
 
 /* =========================================================
    REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .pricing__main {
-    animation: none;
-  }
-
-  .pricing__scroll span {
-    animation: none;
-  }
-
-  .pricing__nav-item,
-  .pricing__progress button,
-  .pricing__cta {
+  .pricing__header,
+  .pricing__grid,
+  .pricing__footer,
+  .pricing__card,
+  .pricing__card-fill,
+  .pricing__card-cta {
     transition: none;
   }
 }

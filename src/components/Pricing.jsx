@@ -2,107 +2,88 @@ import { useEffect, useRef, useState } from 'react'
 
 import '../styles/pricing.css'
 
-const solutions = [
+const categories = [
   {
-    number: '01',
-    type: 'LANDING PAGE',
+    id: 'presence',
     eyebrow: 'PRESENÇA DIGITAL',
-    title: 'Uma página para fazer seu negócio ser visto.',
+    name: 'Ser visto',
     description:
-      'Uma experiência focada em apresentar seu negócio, serviço, produto ou campanha com clareza e personalidade.',
-    examples: ['Restaurante', 'Barbearia', 'Doceria', 'Profissional'],
-    price: 'R$ 900',
-    accent: 'purple',
+      'Para apresentar seu negócio com clareza, mostrar o que você oferece e criar um espaço próprio para sua marca na internet.',
+    projects: [
+      {
+        name: 'Landing page',
+        price: 'R$ 900',
+      },
+      {
+        name: 'Site institucional',
+        price: 'R$ 1.500',
+      },
+      {
+        name: 'Catálogo / vitrine',
+        price: 'R$ 1.800',
+      },
+    ],
   },
   {
-    number: '02',
-    type: 'SITE INSTITUCIONAL',
-    eyebrow: 'PRESENÇA DIGITAL',
-    title: 'Mais espaço para contar o que faz você diferente.',
-    description:
-      'Um site completo para apresentar sua empresa, seus serviços, sua história e construir confiança antes mesmo do primeiro contato.',
-    examples: ['Empresa', 'Clínica', 'Escritório', 'Marca'],
-    price: 'R$ 1.500',
-    accent: 'yellow',
-  },
-  {
-    number: '03',
-    type: 'CATÁLOGO / VITRINE',
+    id: 'commercial',
     eyebrow: 'EXPERIÊNCIA COMERCIAL',
-    title: 'Seus produtos merecem mais do que uma lista.',
+    name: 'Vender melhor',
     description:
-      'Uma vitrine digital para organizar produtos, serviços ou coleções e tornar a descoberta muito mais agradável.',
-    examples: ['Produtos', 'Cardápios', 'Coleções', 'Portfólio'],
-    price: 'R$ 1.800',
-    accent: 'purple',
+      'Para organizar produtos, serviços e atendimentos e tornar mais simples o caminho entre conhecer seu negócio e entrar em contato.',
+    projects: [
+      {
+        name: 'Agendamento',
+        price: 'R$ 2.000',
+      },
+      {
+        name: 'Loja virtual',
+        price: 'R$ 2.500',
+      },
+    ],
   },
   {
-    number: '04',
-    type: 'LOJA VIRTUAL',
-    eyebrow: 'EXPERIÊNCIA COMERCIAL',
-    title: 'Da descoberta até a compra.',
+    id: 'digital',
+    eyebrow: 'SOLUÇÕES DIGITAIS',
+    name: 'Organizar',
     description:
-      'Uma experiência de venda pensada para apresentar seus produtos, facilitar a navegação e criar um caminho claro até a compra.',
-    examples: ['Moda', 'Calçados', 'Autopeças', 'Artesanato'],
-    price: 'R$ 2.500',
-    accent: 'yellow',
+      'Para quando processos, informações e tarefas começam a ocupar tempo demais e precisam de uma solução mais organizada.',
+    projects: [
+      {
+        name: 'Dashboard',
+        price: 'R$ 3.000',
+      },
+      {
+        name: 'Sistema de gestão',
+        price: 'R$ 3.500',
+      },
+    ],
   },
   {
-    number: '05',
-    type: 'SISTEMA / CRUD',
-    eyebrow: 'SOLUÇÃO DIGITAL',
-    title: 'Quando seu negócio precisa começar a trabalhar melhor.',
+    id: 'custom',
+    eyebrow: 'PROJETO PERSONALIZADO',
+    name: 'Algo diferente',
     description:
-      'Sistemas para organizar cadastros, informações, processos e operações que já ficaram grandes demais para planilhas e anotações.',
-    examples: ['Cadastros', 'Gestão', 'Estoque', 'Clientes'],
-    price: 'R$ 3.500',
-    accent: 'purple',
-  },
-  {
-    number: '06',
-    type: 'DASHBOARD',
-    eyebrow: 'SOLUÇÃO DIGITAL',
-    title: 'Tudo importante em um só lugar.',
-    description:
-      'Painéis para reunir informações, acompanhar indicadores e transformar dados espalhados em uma visão mais simples do negócio.',
-    examples: ['Indicadores', 'Relatórios', 'Vendas', 'Métricas'],
-    price: 'R$ 3.000',
-    accent: 'yellow',
-  },
-  {
-    number: '07',
-    type: 'AGENDAMENTO',
-    eyebrow: 'SOLUÇÃO DIGITAL',
-    title: 'Menos mensagens. Mais organização.',
-    description:
-      'Uma experiência para organizar horários, reservas, serviços e atendimentos sem deixar a rotina presa a conversas intermináveis.',
-    examples: ['Salão', 'Clínica', 'Consultório', 'Reservas'],
-    price: 'R$ 2.000',
-    accent: 'purple',
-  },
-  {
-    number: '08',
-    type: 'PROJETO PERSONALIZADO',
-    eyebrow: 'ALGO DIFERENTE',
-    title: 'Talvez o que você precisa ainda não tenha nome.',
-    description:
-      'Se nenhuma dessas soluções parece exatamente certa, podemos começar pela ideia, pelo problema ou pela oportunidade.',
-    examples: ['Ideias', 'Integrações', 'Ferramentas', 'Experiências'],
-    price: 'SOB MEDIDA',
-    accent: 'yellow',
+      'Para necessidades que não cabem em uma solução pronta. O projeto começa entendendo o que seu negócio realmente precisa.',
+    projects: [
+      {
+        name: 'Solução sob medida',
+        price: 'Sob consulta',
+      },
+    ],
   },
 ]
 
 export default function Pricing() {
   const sectionRef = useRef(null)
 
-  const [activeIndex, setActiveIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const section = sectionRef.current
 
-    if (!section) return undefined
+    if (!section) {
+      return undefined
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -111,7 +92,7 @@ export default function Pricing() {
         }
       },
       {
-        threshold: 0.05,
+        threshold: 0.12,
       },
     )
 
@@ -120,304 +101,160 @@ export default function Pricing() {
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    const section = sectionRef.current
-
-    if (!section) return undefined
-
-    let ticking = false
-
-    const updateActiveIndex = () => {
-      const rect = section.getBoundingClientRect()
-
-      const scrollDistance =
-        section.offsetHeight - window.innerHeight
-
-      if (scrollDistance <= 0) {
-        ticking = false
-        return
-      }
-
-      const currentScroll =
-        window.scrollY -
-        (window.scrollY + rect.top)
-
-      const clampedScroll = Math.max(
-        0,
-        Math.min(scrollDistance, currentScroll),
-      )
-
-      const progress =
-        clampedScroll / scrollDistance
-
-      const nextIndex = Math.min(
-        solutions.length - 1,
-        Math.floor(
-          progress * solutions.length,
-        ),
-      )
-
-      setActiveIndex((current) =>
-        current === nextIndex
-          ? current
-          : nextIndex,
-      )
-
-      ticking = false
-    }
-
-    const handleScroll = () => {
-      if (ticking) return
-
-      ticking = true
-
-      window.requestAnimationFrame(
-        updateActiveIndex,
-      )
-    }
-
-    updateActiveIndex()
-
-    window.addEventListener(
-      'scroll',
-      handleScroll,
-      { passive: true },
-    )
-
-    window.addEventListener(
-      'resize',
-      handleScroll,
-    )
-
-    return () => {
-      window.removeEventListener(
-        'scroll',
-        handleScroll,
-      )
-
-      window.removeEventListener(
-        'resize',
-        handleScroll,
-      )
-    }
-  }, [])
-
-  const scrollToSolution = (index) => {
-    const section = sectionRef.current
-
-    if (!section) return
-
-    const scrollDistance =
-      section.offsetHeight -
-      window.innerHeight
-
-    const progress =
-      index / solutions.length
-
-    const target =
-      window.scrollY +
-      section.getBoundingClientRect().top +
-      progress * scrollDistance
-
-    window.scrollTo({
-      top: target,
-      behavior: 'smooth',
-    })
-  }
-
-  const active = solutions[activeIndex]
-
   return (
     <section
       ref={sectionRef}
-      className={`pricing pricing--${active.accent} ${
+      className={`pricing ${
         isVisible ? 'is-visible' : ''
       }`}
       id="pricing"
       aria-labelledby="pricing-title"
     >
-      <div className="pricing__sticky">
-        <div className="pricing__noise" aria-hidden="true" />
+      <div className="pricing__inner">
 
-        <div className="pricing__inner">
-          <header className="pricing__header">
-            <div className="pricing__header-meta">
-              <span className="pricing__eyebrow">
-                INVESTIMENTO
-              </span>
+        <header className="pricing__header">
 
-              <span className="pricing__counter">
-                {active.number}
-                <span>/</span>
-                08
-              </span>
-            </div>
+          <span className="pricing__eyebrow">
+            INVESTIMENTO
+          </span>
 
-            <div className="pricing__heading-row">
+          <div className="pricing__heading">
+
+            <div className="pricing__heading-main">
+
               <h2 id="pricing-title">
-                O que seu negócio
-                <span>precisa construir?</span>
+                Cada projeto
+                <span>
+                  começa de um jeito.
+                </span>
               </h2>
 
-              <p>
-                Não existe um tamanho único para todo
-                negócio. Escolha o ponto de partida
-                que mais combina com o que você quer
-                colocar no mundo.
-              </p>
             </div>
-          </header>
 
-          <div className="pricing__solutions">
-            <nav
-              className="pricing__nav"
-              aria-label="Soluções da Rouxinol"
-            >
-              {solutions.map(
-                (solution, index) => (
-                  <button
-                    key={solution.number}
-                    type="button"
-                    className={`pricing__nav-item ${
-                      activeIndex === index
-                        ? 'is-active'
-                        : ''
-                    }`}
-                    onClick={() =>
-                      scrollToSolution(index)
-                    }
-                    aria-current={
-                      activeIndex === index
-                        ? 'true'
-                        : undefined
-                    }
-                  >
-                    <span className="pricing__nav-number">
-                      {solution.number}
-                    </span>
+            <div className="pricing__intro">
 
-                    <span className="pricing__nav-name">
-                      {solution.type}
-                    </span>
+              <p>
+                Cada solução parte de um
+                ponto de partida diferente.
+              </p>
 
-                    <span
-                      className="pricing__nav-arrow"
-                      aria-hidden="true"
-                    >
-                      ↗
-                    </span>
-                  </button>
-                ),
-              )}
-            </nav>
+              <p>
+                O valor final acompanha o
+                que o projeto precisa.
+              </p>
 
+            </div>
+
+          </div>
+
+        </header>
+
+        <div className="pricing__grid">
+
+          {categories.map((category) => (
             <article
-              className="pricing__main"
-              key={active.number}
+              key={category.id}
+              className="pricing__card"
             >
-              <div className="pricing__main-number">
-                {active.number}
-              </div>
 
-              <div className="pricing__main-content">
-                <div className="pricing__main-label">
-                  <span className="pricing__main-line" />
+              <div
+                className="pricing__card-fill"
+                aria-hidden="true"
+              />
 
-                  {active.eyebrow}
-                </div>
+              <div className="pricing__card-content">
 
-                <span className="pricing__main-type">
-                  {active.type}
-                </span>
+                <div className="pricing__card-top">
 
-                <h3>{active.title}</h3>
-
-                <p className="pricing__main-description">
-                  {active.description}
-                </p>
-
-                <div className="pricing__examples">
-                  {active.examples.map(
-                    (example) => (
-                      <span key={example}>
-                        {example}
-                      </span>
-                    ),
-                  )}
-                </div>
-              </div>
-
-              <div className="pricing__main-bottom">
-                <div className="pricing__price">
-                  <span>
-                    {active.price === 'SOB MEDIDA'
-                      ? 'INVESTIMENTO'
-                      : 'A PARTIR DE'}
+                  <span className="pricing__card-eyebrow">
+                    {category.eyebrow}
                   </span>
 
-                  <strong>
-                    {active.price}
-                  </strong>
+                </div>
+
+                <div className="pricing__card-heading">
+
+                  <h3>
+                    {category.name}
+                  </h3>
+
+                  <p>
+                    {category.description}
+                  </p>
+
+                </div>
+
+                <div className="pricing__projects">
+
+                  <span className="pricing__projects-label">
+                    SOLUÇÕES
+                  </span>
+
+                  {category.projects.map((project) => (
+                    <div
+                      className="pricing__project"
+                      key={project.name}
+                    >
+
+                      <span className="pricing__project-name">
+                        {project.name}
+                      </span>
+
+                      <span className="pricing__project-price">
+                        {project.price === 'Sob consulta'
+                          ? project.price
+                          : `a partir de ${project.price}`}
+                      </span>
+
+                    </div>
+                  ))}
+
                 </div>
 
                 <a
                   href="#contact"
-                  className="pricing__cta"
+                  className="pricing__card-cta"
                 >
                   <span>
-                    {active.price === 'SOB MEDIDA'
-                      ? 'FALAR SOBRE A IDEIA'
-                      : 'CONVERSAR SOBRE O PROJETO'}
+                    {category.id === 'custom'
+                      ? 'CONVERSAR SOBRE O PROJETO'
+                      : 'VER ESSA POSSIBILIDADE'}
                   </span>
 
                   <span aria-hidden="true">
                     ↗
                   </span>
                 </a>
+
               </div>
+
             </article>
+          ))}
+
+        </div>
+
+        <footer className="pricing__footer">
+
+          <div className="pricing__footer-label">
+            <span />
+            VALORES INICIAIS
           </div>
 
-          <footer className="pricing__footer">
-            <div className="pricing__progress">
-              {solutions.map(
-                (solution, index) => (
-                  <button
-                    key={solution.number}
-                    type="button"
-                    className={
-                      activeIndex === index
-                        ? 'is-active'
-                        : ''
-                    }
-                    aria-label={`Ir para ${solution.type}`}
-                    aria-current={
-                      activeIndex === index
-                        ? 'true'
-                        : undefined
-                    }
-                    onClick={() =>
-                      scrollToSolution(index)
-                    }
-                  />
-                ),
-              )}
-            </div>
+          <p>
+            O valor final depende do escopo,
+            funcionalidades e complexidade
+            de cada projeto.
+          </p>
 
-            <p>
-              Valores iniciais. O investimento final
-              depende do escopo e da complexidade
-              de cada projeto.
-            </p>
-
-            <span className="pricing__scroll">
-              ROLE PARA EXPLORAR
-              <span aria-hidden="true">
-                ↓
-              </span>
+          <a href="#contact">
+            NÃO SABE POR ONDE COMEÇAR?
+            <span aria-hidden="true">
+              ↗
             </span>
-          </footer>
-        </div>
+          </a>
+
+        </footer>
+
       </div>
     </section>
   )
