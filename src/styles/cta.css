@@ -1,28 +1,19 @@
 /* =========================================================
-   CTA — STARTING POINT
+   CTA
    ========================================================= */
 
 .cta {
   position: relative;
+
   min-height: 100svh;
-  padding:
-    clamp(5rem, 8vw, 7.5rem)
-    6vw
-    clamp(3.5rem, 6vw, 5rem);
 
   overflow: hidden;
 
-  background:
-    linear-gradient(
-      180deg,
-      rgba(17, 11, 26, 0.28),
-      rgba(17, 11, 26, 0.5)
-    ),
-    url('/assets/CTA-background.jpg')
-      center / cover
-      no-repeat;
+  background: #f7f5ef;
 
-  color: var(--cream);
+  color:
+    var(--ink, #17111d);
+
   isolation: isolate;
 }
 
@@ -33,39 +24,116 @@
 
 .cta__background {
   position: absolute;
+
   inset: 0;
+
   z-index: -1;
+
+  overflow: hidden;
+
   pointer-events: none;
+
+  background:
+    #f7f5ef
+    url('/assets/cta-background.png')
+    center / cover
+    no-repeat;
 }
+
+
+/*
+   Soft central light.
+
+   Keeps the area behind the CTA clean even when
+   the generated image contains architectural details.
+*/
 
 .cta__background::before {
   content: '';
+
   position: absolute;
+
   inset: 0;
+
+  z-index: 1;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 48%,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(255, 255, 255, 0.78) 24%,
+      rgba(255, 255, 255, 0.28) 47%,
+      transparent 72%
+    );
+
+  pointer-events: none;
+}
+
+
+/*
+   Very subtle atmospheric veil.
+
+   Prevents the architectural background from
+   becoming visually stronger than the interface.
+*/
+
+.cta__background::after {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
 
   background:
     linear-gradient(
       90deg,
-      rgba(17, 11, 26, 0.7) 0%,
-      rgba(17, 11, 26, 0.38) 55%,
-      rgba(17, 11, 26, 0.5) 100%
+      rgba(247, 245, 239, 0.2),
+      transparent 25%,
+      transparent 75%,
+      rgba(247, 245, 239, 0.2)
     );
 
-  opacity: 0.85;
+  pointer-events: none;
 }
 
-.cta__background::after {
-  content: '';
-  position: absolute;
-  inset: 0;
 
-  background:
-    linear-gradient(
-      180deg,
-      rgba(91, 33, 182, 0.08),
-      transparent 40%,
-      rgba(244, 215, 47, 0.035)
-    );
+/* =========================================================
+   ARCHITECTURAL DEPTH
+   ========================================================= */
+
+.cta__orb {
+  position: absolute;
+
+  z-index: 3;
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(91, 35, 130, 0.045);
+
+  pointer-events: none;
+}
+
+.cta__orb--one {
+  width: 700px;
+  height: 700px;
+
+  top: -570px;
+  right: -260px;
+}
+
+.cta__orb--two {
+  width: 500px;
+  height: 500px;
+
+  bottom: -410px;
+  left: -270px;
+
+  border-color:
+    rgba(246, 201, 69, 0.075);
 }
 
 
@@ -75,14 +143,22 @@
 
 .cta__inner {
   position: relative;
-  z-index: 2;
 
-  width: min(1380px, 100%);
-  min-height: calc(100svh - 13rem);
+  z-index: 4;
+
+  width: min(1180px, 100%);
+
+  min-height: 100svh;
 
   margin: 0 auto;
 
+  padding:
+    clamp(28px, 4vw, 48px)
+    clamp(22px, 5vw, 70px)
+    26px;
+
   display: flex;
+
   flex-direction: column;
 }
 
@@ -92,408 +168,556 @@
    ========================================================= */
 
 .cta__header {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  padding-top:
+    clamp(5rem, 10vw, 8.5rem);
+
   opacity: 0;
-  transform: translateY(30px);
+
+  transform:
+    translateY(28px);
 
   transition:
-    opacity 800ms ease,
-    transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 900ms ease,
+    transform 1000ms
+      cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cta.is-visible .cta__header {
   opacity: 1;
-  transform: translateY(0);
+
+  transform:
+    translateY(0);
 }
 
-.cta__header-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
-  padding-bottom: 1.3rem;
-
-  border-bottom:
-    1px solid
-    rgba(245, 240, 230, 0.2);
-}
+/* =========================================================
+   EYEBROW
+   ========================================================= */
 
 .cta__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
+  margin: 0 0 25px;
 
-  color: var(--yellow);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.56rem;
-  letter-spacing: 0.15em;
-}
-
-.cta__eyebrow::before {
-  content: '';
-
-  width: 26px;
-  height: 1px;
-
-  background: var(--yellow);
-}
-
-.cta__header-index {
   color:
-    rgba(
-      245,
-      240,
-      230,
-      0.42
-    );
+    var(--purple, #5b2382);
 
   font-family:
     'DM Mono',
     monospace;
 
-  font-size: 0.5rem;
-  letter-spacing: 0.12em;
+  font-size: 0.47rem;
+
+  font-weight: 500;
+
+  letter-spacing: 0.16em;
 }
 
-.cta__heading {
-  display: grid;
 
-  grid-template-columns:
-    minmax(0, 1.4fr)
-    minmax(220px, 0.6fr);
-
-  gap: 5rem;
-
-  align-items: end;
-
-  padding-top:
-    clamp(
-      3rem,
-      6vw,
-      5.5rem
-    );
-}
+/* =========================================================
+   TITLE
+   ========================================================= */
 
 .cta__title {
+  max-width: 900px;
+
   margin: 0;
 
-  max-width: 1000px;
+  color:
+    var(--ink, #17111d);
 
   font-family:
     'Playfair Display',
     serif;
 
   font-size:
-    clamp(
-      4rem,
-      8vw,
-      8.8rem
-    );
+    clamp(4.5rem, 9vw, 8.8rem);
 
   font-weight: 500;
 
-  line-height: 0.86;
+  line-height: 0.83;
 
-  letter-spacing: -0.065em;
+  letter-spacing: -0.075em;
+
+  text-wrap: balance;
+
+  text-shadow:
+    0 10px 30px
+    rgba(255, 255, 255, 0.42);
 }
 
 .cta__title span {
   display: block;
 
-  margin-left:
-    clamp(
-      2rem,
-      7vw,
-      8rem
-    );
-
-  color: var(--yellow);
+  color:
+    var(--purple, #5b2382);
 
   font-style: italic;
 }
 
-.cta__intro {
-  max-width: 340px;
 
-  margin: 0 0 0 auto;
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.cta__intro {
+  margin:
+    30px 0 0;
 
   color:
-    rgba(
-      245,
-      240,
-      230,
-      0.62
-    );
+    rgba(23, 17, 29, 0.42);
 
-  font-size: 0.82rem;
+  font-size:
+    clamp(0.9rem, 1.05vw, 1rem);
 
-  line-height: 1.75;
+  line-height: 1.55;
+
+  text-shadow:
+    0 3px 14px
+    rgba(255, 255, 255, 0.65);
 }
 
 
 /* =========================================================
-   CONTENT
+   INTERFACE
    ========================================================= */
 
-.cta__content {
-  display: grid;
+.cta__interface {
+  display: flex;
 
-  grid-template-columns:
-    minmax(0, 1.15fr)
-    minmax(320px, 0.85fr);
-
-  gap: clamp(3rem, 7vw, 8rem);
+  justify-content: center;
 
   margin-top:
-    clamp(
-      4rem,
-      8vw,
-      7rem
-    );
+    clamp(4rem, 6vw, 5.5rem);
 
-  flex: 1;
+  opacity: 0;
+
+  transform:
+    translateY(34px);
+
+  transition:
+    opacity 900ms 120ms ease,
+    transform 1000ms 120ms
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta.is-visible .cta__interface {
+  opacity: 1;
+
+  transform:
+    translateY(0);
 }
 
 
 /* =========================================================
-   PATHS
+   CARD
    ========================================================= */
 
-.cta__paths-label {
-  margin-bottom: 1rem;
-
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.38
-    );
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.5rem;
-
-  letter-spacing: 0.14em;
-}
-
-.cta__path-list {
-  border-top:
-    1px solid
-    rgba(
-      245,
-      240,
-      230,
-      0.2
-    );
-}
-
-.cta__path {
+.cta__card {
   position: relative;
 
-  display: grid;
+  width: min(540px, 100%);
 
-  grid-template-columns:
-    44px
-    minmax(0, 1fr)
-    40px;
+  overflow: hidden;
 
-  gap: 1rem;
-
-  align-items: center;
-
-  min-height: 78px;
-
-  padding:
-    0.8rem
-    0.4rem;
-
-  border-bottom:
+  border:
     1px solid
-    rgba(
-      245,
-      240,
-      230,
-      0.12
-    );
+    rgba(23, 17, 29, 0.085);
 
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.48
-    );
+  border-radius: 30px;
 
-  text-decoration: none;
+  background:
+    rgba(255, 255, 255, 0.86);
+
+  /*
+    Main floating shadow.
+    Soft enough to preserve the minimal aesthetic,
+    strong enough to separate the interface
+    from the architectural background.
+  */
+
+  box-shadow:
+    0 18px 35px
+      rgba(23, 17, 29, 0.055),
+
+    0 40px 90px
+      rgba(91, 35, 130, 0.075),
+
+    0 8px 18px
+      rgba(255, 255, 255, 0.7)
+      inset;
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  animation:
+    ctaFloat
+    7s
+    ease-in-out
+    infinite;
 
   transition:
-    color 400ms ease,
-    padding 500ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 400ms ease;
+    box-shadow 500ms ease,
+    transform 500ms
+      cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cta__path::before {
+
+/*
+   Extremely subtle purple light underneath
+   the floating interface.
+*/
+
+.cta__card::after {
   content: '';
 
   position: absolute;
 
-  left: 0;
-  bottom: -1px;
+  left: 12%;
 
-  width: 0;
-  height: 2px;
+  right: 12%;
 
-  background: var(--yellow);
+  bottom: -34px;
 
-  transition:
-    width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
+  height: 60px;
 
-.cta__path:hover,
-.cta__path:focus-visible,
-.cta__path.is-active {
-  padding-left: 1rem;
+  z-index: -1;
 
-  color: var(--cream);
+  border-radius: 50%;
 
   background:
-    rgba(
-      244,
-      215,
-      47,
-      0.045
-    );
+    rgba(91, 35, 130, 0.12);
+
+  filter:
+    blur(28px);
+
+  opacity: 0.55;
 }
 
-.cta__path:hover::before,
-.cta__path:focus-visible::before,
-.cta__path.is-active::before {
-  width: 100%;
+
+/* =========================================================
+   FLOATING ANIMATION
+   ========================================================= */
+
+@keyframes ctaFloat {
+  0%,
+  100% {
+    transform:
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      translateY(-8px);
+  }
 }
 
-.cta__path-number {
-  align-self: start;
+.cta__card:hover {
+  animation-play-state: paused;
 
-  padding-top: 0.25rem;
+  transform:
+    translateY(-5px);
 
-  color: var(--yellow);
+  box-shadow:
+    0 24px 42px
+      rgba(23, 17, 29, 0.065),
+
+    0 48px 105px
+      rgba(91, 35, 130, 0.095),
+
+    0 8px 18px
+      rgba(255, 255, 255, 0.72)
+      inset;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.cta__card-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    18px 22px;
+
+  border-bottom:
+    1px solid
+    rgba(23, 17, 29, 0.065);
+}
+
+.cta__card-label {
+  color:
+    rgba(23, 17, 29, 0.32);
 
   font-family:
     'DM Mono',
     monospace;
 
-  font-size: 0.5rem;
+  font-size: 0.41rem;
 
-  letter-spacing: 0.08em;
-
-  opacity: 0.7;
+  letter-spacing: 0.13em;
 }
 
-.cta__path-copy {
+.cta__card-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    rgba(23, 17, 29, 0.28);
+
+  font-family:
+    'DM Mono',
+    monospace;
+
+  font-size: 0.38rem;
+
+  letter-spacing: 0.1em;
+}
+
+.cta__card-status span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    var(--yellow, #f6c945);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(246, 201, 69, 0.1);
+}
+
+
+/* =========================================================
+   CHOICES
+   ========================================================= */
+
+.cta__choices {
   display: flex;
+
   flex-direction: column;
-  gap: 0.35rem;
+
+  gap: 7px;
+
+  padding:
+    18px;
 }
 
-.cta__path-copy strong {
+
+/* =========================================================
+   CHOICE
+   ========================================================= */
+
+.cta__choice {
+  width: 100%;
+
+  min-height: 58px;
+
+  padding:
+    0 17px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border:
+    1px solid
+    rgba(23, 17, 29, 0.065);
+
+  border-radius: 17px;
+
+  background:
+    rgba(247, 245, 239, 0.5);
+
+  color:
+    rgba(23, 17, 29, 0.62);
+
   font-family:
     'DM Sans',
     sans-serif;
 
-  font-size:
-    clamp(
-      0.75rem,
-      1vw,
-      0.88rem
-    );
+  font-size: 0.82rem;
 
-  font-weight: 600;
+  text-align: left;
 
-  letter-spacing: 0.025em;
-}
-
-.cta__path-copy span {
-  max-width: 480px;
-
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.42
-    );
-
-  font-size: 0.68rem;
-
-  line-height: 1.5;
+  cursor: pointer;
 
   transition:
-    color 350ms ease;
+    background-color 280ms ease,
+    border-color 280ms ease,
+    color 280ms ease,
+    transform 280ms
+      cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms ease;
 }
 
-.cta__path:hover .cta__path-copy span,
-.cta__path:focus-visible .cta__path-copy span,
-.cta__path.is-active .cta__path-copy span {
+.cta__choice:hover {
+  transform:
+    translateX(3px);
+
+  border-color:
+    rgba(91, 35, 130, 0.16);
+
+  background:
+    rgba(255, 255, 255, 0.92);
+
   color:
-    rgba(
-      245,
-      240,
-      230,
-      0.65
-    );
+    var(--purple, #5b2382);
 }
 
-.cta__path-arrow {
+.cta__choice.is-active {
+  transform:
+    translateX(5px);
+
+  border-color:
+    var(--purple, #5b2382);
+
+  background:
+    var(--purple, #5b2382);
+
+  color:
+    #fffaf1;
+
+  box-shadow:
+    0 8px 24px
+    rgba(91, 35, 130, 0.12);
+}
+
+
+/* =========================================================
+   CHOICE LEFT
+   ========================================================= */
+
+.cta__choice-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+}
+
+
+/* =========================================================
+   INDICATOR
+   ========================================================= */
+
+.cta__choice-indicator {
+  width: 17px;
+  height: 17px;
+
   display: grid;
+
   place-items: center;
 
-  width: 32px;
-  height: 32px;
+  flex-shrink: 0;
 
   border:
     1px solid
-    rgba(
-      245,
-      240,
-      230,
-      0.16
-    );
+    rgba(23, 17, 29, 0.2);
 
   border-radius: 50%;
 
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.65
-    );
-
-  font-size: 0.8rem;
-
   transition:
-    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 350ms ease,
-    color 350ms ease,
-    border-color 350ms ease;
+    border-color 250ms ease;
 }
 
-.cta__path:hover .cta__path-arrow,
-.cta__path:focus-visible .cta__path-arrow,
-.cta__path.is-active .cta__path-arrow {
-  transform: translate(2px, -2px);
+.cta__choice-indicator span {
+  width: 7px;
+  height: 7px;
 
-  border-color: var(--yellow);
+  border-radius: 50%;
 
-  background: var(--yellow);
+  background:
+    transparent;
 
-  color: var(--ink);
+  transform:
+    scale(0);
+
+  transition:
+    transform 250ms
+      cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 250ms ease;
+}
+
+.cta__choice.is-active
+.cta__choice-indicator {
+  border-color:
+    var(--yellow, #f6c945);
+}
+
+.cta__choice.is-active
+.cta__choice-indicator span {
+  background:
+    var(--yellow, #f6c945);
+
+  transform:
+    scale(1);
+}
+
+
+/* =========================================================
+   CHOICE NAME
+   ========================================================= */
+
+.cta__choice-name {
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   CHOICE ARROW
+   ========================================================= */
+
+.cta__choice-arrow {
+  font-size: 1rem;
+
+  opacity: 0.25;
+
+  transform:
+    translate(0, 0);
+
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
+}
+
+.cta__choice:hover
+.cta__choice-arrow {
+  opacity: 0.7;
+
+  transform:
+    translate(2px, -2px);
+}
+
+.cta__choice.is-active
+.cta__choice-arrow {
+  color:
+    var(--yellow, #f6c945);
+
+  opacity: 1;
+
+  transform:
+    translate(2px, -2px);
 }
 
 
@@ -502,198 +726,176 @@
    ========================================================= */
 
 .cta__response {
-  position: relative;
-
-  min-height: 100%;
+  min-height: 82px;
 
   padding:
-    clamp(2rem, 4vw, 4rem);
-
-  border:
-    1px solid
-    rgba(
-      245,
-      240,
-      230,
-      0.16
-    );
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(91, 33, 182, 0.82),
-      rgba(17, 11, 26, 0.72)
-    );
+    3px 27px
+    24px;
 
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
-  overflow: hidden;
+  align-items: center;
+
+  gap: 13px;
 }
 
-.cta__response::before {
-  content: '';
+.cta__response-line {
+  width: 18px;
+  height: 1px;
 
-  position: absolute;
-
-  width: 260px;
-  height: 260px;
-
-  right: -110px;
-  top: -110px;
-
-  border-radius: 50%;
+  flex-shrink: 0;
 
   background:
-    rgba(
-      244,
-      215,
-      47,
-      0.13
-    );
-
-  pointer-events: none;
-}
-
-.cta__response-number {
-  position: relative;
-  z-index: 1;
-
-  color: var(--yellow);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.56rem;
-
-  letter-spacing: 0.12em;
-}
-
-.cta__response-content {
-  position: relative;
-  z-index: 1;
-
-  max-width: 480px;
-
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-.cta__response-label {
-  display: block;
-
-  margin-bottom: 1.6rem;
-
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.45
-    );
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.5rem;
-
-  letter-spacing: 0.14em;
+    var(--yellow, #f6c945);
 }
 
 .cta__response-text {
   margin: 0;
 
-  color: var(--cream);
+  color:
+    rgba(23, 17, 29, 0.5);
 
   font-family:
     'Playfair Display',
     serif;
 
   font-size:
-    clamp(
-      2.4rem,
-      4vw,
-      4.8rem
-    );
+    clamp(0.95rem, 1.4vw, 1.12rem);
 
-  font-weight: 500;
+  font-style: italic;
 
-  line-height: 0.94;
-
-  letter-spacing: -0.05em;
+  line-height: 1.35;
 
   animation:
-    cta-response-in
-    500ms
-    cubic-bezier(
-      0.22,
-      1,
-      0.36,
-      1
-    );
+    ctaResponseIn 450ms
+    cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cta__response-detail {
-  max-width: 350px;
+@keyframes ctaResponseIn {
+  from {
+    opacity: 0;
 
-  margin:
-    1.5rem
-    0
-    0;
+    transform:
+      translateY(7px);
+  }
 
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.cta__card-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding:
+    14px 16px 16px
+    21px;
+
+  border-top:
+    1px solid
+    rgba(23, 17, 29, 0.065);
+}
+
+.cta__footer-note {
   color:
-    rgba(
-      245,
-      240,
-      230,
-      0.55
-    );
+    rgba(23, 17, 29, 0.28);
 
-  font-size: 0.72rem;
-
-  line-height: 1.65;
+  font-size: 0.63rem;
 }
 
-.cta__response-link {
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.cta__button {
   display: inline-flex;
 
   align-items: center;
 
-  gap: 0.65rem;
+  gap: 10px;
 
-  margin-top: 2.5rem;
+  padding:
+    6px 6px 6px 15px;
 
-  padding-bottom: 0.55rem;
+  border-radius: 999px;
 
-  border-bottom:
-    1px solid
-    var(--yellow);
+  background:
+    var(--purple, #5b2382);
 
-  color: var(--yellow);
+  color:
+    #fffaf1;
 
   font-family:
     'DM Mono',
     monospace;
 
-  font-size: 0.54rem;
+  font-size: 0.43rem;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 
   text-decoration: none;
-}
-
-.cta__response-link span {
-  font-size: 0.9rem;
 
   transition:
-    transform 350ms ease;
+    background-color 250ms ease,
+    transform 300ms
+      cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cta__response-link:hover span {
-  transform: translate(3px, -3px);
+.cta__button:hover {
+  background:
+    var(--ink, #17111d);
+
+  transform:
+    translateY(-2px);
+}
+
+
+/* =========================================================
+   BUTTON ICON
+   ========================================================= */
+
+.cta__button-icon {
+  width: 31px;
+  height: 31px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    var(--yellow, #f6c945);
+
+  color:
+    var(--ink, #17111d);
+
+  font-size: 0.8rem;
+
+  transition:
+    transform 300ms
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta__button:hover
+.cta__button-icon {
+  transform:
+    translate(2px, -2px);
 }
 
 
@@ -705,200 +907,85 @@
   display: flex;
 
   align-items: center;
+
   justify-content: space-between;
 
-  gap: 2rem;
-
   margin-top:
-    clamp(
-      3rem,
-      5vw,
-      4.5rem
-    );
+    auto;
 
-  padding-top: 1.4rem;
+  padding-top: 17px;
 
   border-top:
     1px solid
-    rgba(
-      245,
-      240,
-      230,
-      0.14
-    );
-}
-
-.cta__footer p {
-  max-width: 480px;
-
-  margin: 0;
+    rgba(23, 17, 29, 0.07);
 
   color:
-    rgba(
-      245,
-      240,
-      230,
-      0.42
-    );
-
-  font-size: 0.68rem;
-
-  line-height: 1.6;
-}
-
-.cta__footer span {
-  color:
-    rgba(
-      245,
-      240,
-      230,
-      0.3
-    );
+    rgba(23, 17, 29, 0.23);
 
   font-family:
     'DM Mono',
     monospace;
 
-  font-size: 0.5rem;
+  font-size: 0.38rem;
 
-  letter-spacing: 0.1em;
+  letter-spacing: 0.11em;
+}
+
+.cta__footer span:first-child {
+  color:
+    var(--purple, #5b2382);
+
+  font-weight: 600;
 }
 
 
 /* =========================================================
-   FOCUS
+   TABLET
    ========================================================= */
 
-.cta__path:focus-visible,
-.cta__response-link:focus-visible {
-  outline:
-    2px solid
-    var(--yellow);
+@media (max-width: 760px) {
+  .cta__background {
+    background-position:
+      center bottom;
 
-  outline-offset: 4px;
-}
-
-
-/* =========================================================
-   ANIMATION
-   ========================================================= */
-
-@keyframes cta-response-in {
-  from {
-    opacity: 0;
-    transform:
-      translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform:
-      translateY(0);
-  }
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 900px) {
-  .cta {
-    min-height: auto;
-
-    padding:
-      5rem
-      1.25rem
-      3.5rem;
+    background-size:
+      auto 100%;
   }
 
   .cta__inner {
     min-height: auto;
+
+    padding:
+      24px
+      20px
+      28px;
   }
 
-  .cta__header-meta {
-    align-items: flex-start;
-  }
-
-  .cta__heading {
-    display: block;
-
-    padding-top: 3.5rem;
+  .cta__header {
+    padding-top: 4.5rem;
   }
 
   .cta__title {
     font-size:
-      clamp(
-        3.2rem,
-        15vw,
-        5.5rem
-      );
-  }
+      clamp(3.7rem, 15vw, 6rem);
 
-  .cta__title span {
-    margin-left: 8vw;
+    line-height: 0.86;
   }
 
   .cta__intro {
-    max-width: 310px;
-
-    margin:
-      1.8rem
-      0
-      0;
-
-    font-size: 0.78rem;
+    margin-top: 24px;
   }
 
-  .cta__content {
-    display: flex;
-    flex-direction: column;
-
-    gap: 2rem;
-
-    margin-top: 4rem;
+  .cta__interface {
+    margin-top: 3.5rem;
   }
 
-  .cta__path {
-    min-height: 76px;
-
-    grid-template-columns:
-      30px
-      minmax(0, 1fr)
-      34px;
-  }
-
-  .cta__path:hover,
-  .cta__path:focus-visible,
-  .cta__path.is-active {
-    padding-left: 0.6rem;
-  }
-
-  .cta__path-copy strong {
-    font-size: 0.7rem;
-  }
-
-  .cta__path-copy span {
-    font-size: 0.62rem;
-  }
-
-  .cta__response {
-    min-height: 360px;
-
-    padding: 1.5rem;
-  }
-
-  .cta__response-text {
-    font-size:
-      clamp(
-        2.3rem,
-        10vw,
-        4rem
-      );
+  .cta__card {
+    border-radius: 25px;
   }
 
   .cta__footer {
-    align-items: flex-start;
+    margin-top: 4rem;
   }
 }
 
@@ -907,76 +994,120 @@
    SMALL MOBILE
    ========================================================= */
 
-@media (max-width: 480px) {
-  .cta__header-index {
-    display: none;
+@media (max-width: 460px) {
+  .cta__background {
+    background-position:
+      center bottom;
+
+    background-size:
+      auto 82%;
+  }
+
+  .cta__inner {
+    padding:
+      20px
+      16px
+      24px;
+  }
+
+  .cta__header {
+    padding-top: 3.8rem;
   }
 
   .cta__eyebrow {
-    font-size: 0.5rem;
+    margin-bottom: 21px;
+
+    font-size: 0.42rem;
   }
 
   .cta__title {
     font-size:
-      clamp(
-        2.8rem,
-        14vw,
-        4.4rem
-      );
-
-    line-height: 0.9;
+      clamp(3.15rem, 16vw, 4.6rem);
   }
 
-  .cta__path {
-    grid-template-columns:
-      24px
-      minmax(0, 1fr)
-      30px;
-
-    gap: 0.7rem;
+  .cta__intro {
+    font-size: 0.83rem;
   }
 
-  .cta__path-copy strong {
-    font-size: 0.66rem;
+  .cta__interface {
+    margin-top: 3rem;
   }
 
-  .cta__path-copy span {
-    max-width: 240px;
+  .cta__card {
+    border-radius: 23px;
 
-    font-size: 0.58rem;
+    animation-duration:
+      8s;
   }
 
-  .cta__path-arrow {
-    width: 28px;
-    height: 28px;
+  .cta__card-header {
+    padding:
+      16px 18px;
+  }
 
-    font-size: 0.7rem;
+  .cta__card-label {
+    font-size: 0.37rem;
+  }
+
+  .cta__card-status {
+    font-size: 0.34rem;
+  }
+
+  .cta__choices {
+    padding:
+      14px;
+  }
+
+  .cta__choice {
+    min-height: 55px;
+
+    padding:
+      0 14px;
+
+    border-radius: 15px;
+
+    font-size: 0.78rem;
+  }
+
+  .cta__choice-left {
+    gap: 11px;
   }
 
   .cta__response {
-    min-height: 330px;
-  }
+    min-height: 82px;
 
-  .cta__response-label {
-    font-size: 0.45rem;
+    padding:
+      2px 20px
+      22px;
   }
 
   .cta__response-text {
-    font-size: 2.35rem;
+    font-size: 0.95rem;
   }
 
-  .cta__response-detail {
-    font-size: 0.65rem;
+  .cta__card-footer {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding:
+      14px 16px 16px;
   }
 
-  .cta__response-link {
-    margin-top: 2rem;
+  .cta__button {
+    width: 100%;
 
-    font-size: 0.48rem;
+    justify-content: space-between;
   }
 
-  .cta__footer p {
-    font-size: 0.6rem;
+  .cta__footer {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    font-size: 0.34rem;
   }
 }
 
@@ -987,16 +1118,26 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cta__header,
-  .cta__path,
-  .cta__path-arrow,
-  .cta__response-text,
-  .cta__response-link span {
+  .cta__interface,
+  .cta__card,
+  .cta__choice,
+  .cta__button,
+  .cta__button-icon {
     transition: none;
+  }
+
+  .cta__header,
+  .cta__interface {
+    opacity: 1;
+
+    transform: none;
+  }
+
+  .cta__card {
     animation: none;
   }
 
-  .cta__header {
-    opacity: 1;
-    transform: none;
+  .cta__response-text {
+    animation: none;
   }
 }

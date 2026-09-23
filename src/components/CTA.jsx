@@ -2,36 +2,31 @@ import { useEffect, useRef, useState } from 'react'
 
 import '../styles/cta.css'
 
-const paths = [
+const products = [
   {
-    number: '01',
-    label: 'EU PRECISO APARECER',
-    detail: 'Meu negócio é bom, mas parece que ninguém sabe que ele existe.',
-    response: 'Então vamos dar um jeito de fazer ele aparecer.',
+    id: 'site',
+    label: 'Um site',
+    description: 'Um lugar para sua marca existir de verdade.',
   },
   {
-    number: '02',
-    label: 'EU PRECISO EXPLICAR',
-    detail: 'Eu passo mais tempo explicando minha empresa do que trabalhando nela.',
-    response: 'Talvez esteja na hora de deixar seu site fazer um pouco desse trabalho.',
+    id: 'loja',
+    label: 'Uma loja',
+    description: 'Para transformar visita em venda.',
   },
   {
-    number: '03',
-    label: 'EU PRECISO ORGANIZAR',
-    detail: 'Eu tenho uma planilha para tudo. O problema é que agora tenho uma planilha pras planilhas.',
-    response: 'Acho que está na hora de organizar essa casa.',
+    id: 'catalogo',
+    label: 'Um catálogo',
+    description: 'Tudo o que você oferece, organizado.',
   },
   {
-    number: '04',
-    label: 'EU PRECISO VENDER',
-    detail: 'Eu tenho coisa boa para vender. Só não consigo fazer as pessoas chegarem até ela.',
-    response: 'Então vamos parar de deixar seus produtos escondidos.',
+    id: 'sistema',
+    label: 'Um sistema',
+    description: 'Para deixar o trabalho menos complicado.',
   },
   {
-    number: '05',
-    label: 'EU TENHO UM PROBLEMA',
-    detail: 'Meu problema é tão específico que eu nem sei explicar direito.',
-    response: 'Melhor ainda. Pode começar me contando do seu jeito.',
+    id: 'ideia',
+    label: 'Tenho uma ideia',
+    description: 'Você explica. A gente descobre o resto.',
   },
 ]
 
@@ -39,7 +34,7 @@ export default function CTA() {
   const sectionRef = useRef(null)
 
   const [isVisible, setIsVisible] = useState(false)
-  const [activePath, setActivePath] = useState(4)
+  const [activeProduct, setActiveProduct] = useState('site')
 
   useEffect(() => {
     const element = sectionRef.current
@@ -64,7 +59,9 @@ export default function CTA() {
     return () => observer.disconnect()
   }, [])
 
-  const active = paths[activePath]
+  const active = products.find(
+    (product) => product.id === activeProduct,
+  )
 
   return (
     <section
@@ -76,130 +73,141 @@ export default function CTA() {
       <div
         className="cta__background"
         aria-hidden="true"
-      />
+      >
+        <span className="cta__orb cta__orb--one" />
+        <span className="cta__orb cta__orb--two" />
+      </div>
 
       <div className="cta__inner">
+
         <header className="cta__header">
-          <div className="cta__header-meta">
-            <span className="cta__eyebrow">
-              01 — STARTING POINT
-            </span>
+          <span className="cta__eyebrow">
+            PODE COMEÇAR POR AQUI
+          </span>
 
-            <span className="cta__header-index">
-              ROUXINOL / 05
-            </span>
-          </div>
+          <h2
+            id="cta-title"
+            className="cta__title"
+          >
+            O que você
+            <span>precisa?</span>
+          </h2>
 
-          <div className="cta__heading">
-            <h2
-              className="cta__title"
-              id="cta-title"
-            >
-              E se a gente
-              <span>começar pela sua ideia?</span>
-            </h2>
-
-            <p className="cta__intro">
-              Você não precisa saber exatamente qual solução
-              precisa. Comece pelo que você quer mudar.
-            </p>
-          </div>
+          <p className="cta__intro">
+            Escolha uma direção.
+            <br />
+            O resto a gente conversa.
+          </p>
         </header>
 
-        <div className="cta__content">
-          <div className="cta__paths">
-            <div className="cta__paths-label">
-              POR ONDE COMEÇAMOS?
+
+        <div className="cta__interface">
+
+          <div className="cta__card">
+
+            <div className="cta__card-header">
+              <span className="cta__card-label">
+                VAMOS COMEÇAR POR AQUI
+              </span>
+
+              <span className="cta__card-status">
+                <span />
+                ONLINE
+              </span>
             </div>
 
-            <div className="cta__path-list">
-              {paths.map((path, index) => {
-                const isActive = activePath === index
+
+            <div className="cta__choices">
+              {products.map((product) => {
+                const isActive =
+                  activeProduct === product.id
 
                 return (
-                  <a
-                    key={path.number}
-                    href="#contact"
-                    className={`cta__path ${
+                  <button
+                    key={product.id}
+                    type="button"
+                    className={`cta__choice ${
                       isActive ? 'is-active' : ''
                     }`}
-                    onMouseEnter={() =>
-                      setActivePath(index)
+                    onClick={() =>
+                      setActiveProduct(product.id)
                     }
-                    onFocus={() =>
-                      setActivePath(index)
-                    }
+                    aria-pressed={isActive}
                   >
-                    <span className="cta__path-number">
-                      {path.number}
-                    </span>
+                    <span className="cta__choice-left">
 
-                    <span className="cta__path-copy">
-                      <strong>
-                        {path.label}
-                      </strong>
-
-                      <span>
-                        {path.detail}
+                      <span className="cta__choice-indicator">
+                        <span />
                       </span>
+
+                      <span className="cta__choice-name">
+                        {product.label}
+                      </span>
+
                     </span>
 
-                    <span
-                      className="cta__path-arrow"
-                      aria-hidden="true"
-                    >
+                    <span className="cta__choice-arrow">
                       ↗
                     </span>
-                  </a>
+                  </button>
                 )
               })}
             </div>
-          </div>
 
-          <div className="cta__response">
-            <div className="cta__response-number">
-              {active.number}
-            </div>
 
-            <div className="cta__response-content">
-              <span className="cta__response-label">
-                TALVEZ O PRIMEIRO PASSO SEJA
-              </span>
+            <div className="cta__response">
+
+              <span className="cta__response-line" />
 
               <p
-                key={activePath}
+                key={activeProduct}
                 className="cta__response-text"
               >
-                {active.response}
+                {active.description}
               </p>
 
-              <p className="cta__response-detail">
-                {active.detail}
-              </p>
+            </div>
+
+
+            <div className="cta__card-footer">
+
+              <span className="cta__footer-note">
+                Sem compromisso.
+              </span>
 
               <a
                 href="#contact"
-                className="cta__response-link"
+                className="cta__button"
               >
-                CONVERSAR SOBRE O PROJETO
-                <span aria-hidden="true">
+                <span>
+                  VAMOS CONVERSAR
+                </span>
+
+                <span
+                  className="cta__button-icon"
+                  aria-hidden="true"
+                >
                   ↗
                 </span>
               </a>
+
             </div>
+
           </div>
+
         </div>
 
+
         <footer className="cta__footer">
-          <p>
-            Você não precisa chegar com tudo decidido.
-            A gente pode descobrir o caminho juntos.
-          </p>
+          <span>
+            ROUXINOL
+          </span>
 
           <span>
-            05 / 05
+            PRESENÇA DIGITAL · SOLUÇÕES DIGITAIS
           </span>
         </footer>
+
       </div>
     </section>
   )
