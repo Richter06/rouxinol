@@ -10,7 +10,6 @@
   color: var(--ink);
 }
 
-
 /* =========================================================
    BACKGROUND
    ========================================================= */
@@ -50,7 +49,6 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
 }
 
-
 /* =========================================================
    HEADER
    ========================================================= */
@@ -58,32 +56,33 @@
 .hero__header {
   position: relative;
   z-index: 10;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
-  padding:
-    30px
-    clamp(24px, 5vw, 76px);
+  padding: 30px clamp(24px, 5vw, 76px);
+  opacity: 0;
+  transform: translateY(-18px);
+  transition:
+    opacity 700ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero.is-loaded .hero__header {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__brand {
   display: inline-flex;
   align-items: center;
-
   min-width: 190px;
-
   color: var(--ink);
   text-decoration: none;
 }
 
 .hero__brand-name {
-  font-family:
-    'DM Mono',
-    monospace;
-
+  font-family: 'DM Mono', monospace;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.24em;
@@ -91,16 +90,11 @@
 
 .hero__header-label {
   color: rgba(17, 11, 26, 0.45);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
+  font-family: 'DM Mono', monospace;
   font-size: 0.5rem;
   letter-spacing: 0.12em;
   text-align: right;
 }
-
 
 /* =========================================================
    CONTENT
@@ -109,18 +103,11 @@
 .hero__content {
   position: relative;
   z-index: 2;
-
   display: flex;
   flex-direction: column;
-
   min-height: calc(100svh - 92px);
-
-  padding:
-    4vh
-    clamp(24px, 5vw, 76px)
-    28px;
+  padding: 4vh clamp(24px, 5vw, 76px) 28px;
 }
-
 
 /* =========================================================
    INTRO
@@ -129,18 +116,13 @@
 .hero__intro {
   position: relative;
   z-index: 4;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-
   width: 100%;
-
   margin: auto 0 0;
-
   text-align: center;
 }
-
 
 /* =========================================================
    BIRD
@@ -149,31 +131,30 @@
 .hero__bird {
   display: flex;
   flex-direction: column;
-
   margin: 0 0 clamp(18px, 2.5vw, 32px);
-
   color: var(--purple, #5b2382);
-
-  font-family:
-    'Playfair Display',
-    serif;
-
-  font-size:
-    clamp(1.35rem, 2.2vw, 2.3rem);
-
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.35rem, 2.2vw, 2.3rem);
   font-style: italic;
   font-weight: 500;
   line-height: 0.9;
-
   letter-spacing: -0.045em;
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 700ms ease 180ms,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
+}
+
+.hero.is-loaded .hero__bird {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__bird span {
   margin-left: clamp(1.5rem, 4vw, 5rem);
-
   color: var(--ink);
 }
-
 
 /* =========================================================
    TITLE
@@ -181,56 +162,49 @@
 
 .hero__title {
   width: min(1400px, 100%);
-
   margin: 0;
-
+  padding-bottom: 0.14em;
   color: var(--ink);
-
-  font-size:
-    clamp(4rem, 8.5vw, 9.5rem);
-
+  font-size: clamp(4rem, 8.5vw, 9.5rem);
   font-weight: 500;
-  line-height: 0.82;
-
+  line-height: 0.9;
   letter-spacing: -0.075em;
-
   text-wrap: balance;
+  opacity: 0;
+  transform: translateY(70px);
+  transition:
+    opacity 300ms ease 360ms,
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) 360ms;
+}
+
+.hero.is-loaded .hero__title {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__title-accent {
   display: block;
-
   margin-top: 0.05em;
-
   color: var(--purple, #5b2382);
-
-  font-family:
-    'Playfair Display',
-    serif;
-
+  font-family: 'Playfair Display', serif;
   font-style: italic;
   font-weight: 500;
 }
 
 .hero__word-slot {
   display: inline-block;
-
   min-width: 4.7ch;
-
   color: var(--purple, #5b2382);
-
   text-align: left;
 }
 
 .hero__word {
   display: inline-block;
-
   animation:
     heroWordEnter
     700ms
     cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 
 /* =========================================================
    SUBTITLE
@@ -239,26 +213,29 @@
 .hero__subtitle {
   display: flex;
   flex-direction: column;
-
   margin:
     clamp(24px, 3vw, 38px)
     0
     0;
-
   color: rgba(17, 11, 26, 0.65);
-
-  font-size:
-    clamp(0.9rem, 1.25vw, 1.08rem);
-
+  font-size: clamp(0.9rem, 1.25vw, 1.08rem);
   line-height: 1.4;
-
   letter-spacing: -0.015em;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 700ms ease 650ms,
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1) 650ms;
+}
+
+.hero.is-loaded .hero__subtitle {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__subtitle span {
   color: rgba(17, 11, 26, 0.4);
 }
-
 
 /* =========================================================
    CTA
@@ -268,36 +245,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-
   width: 218px;
   height: 60px;
-
   margin-top: 28px;
   padding:
     6px
     6px
     6px
     23px;
-
   border: 1px solid var(--purple, #5b2382);
   border-radius: 999px;
-
   background: var(--purple, #5b2382);
-
   color: var(--cream);
-
   text-decoration: none;
-
+  opacity: 0;
+  transform: translateY(25px) scale(0.96);
   transition:
-    transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 700ms ease 800ms,
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1) 800ms,
     background-color 300ms ease;
 }
 
-.hero__cta-label {
-  font-family:
-    'DM Mono',
-    monospace;
+.hero.is-loaded .hero__cta {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 
+.hero__cta-label {
+  font-family: 'DM Mono', monospace;
   font-size: 0.57rem;
   letter-spacing: 0.12em;
 }
@@ -306,18 +281,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 46px;
   height: 46px;
-
   border-radius: 50%;
-
   background: var(--yellow);
-
   color: var(--ink);
-
   font-size: 1rem;
-
   transition:
     transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -338,25 +307,30 @@
     scale(0.985);
 }
 
-
 /* =========================================================
    NETWORK
    ========================================================= */
 
 .hero__network {
   position: relative;
-
   width: min(920px, 92vw);
   height: clamp(170px, 19vw, 245px);
-
   margin:
     clamp(34px, 4vw, 55px)
     auto
     0;
-
   flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(45px) scale(0.94);
+  transition:
+    opacity 1000ms ease 850ms,
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1) 850ms;
 }
 
+.hero.is-loaded .hero__network {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 
 /* =========================================================
    ORBITS
@@ -364,14 +338,10 @@
 
 .hero__network-orbit {
   position: absolute;
-
   top: 50%;
   left: 50%;
-
   border: 1px solid rgba(91, 35, 130, 0.14);
-
   border-radius: 50%;
-
   transform:
     translate(-50%, -50%);
 }
@@ -379,9 +349,10 @@
 .hero__network-orbit--outer {
   width: 72%;
   height: 100%;
-
+  opacity: 0;
   animation:
-    networkOrbit 18s
+    networkOrbit
+    18s
     linear
     infinite;
 }
@@ -389,15 +360,26 @@
 .hero__network-orbit--inner {
   width: 45%;
   height: 64%;
-
   border-color: rgba(246, 201, 69, 0.35);
-
+  opacity: 0;
   animation:
-    networkOrbitReverse 13s
+    networkOrbitReverse
+    13s
     linear
     infinite;
 }
 
+.hero.is-loaded .hero__network-orbit--outer {
+  animation:
+    orbitReveal 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1100ms both,
+    networkOrbit 18s linear 2300ms infinite;
+}
+
+.hero.is-loaded .hero__network-orbit--inner {
+  animation:
+    orbitReveal 1000ms cubic-bezier(0.16, 1, 0.3, 1) 1250ms both,
+    networkOrbitReverse 13s linear 2250ms infinite;
+}
 
 /* =========================================================
    NETWORK LINES
@@ -405,20 +387,17 @@
 
 .hero__network-line {
   position: absolute;
-
   top: 50%;
   left: 50%;
-
   height: 1px;
-
   transform-origin: left center;
-
   background:
     linear-gradient(
       90deg,
       rgba(91, 35, 130, 0.3),
       rgba(91, 35, 130, 0)
     );
+  opacity: 0;
 }
 
 .hero__network-line--one {
@@ -446,6 +425,50 @@
   transform: rotate(90deg);
 }
 
+.hero.is-loaded .hero__network-line--one {
+  animation:
+    networkLineOne
+    700ms
+    ease
+    1050ms
+    both;
+}
+
+.hero.is-loaded .hero__network-line--two {
+  animation:
+    networkLineTwo
+    700ms
+    ease
+    1120ms
+    both;
+}
+
+.hero.is-loaded .hero__network-line--three {
+  animation:
+    networkLineThree
+    700ms
+    ease
+    1190ms
+    both;
+}
+
+.hero.is-loaded .hero__network-line--four {
+  animation:
+    networkLineFour
+    700ms
+    ease
+    1260ms
+    both;
+}
+
+.hero.is-loaded .hero__network-line--five {
+  animation:
+    networkLineFive
+    700ms
+    ease
+    1330ms
+    both;
+}
 
 /* =========================================================
    SERVICES
@@ -453,97 +476,134 @@
 
 .hero__service {
   position: absolute;
-
   display: flex;
   align-items: center;
   gap: 9px;
-
   padding: 9px 13px;
-
   border: 1px solid rgba(91, 35, 130, 0.13);
   border-radius: 999px;
-
-  background:
-    rgba(255, 251, 243, 0.76);
-
+  background: rgba(255, 251, 243, 0.76);
   color: rgba(17, 11, 26, 0.62);
-
   box-shadow:
     0 8px 25px rgba(35, 18, 50, 0.045);
-
   backdrop-filter: blur(8px);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
+  font-family: 'DM Mono', monospace;
   font-size: 0.47rem;
   letter-spacing: 0.1em;
-
   white-space: nowrap;
-
-  animation:
-    serviceFloat
-    5s
-    ease-in-out
-    infinite;
+  opacity: 0;
+  scale: 0.85;
 }
 
 .hero__service-dot {
   width: 6px;
   height: 6px;
-
   border-radius: 50%;
-
   background: var(--yellow);
 }
 
 .hero__service--top-left {
   top: 8%;
   left: 15%;
-
-  animation-delay: -1.2s;
 }
 
 .hero__service--top-right {
   top: 6%;
   right: 15%;
-
-  animation-delay: -3s;
 }
 
 .hero__service--middle-left {
   top: 48%;
   left: 2%;
-
-  animation-delay: -2.1s;
 }
 
 .hero__service--middle-right {
   top: 47%;
   right: 2%;
-
-  animation-delay: -4s;
 }
 
 .hero__service--bottom {
   right: 50%;
   bottom: 0;
-
   transform: translateX(50%);
-
   background: var(--purple, #5b2382);
   border-color: var(--purple, #5b2382);
-
   color: var(--cream);
-
-  animation-delay: -0.5s;
 }
 
 .hero__service--bottom .hero__service-dot {
   background: var(--yellow);
 }
 
+.hero.is-loaded .hero__service--top-left {
+  animation:
+    serviceReveal
+    700ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    1200ms
+    both,
+    serviceFloat
+    5s
+    ease-in-out
+    1900ms
+    infinite;
+}
+
+.hero.is-loaded .hero__service--top-right {
+  animation:
+    serviceReveal
+    700ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    1300ms
+    both,
+    serviceFloat
+    5s
+    ease-in-out
+    2000ms
+    infinite;
+}
+
+.hero.is-loaded .hero__service--middle-left {
+  animation:
+    serviceReveal
+    700ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    1400ms
+    both,
+    serviceFloat
+    5s
+    ease-in-out
+    2100ms
+    infinite;
+}
+
+.hero.is-loaded .hero__service--middle-right {
+  animation:
+    serviceReveal
+    700ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    1500ms
+    both,
+    serviceFloat
+    5s
+    ease-in-out
+    2200ms
+    infinite;
+}
+
+.hero.is-loaded .hero__service--bottom {
+  animation:
+    serviceReveal
+    700ms
+    cubic-bezier(0.22, 1, 0.36, 1)
+    1600ms
+    both,
+    serviceFloat
+    5s
+    ease-in-out
+    2300ms
+    infinite;
+}
 
 /* =========================================================
    CENTER
@@ -551,58 +611,42 @@
 
 .hero__network-center {
   position: absolute;
-
   top: 50%;
   left: 50%;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   width: 104px;
   height: 104px;
-
   border:
     1px solid
     rgba(91, 35, 130, 0.2);
-
   border-radius: 50%;
-
   background: var(--cream);
-
   transform:
     translate(-50%, -50%);
-
   box-shadow:
     0 15px 50px rgba(91, 35, 130, 0.08);
-
   z-index: 3;
+  opacity: 0;
 }
 
 .hero__network-center::before {
   content: '';
-
   position: absolute;
   inset: 6px;
-
   border:
     1px solid
     rgba(246, 201, 69, 0.5);
-
   border-radius: 50%;
 }
 
 .hero__network-center-bird {
   position: relative;
   z-index: 2;
-
   color: var(--purple, #5b2382);
-
-  font-family:
-    'Playfair Display',
-    serif;
-
+  font-family: 'Playfair Display', serif;
   font-size: 2rem;
   font-style: italic;
   line-height: 1;
@@ -611,19 +655,21 @@
 .hero__network-center-name {
   position: relative;
   z-index: 2;
-
   margin-top: 5px;
-
   color: rgba(17, 11, 26, 0.5);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
+  font-family: 'DM Mono', monospace;
   font-size: 0.36rem;
   letter-spacing: 0.13em;
 }
 
+.hero.is-loaded .hero__network-center {
+  animation:
+    centerReveal
+    900ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    1450ms
+    both;
+}
 
 /* =========================================================
    BOTTOM
@@ -633,20 +679,25 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
   width: 100%;
-
   margin-top: auto;
   padding-top: 25px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 700ms ease 1050ms,
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 1050ms;
+}
+
+.hero.is-loaded .hero__bottom {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__description {
   max-width: 330px;
-
   margin: 0;
-
   color: rgba(17, 11, 26, 0.48);
-
   font-size: 0.76rem;
   line-height: 1.5;
 }
@@ -655,26 +706,20 @@
   display: flex;
   align-items: center;
   gap: 13px;
-
   color: rgba(17, 11, 26, 0.35);
 }
 
 .hero__scroll-line {
   width: 45px;
   height: 1px;
-
   background: rgba(17, 11, 26, 0.2);
 }
 
 .hero__scroll-text {
-  font-family:
-    'DM Mono',
-    monospace;
-
+  font-family: 'DM Mono', monospace;
   font-size: 0.45rem;
   letter-spacing: 0.15em;
 }
-
 
 /* =========================================================
    ANIMATIONS
@@ -731,6 +776,129 @@
   }
 }
 
+@keyframes orbitReveal {
+  from {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      scale(0.65);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+}
+
+@keyframes networkLineOne {
+  from {
+    opacity: 0;
+    transform:
+      rotate(-29deg)
+      scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      rotate(-29deg)
+      scaleX(1);
+  }
+}
+
+@keyframes networkLineTwo {
+  from {
+    opacity: 0;
+    transform:
+      rotate(28deg)
+      scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      rotate(28deg)
+      scaleX(1);
+  }
+}
+
+@keyframes networkLineThree {
+  from {
+    opacity: 0;
+    transform:
+      rotate(158deg)
+      scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      rotate(158deg)
+      scaleX(1);
+  }
+}
+
+@keyframes networkLineFour {
+  from {
+    opacity: 0;
+    transform:
+      rotate(202deg)
+      scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      rotate(202deg)
+      scaleX(1);
+  }
+}
+
+@keyframes networkLineFive {
+  from {
+    opacity: 0;
+    transform:
+      rotate(90deg)
+      scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      rotate(90deg)
+      scaleX(1);
+  }
+}
+
+@keyframes serviceReveal {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes centerReveal {
+  from {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+}
 
 /* =========================================================
    TABLET
@@ -760,7 +928,6 @@
   }
 }
 
-
 /* =========================================================
    MOBILE
    ========================================================= */
@@ -789,7 +956,6 @@
 
   .hero__content {
     min-height: calc(100svh - 72px);
-
     padding:
       3vh
       20px
@@ -802,7 +968,6 @@
 
   .hero__bird {
     margin-bottom: 20px;
-
     font-size:
       clamp(1.2rem, 6vw, 1.7rem);
   }
@@ -813,12 +978,10 @@
 
   .hero__title {
     width: 100%;
-
+    padding-bottom: 0.14em;
     font-size:
       clamp(3.15rem, 15.2vw, 5.8rem);
-
-    line-height: 0.86;
-
+    line-height: 0.92;
     letter-spacing: -0.08em;
   }
 
@@ -828,21 +991,18 @@
 
   .hero__subtitle {
     margin-top: 23px;
-
     font-size: 0.82rem;
   }
 
   .hero__cta {
     width: 205px;
     height: 58px;
-
     margin-top: 24px;
   }
 
   .hero__network {
     width: 100%;
     height: 170px;
-
     margin-top: 30px;
   }
 
@@ -870,8 +1030,9 @@
   }
 
   .hero__service {
-    padding: 7px 10px;
-
+    padding:
+      7px
+      10px;
     font-size: 0.4rem;
   }
 
@@ -921,7 +1082,6 @@
 
   .hero__description {
     max-width: 280px;
-
     font-size: 0.7rem;
   }
 
@@ -929,7 +1089,6 @@
     display: none;
   }
 }
-
 
 /* =========================================================
    VERY SMALL MOBILE
@@ -948,8 +1107,10 @@
   }
 
   .hero__title {
+    padding-bottom: 0.16em;
     font-size:
       clamp(2.75rem, 15.3vw, 4.6rem);
+    line-height: 0.92;
   }
 
   .hero__subtitle {
@@ -958,7 +1119,6 @@
 
   .hero__network {
     height: 145px;
-
     margin-top: 25px;
   }
 
@@ -972,8 +1132,9 @@
   }
 
   .hero__service {
-    padding: 6px 8px;
-
+    padding:
+      6px
+      8px;
     font-size: 0.35rem;
   }
 
@@ -982,17 +1143,37 @@
   }
 }
 
-
 /* =========================================================
    REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__word,
+  .hero__header,
+  .hero__bird,
+  .hero__title,
+  .hero__subtitle,
+  .hero__cta,
+  .hero__network,
+  .hero__bottom {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+
   .hero__network-orbit--outer,
   .hero__network-orbit--inner,
-  .hero__service {
+  .hero__network-line,
+  .hero__service,
+  .hero__network-center {
+    opacity: 1;
+    scale: 1;
     animation: none;
+  }
+
+  .hero__network-center {
+    transform:
+      translate(-50%, -50%);
   }
 
   .hero__cta,

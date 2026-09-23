@@ -40,6 +40,15 @@ const services = [
 
 export default function Hero() {
   const [wordIndex, setWordIndex] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 80)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,7 +62,9 @@ export default function Hero() {
 
   return (
     <section
-      className="hero"
+      className={`hero ${
+        isLoaded ? 'is-loaded' : ''
+      }`}
       aria-labelledby="hero-title"
     >
       <div
@@ -149,6 +160,7 @@ export default function Hero() {
               className={`hero__service hero__service--${service.position}`}
             >
               <span className="hero__service-dot" />
+
               <span className="hero__service-label">
                 {service.label}
               </span>
