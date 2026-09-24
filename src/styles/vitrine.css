@@ -1,26 +1,19 @@
 /* =========================================================
-   SOLUTIONS / VITRINE
+   VITRINE
+   Percurso por projetos guiado pelo scroll.
+   O JS escreve transform/opacity/filter dos cards (molas);
+   distâncias e profundidade vêm das variáveis --stride,
+   --depth e --ry do .vitrine-stage.
    ========================================================= */
 
 .vitrine {
-  position: relative;
+  --v-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
+  position: relative;
   overflow-x: clip;
   overflow-y: visible;
 
-  background:
-    radial-gradient(
-      circle at 18% 22%,
-      rgba(255, 205, 45, 0.12),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 82% 72%,
-      rgba(91, 33, 182, 0.18),
-      transparent 32%
-    ),
-    var(--cream);
-
+  background: var(--cream);
   color: var(--ink);
 
   outline: none;
@@ -33,38 +26,41 @@
 
 
 /* =========================================================
-   STICKY
+   STICKY (duas colunas no desktop)
    ========================================================= */
 
 .vitrine-sticky {
   position: sticky;
-
   top: 0;
-
   z-index: 2;
 
-  width: min(1200px, 100%);
-
+  width: min(1240px, 100%);
   height: 100vh;
-
-  min-height: 100svh;
+  height: 100svh;
 
   margin: 0 auto;
-
   padding:
-    clamp(2rem, 4vh, 4rem)
-    clamp(1.5rem, 5vw, 5rem)
-    2rem;
+    clamp(1.5rem, 4vh, 3.5rem)
+    clamp(1.15rem, 5vw, 4.5rem);
 
   box-sizing: border-box;
 
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: stretch;
+}
+
+.vitrine-side {
+  position: relative;
+  z-index: 3;
+
+  min-width: 0;
+
   display: flex;
-
   flex-direction: column;
-
-  justify-content: flex-start;
-
-  overflow: visible;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
 
@@ -74,97 +70,79 @@
 
 .vitrine-kicker {
   display: inline-flex;
-
   align-items: center;
-
   gap: 0.7rem;
 
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.9rem;
 
   font-family: 'DM Mono', monospace;
-
-  font-size: 0.68rem;
-
+  font-size: 0.66rem;
   font-weight: 600;
-
   letter-spacing: 0.15em;
 
   color: var(--purple);
-
-  flex-shrink: 0;
 }
 
 .vitrine-kicker::before {
   content: '';
 
   width: 28px;
-
   height: 2px;
 
   background: var(--yellow);
-}
-
-.vitrine-head {
-  position: relative;
-
-  z-index: 20;
-
-  flex-shrink: 0;
 }
 
 .vitrine-head h2 {
   margin: 0;
 
   font-family: 'Playfair Display', serif;
-
-  font-size:
-    clamp(
-      2.7rem,
-      5vw,
-      5rem
-    );
-
+  font-size: clamp(2.3rem, 3.9vw, 4rem);
   font-weight: 500;
-
-  line-height: 0.9;
-
+  line-height: 0.92;
   letter-spacing: -0.05em;
 }
 
-.vitrine-head h2 span {
+/* máscara que revela linha a linha */
+.vitrine-line {
   display: block;
+  overflow: hidden;
 
-  margin-left:
-    clamp(
-      1rem,
-      4vw,
-      4rem
-    );
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.vitrine-line > span {
+  display: inline-block;
+
+  transform: translateY(112%);
+
+  transition: transform 1s var(--v-ease);
+}
+
+.vitrine-line--accent {
+  margin-left: clamp(0.8rem, 2.5vw, 2.5rem);
 
   color: var(--purple);
 }
 
-.vitrine-head p {
-  max-width: 430px;
+.vitrine-line--accent > span {
+  transition-delay: 0.12s;
+}
 
-  margin:
-    0.8rem
-    0
-    0;
+.vitrine.is-visible .vitrine-line > span {
+  transform: translateY(0);
+}
+
+.vitrine-head p {
+  max-width: 400px;
+
+  margin: 0.9rem 0 0;
 
   font-family: 'DM Sans', sans-serif;
-
-  font-size: 0.92rem;
-
+  font-size: 0.9rem;
   line-height: 1.5;
 
-  color:
-    rgba(
-      17,
-      11,
-      26,
-      0.62
-    );
+  color: rgba(17, 11, 26, 0.62);
 }
 
 
@@ -173,69 +151,29 @@
    ========================================================= */
 
 .vitrine-filters {
-  position: relative;
-
-  z-index: 20;
-
   display: flex;
-
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.4rem;
 
-  gap: 0.45rem;
-
-  margin-top: 1.15rem;
-
-  overflow-x: auto;
-
-  scrollbar-width: none;
-
-  flex-shrink: 0;
-}
-
-.vitrine-filters::-webkit-scrollbar {
-  display: none;
+  margin-top: 1.2rem;
 }
 
 .vitrine-filters button {
   flex: 0 0 auto;
 
-  border:
-    1px solid
-    rgba(
-      17,
-      11,
-      26,
-      0.13
-    );
-
+  border: 1px solid rgba(17, 11, 26, 0.13);
   border-radius: 999px;
 
-  padding:
-    0.5rem
-    0.82rem;
+  padding: 0.5rem 0.82rem;
 
-  background:
-    rgba(
-      255,
-      252,
-      246,
-      0.8
-    );
+  background: rgba(255, 252, 246, 0.8);
 
-  color:
-    rgba(
-      17,
-      11,
-      26,
-      0.64
-    );
+  color: rgba(17, 11, 26, 0.68);
 
   font: inherit;
-
   font-size: 0.62rem;
-
   font-weight: 800;
-
   letter-spacing: 0.07em;
 
   cursor: pointer;
@@ -248,210 +186,319 @@
 
 .vitrine-filters button:hover {
   border-color: var(--purple);
-
   color: var(--purple);
 }
 
 .vitrine-filters button.is-active {
   border-color: var(--purple);
-
   background: var(--purple);
-
   color: var(--cream);
 }
 
-
-/* =========================================================
-   ROULETTE STAGE
-   ========================================================= */
-
-.vitrine-roulette {
-  position: relative;
-
-  width: 100%;
-
-  height:
-    clamp(
-      300px,
-      38vh,
-      410px
-    );
-
-  min-height: 300px;
-
-  margin-top: 1.8rem;
-
-  display: flex;
-
-  align-items: flex-start;
-
-  justify-content: center;
-
-  perspective: 1700px;
-
-  perspective-origin:
-    50% 48%;
-
-  transform-style: preserve-3d;
-
-  touch-action: pan-y;
-
-  flex-shrink: 1;
-
-  overflow-x: clip;
-
-  overflow-y: visible;
-
-  z-index: 1;
+.vitrine-filters button:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
 }
 
 
 /* =========================================================
-   CARDS
+   LEGENDA DO PROJETO ATIVO
    ========================================================= */
 
-.vitrine-preview {
+.vitrine-caption {
+  min-height: 14.5rem;
+}
+
+.vitrine-count {
+  display: block;
+
+  margin-bottom: 0.7rem;
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: var(--purple);
+}
+
+.vitrine-title {
+  margin: 0;
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* revelação palavra por palavra */
+.vitrine-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.vitrine-word > span {
+  display: inline-block;
+
+  animation: vitrine-word-in 0.85s var(--v-ease) both;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+@keyframes vitrine-word-in {
+  from {
+    transform: translateY(112%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.vitrine-caption p {
+  max-width: 420px;
+
+  margin: 0.8rem 0 0;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.86rem;
+  line-height: 1.55;
+
+  color: rgba(17, 11, 26, 0.66);
+
+  animation: vitrine-fade 0.8s var(--v-ease) 0.18s both;
+}
+
+.vitrine-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.6rem;
+
+  margin-top: 0.9rem;
+
+  animation: vitrine-fade 0.8s var(--v-ease) 0.28s both;
+}
+
+@keyframes vitrine-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vitrine-text-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  color: var(--purple);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+
+  text-decoration: none;
+}
+
+.vitrine-text-cta span {
+  transition: transform 300ms var(--v-ease);
+}
+
+.vitrine-text-cta:hover span,
+.vitrine-text-cta:focus-visible span {
+  transform: translateX(3px);
+}
+
+.vitrine-text-cta--contact {
+  color: var(--ink);
+
+  border-bottom: 1px solid var(--yellow);
+}
+
+.vitrine-text-cta--contact:hover span,
+.vitrine-text-cta--contact:focus-visible span {
+  transform: translate(3px, -3px);
+}
+
+.vitrine-text-cta.is-disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.vitrine-text-cta:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 4px;
+}
+
+
+/* =========================================================
+   TRILHO DE PROGRESSO
+   O marcador acompanha a posição contínua (--pos).
+   ========================================================= */
+
+.vitrine-rail {
+  position: relative;
+
+  margin-top: 1.4rem;
+
+  display: grid;
+  grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+
+  border-top: 1px solid rgba(23, 26, 43, 0.18);
+}
+
+.vitrine-rail-marker {
   position: absolute;
+  top: -2px;
+  left: 0;
 
-  left: 50%;
+  width: calc(100% / var(--n, 1));
+  height: 3px;
 
-  top: 0;
+  background: var(--yellow);
 
-  width:
-    min(
-      680px,
-      54vw
-    );
+  transform: translateX(calc(var(--pos, 0) * 100%));
 
-  transform-style: preserve-3d;
+  pointer-events: none;
+  will-change: transform;
+}
 
-  transform:
-    translate3d(
-      calc(
-        -50% +
-        var(--offset) * 340px
-      ),
-      0,
-      calc(
-        var(--abs) * -160px
-      )
-    )
-    rotateY(
-      calc(
-        var(--offset) * -5deg
-      )
-    )
-    scale(
-      clamp(
-        0.74,
-        calc(
-          1 -
-          var(--abs) * 0.09
-        ),
-        1
-      )
-    );
+.vitrine-rail button {
+  margin: 0;
+  padding: 0.75rem 0 0.25rem;
 
-  opacity:
-    clamp(
-      0.14,
-      calc(
-        1 -
-        var(--abs) * 0.26
-      ),
-      1
-    );
+  border: 0;
+  background: none;
 
-  filter:
-    blur(
-      calc(
-        var(--abs) * 0.9px
-      )
-    );
+  color: rgba(17, 11, 26, 0.45);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: left;
 
   cursor: pointer;
 
-  transition:
-    transform
-      650ms
-      cubic-bezier(
-        0.22,
-        0.61,
-        0.36,
-        1
-      ),
-    opacity 500ms ease,
-    filter 500ms ease;
-
-  will-change:
-    transform,
-    opacity,
-    filter;
+  transition: color 250ms ease;
 }
 
-.vitrine-preview.is-active {
-  cursor: default;
+.vitrine-rail button:hover,
+.vitrine-rail button.is-active {
+  color: var(--purple);
+}
 
-  z-index: 5;
+.vitrine-rail button:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
 }
 
 
 /* =========================================================
-   PREVIEW WINDOW
+   PALCO
    ========================================================= */
 
-.vitrine-preview-window {
+.vitrine-stage {
+  --stride: 290;
+  --depth: 150;
+  --ry: 6;
+  --tx: 0;
+  --ty: 0;
+
+  position: relative;
+
+  align-self: center;
+
+  height: clamp(320px, 52vh, 440px);
+
+  min-width: 0;
+
+  perspective: 1700px;
+  perspective-origin: 50% 50%;
+
+  touch-action: pan-y;
+
+  /* bordas suaves: os cards entram e saem sem corte seco */
+  -webkit-mask-image:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+
+  mask-image:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+}
+
+
+/* =========================================================
+   CARD (transform / opacity / filter vêm do JS)
+   ========================================================= */
+
+.vitrine-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: min(540px, 82%);
+
+  margin: 0;
+
+  transform-origin: center center;
+
+  cursor: pointer;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  will-change: transform, opacity;
+}
+
+.vitrine-card.is-active {
+  cursor: grab;
+}
+
+.vitrine-window {
   position: relative;
 
   width: 100%;
-
   aspect-ratio: 16 / 9;
 
   overflow: hidden;
 
-  border:
-    1px solid
-    rgba(
-      17,
-      11,
-      26,
-      0.12
-    );
+  border: 1px solid rgba(17, 11, 26, 0.12);
+  border-radius: 6px;
 
-  background: #151018;
+  background: #111a4a;
 
-  transform:
-    translateZ(18px);
-
-  transition:
-    transform
-      650ms
-      cubic-bezier(
-        0.22,
-        0.61,
-        0.36,
-        1
-      );
+  transition: box-shadow 600ms ease;
 }
 
-.vitrine-preview.is-active
-.vitrine-preview-window {
-  transform:
-    translateZ(26px);
-
-  box-shadow:
-    0 26px 60px
-    rgba(
-      17,
-      11,
-      26,
-      0.16
-    );
+.vitrine-card.is-active .vitrine-window {
+  box-shadow: 0 28px 60px rgba(23, 26, 43, 0.2);
 }
 
-.vitrine-preview-window video {
+.vitrine-window video {
   width: 100%;
-
   height: 100%;
 
   display: block;
@@ -459,411 +506,286 @@
   object-fit: cover;
 }
 
+/* luz suave que segue o cursor */
+.vitrine-window::after {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, 40%),
+      color-mix(in srgb, var(--yellow) 30%, transparent),
+      transparent 62%
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.5s ease;
+
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .vitrine-card.is-active:hover .vitrine-window::after {
+    opacity: 1;
+  }
+}
+
+.vitrine-tag {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+
+  padding: 0.32rem 0.55rem;
+
+  border-radius: 999px;
+
+  background: var(--cream);
+  color: var(--ink);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
 
 /* =========================================================
-   DEMO ART
+   DEMO ART (quando ainda não há vídeo)
    ========================================================= */
 
 .vitrine-demo-art {
   position: absolute;
-
   inset: 0;
 
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 0.5rem;
 
   background:
     linear-gradient(
       135deg,
-      #1b1128 0%,
-      #32135f 48%,
-      #5120a2 100%
+      #111a4a 0%,
+      #1b2a9c 55%,
+      #2638c9 100%
     );
 
   color: var(--cream);
+
+  transform: scale(1.06);
+
+  will-change: transform;
+}
+
+.vitrine-card.is-active .vitrine-demo-art {
+  transform:
+    translate3d(
+      calc(var(--tx, 0) * -10px),
+      calc(var(--ty, 0) * -8px),
+      0
+    )
+    scale(1.06);
 }
 
 .vitrine-demo-art span {
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.6rem;
-
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
   font-weight: 700;
-
   letter-spacing: 0.14em;
 
   color: var(--yellow);
 }
 
 .vitrine-demo-art i {
-  font-family:
-    'Playfair Display',
-    serif;
-
+  font-family: 'Playfair Display', serif;
   font-style: italic;
+  font-size: 1.5rem;
 
-  font-size: 1.4rem;
-
-  opacity: 0.5;
+  opacity: 0.55;
 }
 
 
 /* =========================================================
-   ACTIVE COPY
+   TELAS BAIXAS (desktop)
    ========================================================= */
 
-.vitrine-preview-copy {
-  width: 100%;
-
-  max-width: 560px;
-
-  padding:
-    0.7rem
-    0.25rem
-    0;
-
-  transform:
-    translateZ(34px);
-
-  animation:
-   .vitrine-preview-copy-in
-    480ms
-    cubic-bezier(
-      0.22,
-      0.61,
-      0.36,
-      1
-    )
-    both;
-}
-
-@keyframes.vitrine-preview-copy-in {
-
-  from {
-    opacity: 0;
-
-    transform:
-      translateZ(34px)
-      translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform:
-      translateZ(34px)
-      translateY(0);
-  }
-}
-
-.vitrine-count {
-  display: block;
-
-  margin-bottom: 0.45rem;
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.58rem;
-
-  font-weight: 700;
-
-  letter-spacing: 0.12em;
-
-  color: var(--purple);
-}
-
-.vitrine-preview-copy h3 {
-  margin: 0;
-
-  font-family:
-    'Playfair Display',
-    serif;
-
-  font-size:
-    clamp(
-      1.6rem,
-      2.8vw,
-      2.5rem
-    );
-
-  line-height: 0.98;
-
-  letter-spacing: -0.04em;
-}
-
-.vitrine-preview-copy p {
-  max-width: 420px;
-
-  margin:
-    0.55rem
-    0
-    0;
-
-  font-family:
-    'DM Sans',
-    sans-serif;
-
-  font-size: 0.84rem;
-
-  line-height: 1.45;
-
-  color:
-    rgba(
-      17,
-      11,
-      26,
-      0.62
-    );
-}
-
-.vitrine-text-cta {
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 0.6rem;
-
-  margin-top: 0.7rem;
-
-  color: var(--purple);
-
-  font-family:
-    'DM Mono',
-    monospace;
-
-  font-size: 0.62rem;
-
-  font-weight: 700;
-
-  letter-spacing: 0.08em;
-
-  text-decoration: none;
-}
-
-.vitrine-text-cta span {
-  transition:
-    transform 300ms ease;
-}
-
-.vitrine-text-cta:hover span {
-  transform:
-    translateX(3px);
-}
-
-.vitrine-text-cta.is-disabled {
-  opacity: 0.4;
-
-  cursor: default;
-}
-
-
-/* =========================================================
-   TELAS MÉDIAS / BAIXAS
-   ========================================================= */
-
-@media (
-  min-width: 761px
-) and (max-height: 850px) {
-
-  .vitrine-sticky {
-    padding-top: 1.6rem;
-
-    padding-bottom: 1rem;
-  }
-
-  .vitrine-kicker {
-    margin-bottom: 0.5rem;
-  }
-
-  .vitrine-head h2 {
-    font-size:
-      clamp(
-        2.4rem,
-        4.6vw,
-        4rem
-      );
-  }
-
+@media (min-width: 1000px) and (max-height: 800px) {
   .vitrine-head p {
-    margin-top: 0.5rem;
-
-    font-size: 0.8rem;
-
-    line-height: 1.35;
+    display: none;
   }
 
-  .vitrine-filters {
-    margin-top: 0.7rem;
+  .vitrine-caption {
+    min-height: 12.5rem;
   }
 
-  .vitrine-roulette {
-    height: 285px;
-
-    min-height: 285px;
-
-    margin-top: 1rem;
-  }
-
-  .vitrine-preview-copy {
-    padding-top: 0.45rem;
-  }
-
-  .vitrine-preview-copy h3 {
-    font-size: 1.9rem;
-  }
-
-  .vitrine-preview-copy p {
-    margin-top: 0.35rem;
-
-    font-size: 0.76rem;
-  }
-
-  .vitrine-text-cta {
-    margin-top: 0.4rem;
+  .vitrine-stage {
+    height: clamp(300px, 56vh, 400px);
   }
 }
 
 
 /* =========================================================
-   MOBILE
+   NOTEBOOK
    ========================================================= */
 
-@media (max-width: 760px) {
+@media (max-width: 1199px) {
+  .vitrine-stage {
+    --stride: 240;
+    --depth: 130;
+  }
+}
 
+
+/* =========================================================
+   TABLET E MOBILE: uma coluna
+   (cabeçalho, filtros, palco, legenda, trilho)
+   ========================================================= */
+
+@media (max-width: 999px) {
   .vitrine-sticky {
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
 
-    min-height: 100svh;
+    padding: 1.6rem 1.15rem 1rem;
+  }
 
-    padding:
-      2rem
-      1.15rem
-      1rem;
+  .vitrine-side,
+  .vitrine-side-top,
+  .vitrine-side-bottom {
+    display: contents;
   }
 
   .vitrine-kicker {
-    margin-bottom: 0.65rem;
+    order: 1;
+
+    margin-bottom: 0;
 
     font-size: 0.56rem;
   }
 
+  .vitrine-head {
+    order: 2;
+  }
+
   .vitrine-head h2 {
-    font-size:
-      clamp(
-        2.3rem,
-        10vw,
-        3.4rem
-      );
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
   }
 
   .vitrine-head p {
-    margin-top: 0.65rem;
+    margin-top: 0.6rem;
 
     font-size: 0.8rem;
-
     line-height: 1.4;
   }
 
   .vitrine-filters {
-    margin-top: 0.9rem;
+    order: 3;
 
-    gap: 0.35rem;
+    margin-top: 0;
+
+    flex-wrap: nowrap;
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+  .vitrine-filters::-webkit-scrollbar {
+    display: none;
   }
 
   .vitrine-filters button {
-    padding:
-      0.45rem
-      0.68rem;
+    padding: 0.45rem 0.68rem;
 
     font-size: 0.54rem;
   }
 
-  .vitrine-roulette {
-    height: 285px;
+  .vitrine-stage {
+    --stride: 170;
+    --depth: 100;
 
-    min-height: 285px;
+    order: 4;
 
-    margin-top: 1.2rem;
+    flex: 1 1 auto;
 
-    perspective: 1100px;
+    align-self: stretch;
+
+    height: auto;
+    min-height: 190px;
+    max-height: 340px;
   }
 
-  .vitrine-preview {
-    width:
-      min(
-        88vw,
-        520px
-      );
-
-    transform:
-      translate3d(
-        calc(
-          -50% +
-          var(--offset) * 210px
-        ),
-        0,
-        calc(
-          var(--abs) * -100px
-        )
-      )
-      rotateY(
-        calc(
-          var(--offset) * -5deg
-        )
-      )
-      scale(
-        clamp(
-          0.72,
-          calc(
-            1 -
-            var(--abs) * 0.1
-          ),
-          1
-        )
-      );
+  .vitrine-card {
+    width: min(78vw, 420px);
   }
 
-  .vitrine-preview-window {
+  .vitrine-window {
     aspect-ratio: 4 / 3;
   }
 
-  .vitrine-preview-copy {
-    padding-top: 0.5rem;
+  .vitrine-caption {
+    order: 5;
+
+    min-height: 9.5rem;
+  }
+
+  .vitrine-rail {
+    order: 6;
+
+    margin-top: 0;
   }
 
   .vitrine-count {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
 
-    font-size: 0.5rem;
+    font-size: 0.52rem;
   }
 
-  .vitrine-preview-copy h3 {
+  .vitrine-title {
     font-size: 1.5rem;
   }
 
-  .vitrine-preview-copy p {
-    margin-top: 0.35rem;
+  .vitrine-caption p {
+    margin-top: 0.45rem;
 
-    font-size: 0.74rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
 
-    line-height: 1.35;
+  .vitrine-actions {
+    margin-top: 0.6rem;
   }
 
   .vitrine-text-cta {
-    margin-top: 0.45rem;
+    font-size: 0.56rem;
+  }
+}
 
-    font-size: 0.54rem;
+@media (max-width: 999px) and (max-height: 760px) {
+  .vitrine-head p {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .vitrine-stage {
+    --stride: 150;
+    --depth: 90;
+  }
+
+  .vitrine-rail button {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .vitrine-stage {
+    --stride: 125;
   }
 }
 
@@ -873,14 +795,26 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
-  .vitrine-preview,
-  .vitrine-preview-copy,
-  .vitrine-filters button,
-  .vitrine-text-cta span {
-
+  .vitrine-line > span {
+    transform: none;
     transition: none;
+  }
 
+  .vitrine-word > span,
+  .vitrine-caption p,
+  .vitrine-actions {
     animation: none;
+  }
+
+  .vitrine-filters button,
+  .vitrine-text-cta span,
+  .vitrine-window,
+  .vitrine-window::after,
+  .vitrine-rail button {
+    transition: none;
+  }
+
+  .vitrine-demo-art {
+    transform: none !important;
   }
 }

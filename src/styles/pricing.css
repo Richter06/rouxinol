@@ -1,8 +1,13 @@
 /* =========================================================
    PRICING
+   Conceito: uma escada de quatro degraus (Ser visto →
+   Vender melhor → Organizar → Algo diferente). Os degraus
+   sobem com o scroll e cada um abre como painel.
    ========================================================= */
 
 .pricing {
+  --p-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: relative;
   overflow: hidden;
   background: var(--cream, #f7f5ef);
@@ -23,17 +28,7 @@
    ========================================================= */
 
 .pricing__header {
-  margin-bottom: clamp(4rem, 7vw, 6rem);
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 800ms ease,
-    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pricing.is-visible .pricing__header {
-  opacity: 1;
-  transform: translateY(0);
+  margin-bottom: clamp(3rem, 5vw, 4.5rem);
 }
 
 .pricing__eyebrow {
@@ -73,15 +68,42 @@
   letter-spacing: -0.065em;
 }
 
-.pricing__heading h2 span {
+/* título: máscara que revela linha a linha */
+.pricing__line {
   display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.pricing__line > span {
+  display: inline-block;
+  transform: translateY(112%);
+  transition: transform 1.05s var(--p-ease);
+}
+
+.pricing__line--accent {
   margin-left: clamp(1rem, 5vw, 5rem);
   color: var(--purple);
   font-style: italic;
 }
 
+.pricing__line--accent > span {
+  transition-delay: 0.14s;
+}
+
+.pricing.is-visible .pricing__line > span {
+  transform: translateY(0);
+}
+
 .pricing__intro {
   padding-bottom: 0.2rem;
+  opacity: 0;
+  transition: opacity 0.9s ease 0.35s;
+}
+
+.pricing.is-visible .pricing__intro {
+  opacity: 1;
 }
 
 .pricing__intro p {
@@ -96,175 +118,324 @@
   margin-bottom: 0;
 }
 
+.pricing__hint {
+  margin: 0 0 1.2rem;
+  color: rgba(17, 11, 26, 0.5);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+}
+
 
 /* =========================================================
-   GRID
+   ESCADA (grid de painéis)
+   --rise (0 → 1) vem do scroll. Cada painel é recortado por
+   clip-path: com rise = 0 todos têm a mesma altura; com
+   rise = 1 formam degraus que sobem da esquerda p/ direita.
    ========================================================= */
 
 .pricing__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  --step: 26px;
+  --panel-h: 640px;
+  --open-w: clamp(380px, 42vw, 600px);
+  --rise: 1;
+
+  display: flex;
   align-items: stretch;
-  border-top: 1px solid rgba(17, 11, 26, 0.14);
-  border-bottom: 1px solid rgba(17, 11, 26, 0.14);
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 850ms ease 120ms,
-    transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
 }
 
-.pricing.is-visible .pricing__grid {
-  opacity: 1;
-  transform: translateY(0);
-}
+.pricing__panel {
+  --i: 0;
 
-
-/* =========================================================
-   CARD
-   ========================================================= */
-
-.pricing__card {
   --card-ink: var(--ink, #110b1a);
-  --card-muted: rgba(17, 11, 26, 0.62);
-  --card-soft: rgba(17, 11, 26, 0.44);
-  --card-line: rgba(17, 11, 26, 0.12);
+  --card-muted: rgba(17, 11, 26, 0.66);
+  --card-soft: rgba(17, 11, 26, 0.52);
+  --card-line: rgba(17, 11, 26, 0.13);
   --card-accent: var(--purple);
-  --card-cream: var(--cream, #f7f5ef);
+  --panel-bg: color-mix(in srgb, var(--purple) 7%, #ffffff);
 
   position: relative;
+  flex: 1 1 0;
   min-width: 0;
+  height: calc(var(--panel-h) + var(--step) * 3);
   overflow: hidden;
-  border-right: 1px solid rgba(17, 11, 26, 0.12);
-  background: #ffffff;
   isolation: isolate;
+
+  background: var(--panel-bg);
+  border-left: 1px solid rgba(17, 11, 26, 0.12);
+
+  clip-path: inset(
+    calc(var(--step) * (3 - var(--i) * var(--rise))) 0 0 0
+  );
+
   transition:
-    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 350ms ease;
+    flex-grow 850ms var(--p-ease),
+    background-color 400ms ease;
 }
 
-.pricing__card:last-child {
-  border-right: 0;
+.pricing__panel:last-child {
+  border-right: 1px solid rgba(17, 11, 26, 0.12);
 }
 
-.pricing__card:hover,
-.pricing__card:focus-within {
+.pricing__panel.is-active {
   --card-ink: var(--cream, #f7f5ef);
-  --card-muted: rgba(247, 245, 239, 0.82);
-  --card-soft: rgba(247, 245, 239, 0.62);
-  --card-line: rgba(247, 245, 239, 0.2);
+  --card-muted: rgba(247, 245, 239, 0.86);
+  --card-soft: rgba(247, 245, 239, 0.66);
+  --card-line: rgba(247, 245, 239, 0.22);
   --card-accent: var(--yellow);
+
+  flex-grow: 3.3;
 }
 
-.pricing__card:hover {
-  transform: translateY(-5px);
+/* preenchimento que sobe de baixo para cima (mantido) */
+.pricing__panel::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background: var(--purple);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 750ms var(--p-ease);
 }
 
+.pricing__panel.is-active::before {
+  transform: scaleY(1);
+}
 
-/* =========================================================
-   PURPLE FILL
-   ========================================================= */
-
-.pricing__card-fill {
+/* luz suave que segue o cursor */
+.pricing__panel::after {
+  content: '';
   position: absolute;
   z-index: -1;
   inset: 0;
-  background: var(--purple);
-  transform: translateY(101%);
-  transition:
-    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 40%),
+      color-mix(in srgb, var(--yellow) 30%, transparent),
+      transparent 62%
+    );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 
-.pricing__card:hover .pricing__card-fill,
-.pricing__card:focus-within .pricing__card-fill {
-  transform: translateY(0);
+@media (hover: hover) and (pointer: fine) {
+  .pricing__panel:hover::after {
+    opacity: 1;
+  }
+
+  .pricing__panel:not(.is-active):hover {
+    --panel-bg: color-mix(in srgb, var(--purple) 13%, #ffffff);
+  }
 }
 
 
 /* =========================================================
-   CARD CONTENT
+   FACE FECHADA (sempre mostra categoria e menor preço)
    ========================================================= */
 
-.pricing__card-content {
+.pricing__tab {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin: 0;
+  padding:
+    calc(var(--step) * 3 + 1.4rem)
+    1.3rem
+    1.7rem;
+
+  border: 0;
+  background: none;
+  color: var(--card-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  transition: opacity 260ms ease;
+}
+
+.pricing__panel.is-active .pricing__tab {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pricing__tab-number {
+  color: var(--card-soft);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+}
+
+.pricing__tab-name {
+  flex: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 2.8vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.pricing__tab-foot {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.pricing__tab-price {
+  color: var(--card-accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.pricing__tab-price small {
+  display: block;
+  color: var(--card-soft);
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+}
+
+.pricing__tab-plus {
   position: relative;
-  z-index: 2;
-  min-height: 590px;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(17, 11, 26, 0.22);
+  border-radius: 50%;
+  transition:
+    transform 500ms var(--p-ease),
+    background-color 250ms ease,
+    border-color 250ms ease;
+}
+
+.pricing__tab-plus::before,
+.pricing__tab-plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 1px;
+  background: var(--purple);
+  transform: translate(-50%, -50%);
+}
+
+.pricing__tab-plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pricing__tab:hover .pricing__tab-plus {
+    transform: rotate(90deg);
+    background: var(--yellow);
+    border-color: var(--yellow);
+  }
+}
+
+.pricing__tab:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: -6px;
+}
+
+
+/* =========================================================
+   CONTEÚDO ABERTO
+   Largura fixa: o texto não reflui enquanto o painel cresce.
+   ========================================================= */
+
+.pricing__body {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--open-w);
+  color: var(--card-ink);
+  visibility: hidden;
+  outline: none;
+  transition: visibility 0s linear 220ms;
+}
+
+.pricing__panel.is-active .pricing__body {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.pricing__body-inner,
+.pricing__body-pad {
+  height: 100%;
+}
+
+.pricing__body-pad {
   display: flex;
   flex-direction: column;
   padding:
-    1.5rem
-    clamp(1.3rem, 2vw, 2rem)
+    calc(var(--step) * 3 + 1.4rem)
+    clamp(1.4rem, 2.2vw, 2.2rem)
     1.8rem;
-
-  color: var(--card-ink);
-
-  transition:
-    color 300ms ease;
 }
 
+/* stagger: cada linha entra em sequência */
+.pricing__reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
 
-/* =========================================================
-   CARD TOP
-   ========================================================= */
-
-.pricing__card-top {
-  min-height: 1.2rem;
-  display: flex;
-  align-items: center;
+.pricing__panel.is-active .pricing__reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 700ms var(--p-ease) calc(260ms + var(--k, 0) * 70ms),
+    transform 800ms var(--p-ease) calc(260ms + var(--k, 0) * 70ms);
 }
 
 .pricing__card-eyebrow {
+  display: block;
   color: var(--card-soft);
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem;
+  font-size: 0.62rem;
   line-height: 1.4;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-
-  transition:
-    color 280ms ease;
 }
 
-
-/* =========================================================
-   CARD HEADING
-   ========================================================= */
-
 .pricing__card-heading {
-  margin-top: 4rem;
+  margin-top: 2.6rem;
 }
 
 .pricing__card-heading h3 {
   margin: 0;
   color: var(--card-ink);
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 3vw, 3rem);
+  font-size: clamp(2.4rem, 3.6vw, 3.6rem);
   font-weight: 500;
   line-height: 0.92;
   letter-spacing: -0.055em;
-
-  transition:
-    color 280ms ease;
 }
 
 .pricing__card-heading p {
-  max-width: 285px;
-  margin: 1.35rem 0 0;
+  max-width: 400px;
+  margin: 1.3rem 0 0;
   color: var(--card-muted);
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   line-height: 1.7;
-
-  transition:
-    color 280ms ease;
 }
 
-
-/* =========================================================
-   PROJECTS
-   ========================================================= */
-
 .pricing__projects {
-  margin-top: 3.5rem;
+  margin-top: 2.4rem;
 }
 
 .pricing__projects-label {
@@ -272,13 +443,10 @@
   margin-bottom: 0.8rem;
   color: var(--card-soft);
   font-family: 'DM Mono', monospace;
-  font-size: 0.48rem;
+  font-size: 0.56rem;
   line-height: 1.4;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-
-  transition:
-    color 280ms ease;
 }
 
 .pricing__project {
@@ -287,11 +455,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.95rem 0;
-
   border-top: 1px solid var(--card-line);
-
-  transition:
-    border-color 280ms ease;
 }
 
 .pricing__project:last-child {
@@ -300,31 +464,20 @@
 
 .pricing__project-name {
   color: var(--card-muted);
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   line-height: 1.45;
-
-  transition:
-    color 280ms ease;
 }
 
 .pricing__project-price {
   flex-shrink: 0;
   color: var(--card-accent);
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem;
+  font-size: 0.68rem;
   font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0.01em;
   text-align: right;
-
-  transition:
-    color 280ms ease;
+  font-variant-numeric: tabular-nums;
 }
-
-
-/* =========================================================
-   CTA
-   ========================================================= */
 
 .pricing__card-cta {
   display: flex;
@@ -335,29 +488,29 @@
   margin-top: auto;
   padding-top: 2rem;
 
-  color: var(--card-muted);
+  color: var(--card-ink);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.52rem;
+  font-size: 0.62rem;
   line-height: 1.5;
   letter-spacing: 0.08em;
   text-decoration: none;
-
-  transition:
-    color 280ms ease,
-    gap 240ms ease;
 }
 
 .pricing__card-cta span:last-child {
   color: var(--card-accent);
-  font-size: 1rem;
-
-  transition:
-    color 280ms ease;
+  font-size: 1.1rem;
+  transition: transform 300ms var(--p-ease);
 }
 
-.pricing__card-cta:hover {
-  gap: 1.15rem;
+.pricing__card-cta:hover span:last-child,
+.pricing__card-cta:focus-visible span:last-child {
+  transform: translate(3px, -3px);
+}
+
+.pricing__card-cta:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 4px;
 }
 
 
@@ -370,19 +523,7 @@
   grid-template-columns: auto minmax(180px, 1fr) auto;
   align-items: center;
   gap: 2rem;
-  padding-top: 1.2rem;
-
-  opacity: 0;
-  transform: translateY(12px);
-
-  transition:
-    opacity 700ms ease 300ms,
-    transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 300ms;
-}
-
-.pricing.is-visible .pricing__footer {
-  opacity: 1;
-  transform: translateY(0);
+  padding-top: 1.6rem;
 }
 
 .pricing__footer-label {
@@ -393,7 +534,7 @@
   color: var(--purple);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.46rem;
+  font-size: 0.5rem;
   line-height: 1.4;
   letter-spacing: 0.1em;
 }
@@ -409,9 +550,9 @@
   max-width: 380px;
   margin: 0 auto;
 
-  color: rgba(17, 11, 26, 0.48);
+  color: rgba(17, 11, 26, 0.55);
 
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   line-height: 1.6;
   text-align: center;
 }
@@ -421,10 +562,10 @@
   align-items: center;
   gap: 0.55rem;
 
-  color: rgba(17, 11, 26, 0.58);
+  color: rgba(17, 11, 26, 0.62);
 
   font-family: 'DM Mono', monospace;
-  font-size: 0.46rem;
+  font-size: 0.5rem;
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-decoration: none;
@@ -446,115 +587,152 @@
 
 
 /* =========================================================
-   TABLET
+   NOTEBOOK / TABLET LARGO
    ========================================================= */
 
-@media (max-width: 1050px) {
-  .pricing__inner {
-    width: min(calc(100% - 3rem), 920px);
-  }
-
+@media (max-width: 1150px) {
   .pricing__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .pricing__card:nth-child(2) {
-    border-right: 0;
-  }
-
-  .pricing__card:nth-child(-n + 2) {
-    border-bottom: 1px solid rgba(17, 11, 26, 0.12);
-  }
-
-  .pricing__card-content {
-    min-height: 560px;
+    --step: 20px;
+    --panel-h: 700px;
   }
 }
 
 
 /* =========================================================
-   MOBILE
+   TABLET E MOBILE
+   Vira acordeão vertical: sem degraus, sem clip-path.
+   O painel abre por altura (grid 0fr → 1fr).
    ========================================================= */
 
-@media (max-width: 760px) {
+@media (max-width: 899px) {
   .pricing__inner {
-    width: calc(100% - 2rem);
-    padding: 5rem 0 2.5rem;
-  }
-
-  .pricing__header {
-    margin-bottom: 3.5rem;
+    width: min(calc(100% - 3rem), 760px);
   }
 
   .pricing__heading {
     display: block;
   }
 
-  .pricing__heading h2 {
-    font-size: clamp(2.8rem, 11vw, 4rem);
-  }
-
-  .pricing__heading h2 span {
-    margin-left: 0.7rem;
-  }
-
   .pricing__intro {
     margin-top: 1.8rem;
   }
 
-  .pricing__intro p {
-    max-width: 390px;
-    font-size: 0.78rem;
-  }
-
   .pricing__grid {
-    display: flex;
+    --step: 0px;
+
     flex-direction: column;
-    border-bottom: 0;
+    border-bottom: 1px solid rgba(17, 11, 26, 0.13);
   }
 
-  .pricing__card {
+  .pricing__panel {
+    flex: none;
+    height: auto;
+    overflow: hidden;
+    clip-path: none;
+    border-left: 0;
+    border-top: 1px solid rgba(17, 11, 26, 0.13);
+    background: transparent;
+  }
+
+  .pricing__panel:last-child {
     border-right: 0;
-    border-bottom: 1px solid rgba(17, 11, 26, 0.13);
   }
 
-  .pricing__card:nth-child(-n + 2) {
-    border-bottom: 1px solid rgba(17, 11, 26, 0.13);
+  .pricing__panel.is-active {
+    flex-grow: 0;
   }
 
-  .pricing__card:last-child {
-    border-bottom: 0;
+  .pricing__panel::before {
+    transform-origin: top;
   }
 
-  .pricing__card-content {
-    min-height: 500px;
-    padding: 1.5rem 0 2rem;
+  .pricing__tab {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1.4rem 1rem;
+  }
+
+  .pricing__panel.is-active .pricing__tab {
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .pricing__tab-name {
+    flex: 1;
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    white-space: normal;
+  }
+
+  .pricing__tab-foot {
+    width: auto;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .pricing__tab-price {
+    text-align: right;
+  }
+
+  .pricing__body {
+    position: static;
+    width: auto;
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 650ms var(--p-ease),
+      visibility 0s linear 650ms;
+  }
+
+  .pricing__panel.is-active .pricing__body {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .pricing__body-inner {
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .pricing__body-pad {
+    height: auto;
+    padding: 0.4rem 1rem 2rem;
+  }
+
+  /* o nome já aparece na face fechada; mantém só para leitores de tela */
+  .pricing__card-heading h3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .pricing__card-heading {
-    margin-top: 3rem;
-  }
-
-  .pricing__card-heading h3 {
-    font-size: clamp(2.3rem, 9vw, 3rem);
+    margin-top: 1.2rem;
   }
 
   .pricing__card-heading p {
-    max-width: 420px;
-    font-size: 0.84rem;
-    line-height: 1.7;
+    max-width: 480px;
+    margin-top: 0;
   }
 
   .pricing__projects {
-    margin-top: 2.8rem;
+    margin-top: 1.8rem;
   }
 
-  .pricing__project-name {
-    font-size: 0.8rem;
-  }
-
-  .pricing__project-price {
-    font-size: 0.52rem;
+  .pricing__card-cta {
+    margin-top: 0;
   }
 
   .pricing__footer {
@@ -567,87 +745,88 @@
   .pricing__footer p {
     margin: 0;
     text-align: left;
-    font-size: 0.68rem;
   }
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   MOBILE PEQUENO
    ========================================================= */
 
-@media (max-width: 430px) {
+@media (max-width: 560px) {
   .pricing__inner {
-    width: calc(100% - 1.4rem);
-    padding-top: 3.8rem;
-  }
-
-  .pricing__eyebrow {
-    font-size: 0.52rem;
+    width: calc(100% - 1.6rem);
+    padding: 4.5rem 0 2.5rem;
   }
 
   .pricing__heading h2 {
-    font-size: 2.55rem;
+    font-size: clamp(2.6rem, 12vw, 3.6rem);
+  }
+
+  .pricing__line--accent {
+    margin-left: 0.7rem;
   }
 
   .pricing__intro p {
-    font-size: 0.74rem;
-  }
-
-  .pricing__card-content {
-    min-height: 470px;
-  }
-
-  .pricing__card-eyebrow {
-    font-size: 0.44rem;
-  }
-
-  .pricing__card-heading h3 {
-    font-size: 2.15rem;
-  }
-
-  .pricing__card-heading p {
     font-size: 0.78rem;
-    line-height: 1.7;
+  }
+
+  .pricing__tab {
+    padding: 1.2rem 0.6rem;
+    gap: 0.7rem;
+  }
+
+  .pricing__tab-price small {
+    display: none;
+  }
+
+  .pricing__tab-plus {
+    width: 26px;
+    height: 26px;
+  }
+
+  .pricing__body-pad {
+    padding: 0.4rem 0.6rem 1.8rem;
   }
 
   .pricing__project-name {
-    font-size: 0.76rem;
-  }
-
-  .pricing__project-price {
-    font-size: 0.48rem;
-  }
-
-  .pricing__card-cta {
-    font-size: 0.46rem;
-  }
-
-  .pricing__footer-label {
-    font-size: 0.4rem;
-  }
-
-  .pricing__footer p {
-    font-size: 0.62rem;
-  }
-
-  .pricing__footer a {
-    font-size: 0.42rem;
+    font-size: 0.8rem;
   }
 }
 
 
 /* =========================================================
-   REDUCED MOTION
+   FOCO VISÍVEL E MOVIMENTO REDUZIDO
    ========================================================= */
 
+.pricing__body:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .pricing__header,
-  .pricing__grid,
-  .pricing__footer,
-  .pricing__card,
-  .pricing__card-fill,
-  .pricing__card-cta {
-    transition: none;
+  .pricing__line > span,
+  .pricing__intro,
+  .pricing__panel,
+  .pricing__panel::before,
+  .pricing__panel::after,
+  .pricing__body,
+  .pricing__reveal,
+  .pricing__tab,
+  .pricing__tab-plus,
+  .pricing__card-cta span:last-child {
+    transition: none !important;
+  }
+
+  .pricing__line > span {
+    transform: none;
+  }
+
+  .pricing__intro {
+    opacity: 1;
+  }
+
+  .pricing__reveal {
+    opacity: 1;
+    transform: none;
   }
 }
