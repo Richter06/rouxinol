@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+
 import '../styles/solutions.css'
 
 const solutions = [
@@ -100,8 +101,15 @@ export default function Solutions() {
   const sectionRef = useRef(null)
   const frameRef = useRef(null)
 
+  const targetProgressRef = useRef(0)
+  const smoothProgressRef = useRef(0)
+
   const [progress, setProgress] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
+  const [mousePosition, setMousePosition] = useState({
+    x: 50,
+    y: 50,
+  })
 
   useEffect(() => {
     const section = sectionRef.current
@@ -110,59 +118,74 @@ export default function Solutions() {
       return undefined
     }
 
-    function updateProgress() {
+    function calculateProgress() {
       const rect = section.getBoundingClientRect()
 
       const scrollableDistance =
         rect.height - window.innerHeight
 
       if (scrollableDistance <= 0) {
-        setProgress(0)
+        targetProgressRef.current = 0
         return
       }
 
       const rawProgress =
         -rect.top / scrollableDistance
 
-      setProgress(
-        clamp(rawProgress, 0, 1),
+      targetProgressRef.current = clamp(
+        rawProgress,
+        0,
+        1,
       )
     }
 
-    function requestUpdate() {
-      if (frameRef.current) {
-        return
+    function animate() {
+      const target = targetProgressRef.current
+      const current = smoothProgressRef.current
+
+      const difference = target - current
+
+      smoothProgressRef.current += difference * 0.16
+
+      if (Math.abs(difference) < 0.0001) {
+        smoothProgressRef.current = target
       }
 
+      setProgress(smoothProgressRef.current)
+
       frameRef.current =
-        window.requestAnimationFrame(() => {
-          updateProgress()
-          frameRef.current = null
-        })
+        window.requestAnimationFrame(animate)
     }
 
-    updateProgress()
+    function requestProgressUpdate() {
+      calculateProgress()
+    }
+
+    calculateProgress()
+
+    frameRef.current =
+      window.requestAnimationFrame(animate)
 
     window.addEventListener(
       'scroll',
-      requestUpdate,
+      requestProgressUpdate,
       { passive: true },
     )
 
     window.addEventListener(
       'resize',
-      requestUpdate,
+      requestProgressUpdate,
     )
 
     return () => {
       window.removeEventListener(
         'scroll',
-        requestUpdate,
+        requestProgressUpdate,
       )
 
       window.removeEventListener(
         'resize',
-        requestUpdate,
+        requestProgressUpdate,
       )
 
       if (frameRef.current) {
@@ -183,12 +206,10 @@ export default function Solutions() {
     const observer =
       new IntersectionObserver(
         ([entry]) => {
-          setIsVisible(
-            entry.isIntersecting,
-          )
+          setIsVisible(entry.isIntersecting)
         },
         {
-          threshold: 0.05,
+          threshold: 0.08,
         },
       )
 
@@ -197,18 +218,71 @@ export default function Solutions() {
     return () => observer.disconnect()
   }, [])
 
-  /*
-   * Cada solução ocupa exatamente um ponto
-   * da roleta.
-   *
-   * O scroll não move os cards livremente.
-   * Ele move a posição virtual da roleta.
-   */
+  useEffect(() => {
+    const section = sectionRef.current
+
+    if (!section) {
+      return undefined
+    }
+
+    function handlePointerMove(event) {
+      const rect =
+        section.getBoundingClientRect()
+
+      const x =
+        ((event.clientX - rect.left) /
+          rect.width) *
+        100
+
+      const y =
+        ((event.clientY - rect.top) /
+          rect.height) *
+        100
+
+      setMousePosition({
+        x: clamp(x, 0, 100),
+        y: clamp(y, 0, 100),
+      })
+    }
+
+    function handlePointerLeave() {
+      setMousePosition({
+        x: 50,
+        y: 50,
+      })
+    }
+
+    section.addEventListener(
+      'pointermove',
+      handlePointerMove,
+    )
+
+    section.addEventListener(
+      'pointerleave',
+      handlePointerLeave,
+    )
+
+    return () => {
+      section.removeEventListener(
+        'pointermove',
+        handlePointerMove,
+      )
+
+      section.removeEventListener(
+        'pointerleave',
+        handlePointerLeave,
+      )
+    }
+  }, [])
+
   const wheelPosition =
     progress * (solutions.length - 1)
 
-  const activeIndex =
-    Math.round(wheelPosition)
+  const activeIndex = clamp(
+    Math.round(wheelPosition),
+    0,
+    solutions.length - 1,
+  )
 
   const activeSolution =
     solutions[activeIndex]
@@ -278,21 +352,23 @@ export default function Solutions() {
     <section
       ref={sectionRef}
       className={`solutions ${
-        isVisible
-          ? 'is-visible'
-          : ''
+        isVisible ? 'is-visible' : ''
       }`}
       id="solucoes"
       aria-labelledby="solutions-title"
       tabIndex="0"
       onKeyDown={handleKeyDown}
+      style={{
+        '--mouse-x': `${mousePosition.x}%`,
+        '--mouse-y': `${mousePosition.y}%`,
+      }}
     >
       <div className="solutions__sticky">
-
         <div
           className="solutions__background"
           aria-hidden="true"
         >
+          <div className="solutions__background-glow" />
           <div className="solutions__background-shape" />
         </div>
 
@@ -305,8 +381,11 @@ export default function Solutions() {
             className="solutions__title"
             id="solutions-title"
           >
-            Mas como saber
-            <span>
+            <span className="solutions__title-line">
+              Mas como saber
+            </span>
+
+            <span className="solutions__title-line solutions__title-line--accent">
               o que você precisa?
             </span>
           </h2>
@@ -323,11 +402,8 @@ export default function Solutions() {
         </div>
 
         <div className="solutions__roulette">
-
           <div className="solutions__roulette-window">
-
             <div className="solutions__roulette-list">
-
               {solutions.map(
                 (solution, index) => {
                   const distance =
@@ -340,16 +416,6 @@ export default function Solutions() {
                   const isActive =
                     index === activeIndex
 
-                  /*
-                   * Slots fixos:
-                   *
-                   * - centro
-                   * - acima
-                   * - abaixo
-                   *
-                   * Quanto mais longe,
-                   * menor e mais transparente.
-                   */
                   const translateY =
                     distance * 118
 
@@ -397,6 +463,13 @@ export default function Solutions() {
                             -70,
                           )
 
+                  const rotation =
+                    clamp(
+                      distance * -1.8,
+                      -5,
+                      5,
+                    )
+
                   return (
                     <button
                       key={solution.id}
@@ -407,9 +480,7 @@ export default function Solutions() {
                           : ''
                       }`}
                       onClick={() =>
-                        goToSolution(
-                          index,
-                        )
+                        goToSolution(index)
                       }
                       aria-label={`${solution.category}: ${solution.name}`}
                       aria-current={
@@ -423,6 +494,9 @@ export default function Solutions() {
                         '--item-scale': scale,
                         '--item-opacity': opacity,
                         '--item-blur': `${blur}px`,
+                        '--item-rotate': `${rotation}deg`,
+                        '--item-distance':
+                          absoluteDistance,
                         zIndex:
                           100 -
                           Math.round(
@@ -452,9 +526,7 @@ export default function Solutions() {
                   )
                 },
               )}
-
             </div>
-
           </div>
 
           <div
@@ -468,9 +540,7 @@ export default function Solutions() {
 
               <span>
                 {activeSolution.number}
-                {' '}
-                /
-                {' '}
+                {' / '}
                 08
               </span>
             </div>
@@ -485,19 +555,24 @@ export default function Solutions() {
 
             <div className="solutions__keywords">
               {activeSolution.keywords.map(
-                (keyword) => (
-                  <span key={keyword}>
+                (keyword, index) => (
+                  <span
+                    key={keyword}
+                    style={{
+                      '--keyword-delay': `${
+                        index * 70
+                      }ms`,
+                    }}
+                  >
                     {keyword}
                   </span>
                 ),
               )}
             </div>
           </div>
-
         </div>
 
         <div className="solutions__footer">
-
           <div className="solutions__progress">
             <span>
               {activeSolution.number}
@@ -519,11 +594,11 @@ export default function Solutions() {
 
           <span className="solutions__scroll-hint">
             ROLE PARA DESCOBRIR
-            <span>↓</span>
+            <span className="solutions__scroll-arrow">
+              ↓
+            </span>
           </span>
-
         </div>
-
       </div>
     </section>
   )

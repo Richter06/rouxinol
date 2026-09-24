@@ -5,7 +5,6 @@ import '../styles/visibility.css'
 const stages = [
   {
     id: 'presence',
-    category: 'PRESENÇA',
     title: 'Aparecer.',
     question:
       'As pessoas procuram pelo que você faz e não encontram.',
@@ -14,13 +13,11 @@ const stages = [
     answer:
       'Vamos dar um lugar para o seu negócio ser encontrado.',
     solution: 'LANDING PAGE OU SITE',
-    detail:
-      'Uma presença própria para apresentar quem você é, o que oferece e por que alguém deveria escolher você.',
     visual: 'search',
   },
+
   {
     id: 'organization',
-    category: 'ORGANIZAÇÃO',
     title: 'Encontrar.',
     question:
       'Você sabe que tem tudo anotado em algum lugar. Só não sabe em qual.',
@@ -29,13 +26,11 @@ const stages = [
     answer:
       'Talvez esteja na hora de parar de procurar informação dentro do próprio negócio.',
     solution: 'SISTEMA',
-    detail:
-      'Uma solução feita para reunir cadastros, informações e operações em um único lugar.',
     visual: 'system',
   },
+
   {
     id: 'processes',
-    category: 'PROCESSOS',
     title: 'Simplificar.',
     question:
       'Você ainda perde tempo fazendo a mesma coisa toda semana.',
@@ -44,13 +39,11 @@ const stages = [
     answer:
       'Se uma máquina pode fazer a parte chata, deixe ela fazer a parte chata.',
     solution: 'AUTOMAÇÃO E FERRAMENTAS',
-    detail:
-      'Experiências pensadas para reduzir tarefas repetitivas e deixar sua rotina mais simples.',
     visual: 'process',
   },
+
   {
     id: 'data',
-    category: 'DADOS',
     title: 'Enxergar.',
     question:
       'Você tem números. Só não consegue enxergar o que eles estão dizendo.',
@@ -59,13 +52,11 @@ const stages = [
     answer:
       'Seus números não precisam parecer um interrogatório.',
     solution: 'DASHBOARD',
-    detail:
-      'Uma visão mais clara das informações importantes para você entender o que está acontecendo.',
     visual: 'data',
   },
+
   {
     id: 'sales',
-    category: 'VENDAS',
     title: 'Conectar.',
     question:
       'Você tem coisa boa para vender, mas parece que ninguém está olhando.',
@@ -74,13 +65,11 @@ const stages = [
     answer:
       'Talvez seu produto precise de uma experiência melhor para chegar até ele.',
     solution: 'CATÁLOGO OU LOJA',
-    detail:
-      'Uma experiência para apresentar produtos, facilitar a descoberta e criar um caminho mais claro até a compra.',
     visual: 'commerce',
   },
+
   {
     id: 'custom',
-    category: 'IDEIA',
     title: 'Criar.',
     question:
       'Você tem uma ideia que não cabe em nenhuma ferramenta pronta.',
@@ -89,14 +78,16 @@ const stages = [
     answer:
       'Então talvez seja a ferramenta que esteja errada para o problema.',
     solution: 'PROJETO PERSONALIZADO',
-    detail:
-      'Uma solução pensada a partir daquilo que seu negócio realmente precisa fazer.',
     visual: 'network',
   },
 ]
 
-const PARTICLE_COUNT = 44
-const CUBE_COUNT = 14
+const PARTICLE_COUNT = 34
+const CUBE_COUNT = 10
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max)
+}
 
 function createParticles() {
   return Array.from({ length: PARTICLE_COUNT }, (_, index) => ({
@@ -127,9 +118,26 @@ function createCubes() {
 const particles = createParticles()
 const cubes = createCubes()
 
+function splitWords(text) {
+  return text.split(' ').map((word, index) => (
+    <span
+      key={`${word}-${index}`}
+      className="visibility__word"
+      style={{
+        '--word-delay': `${index * 28}ms`,
+      }}
+    >
+      {word}
+    </span>
+  ))
+}
+
 function Particles({ stage }) {
   return (
-    <div className={`visibility__particles visibility__particles--${stage}`}>
+    <div
+      className={`visibility__particles visibility__particles--${stage}`}
+      aria-hidden="true"
+    >
       {particles.map((particle) => (
         <span
           key={particle.id}
@@ -150,7 +158,10 @@ function Particles({ stage }) {
 
 function Cubes({ stage }) {
   return (
-    <div className={`visibility__cubes visibility__cubes--${stage}`}>
+    <div
+      className={`visibility__cubes visibility__cubes--${stage}`}
+      aria-hidden="true"
+    >
       {cubes.map((cube) => (
         <span
           key={cube.id}
@@ -330,15 +341,13 @@ function CommerceVisual() {
 }
 
 function NetworkVisual({ mouse }) {
-  const rotateX = mouse.y * -8
-  const rotateY = mouse.x * 12
+  const rotateX = mouse.y * -7
+  const rotateY = mouse.x * 10
 
   return (
     <div
       className="visibility__network-scene"
       style={{
-        '--mouse-x': `${mouse.x}`,
-        '--mouse-y': `${mouse.y}`,
         '--network-rotate-x': `${rotateX}deg`,
         '--network-rotate-y': `${rotateY}deg`,
       }}
@@ -379,8 +388,8 @@ function NetworkVisual({ mouse }) {
       </div>
 
       <div className="visibility__network-caption">
-        <span>MOVE YOUR CURSOR</span>
-        <strong>EXPLORE THE SPACE</strong>
+        <span>EXPLORE THE SPACE</span>
+        <strong>YOUR IDEA</strong>
       </div>
     </div>
   )
@@ -403,8 +412,8 @@ function StageVisual({ stage, mouse }) {
       <div
         className="visibility__visual-camera"
         style={{
-          '--mouse-x': `${mouse.x}`,
-          '--mouse-y': `${mouse.y}`,
+          '--mouse-x': mouse.x,
+          '--mouse-y': mouse.y,
         }}
       >
         {stage.visual === 'search' && <SearchVisual />}
@@ -420,6 +429,9 @@ function StageVisual({ stage, mouse }) {
 
 export default function Visibility() {
   const sectionRef = useRef(null)
+  const targetProgressRef = useRef(0)
+  const smoothProgressRef = useRef(0)
+  const frameRef = useRef(null)
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
@@ -450,57 +462,102 @@ export default function Visibility() {
   }, [])
 
   useEffect(() => {
-    function handleScroll() {
-      const element = sectionRef.current
+    const element = sectionRef.current
 
-      if (!element) {
-        return
-      }
+    if (!element) {
+      return undefined
+    }
 
+    function calculateProgress() {
       const rect = element.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const total = rect.height - viewportHeight
+      const total = rect.height - window.innerHeight
 
       if (total <= 0) {
+        targetProgressRef.current = 0
         return
       }
 
-      const progress = Math.min(
+      targetProgressRef.current = clamp(
+        -rect.top / total,
+        0,
         1,
-        Math.max(0, -rect.top / total),
-      )
-
-      setScrollProgress(progress)
-
-      const nextIndex = Math.min(
-        stages.length - 1,
-        Math.floor(progress * stages.length),
-      )
-
-      setActiveIndex((current) =>
-        current === nextIndex ? current : nextIndex,
       )
     }
 
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    })
+    function animate() {
+      const target = targetProgressRef.current
+      const current = smoothProgressRef.current
 
-    handleScroll()
+      const difference = target - current
+
+      smoothProgressRef.current += difference * 0.18
+
+      if (Math.abs(difference) < 0.0001) {
+        smoothProgressRef.current = target
+      }
+
+      const nextProgress = smoothProgressRef.current
+
+      setScrollProgress(nextProgress)
+
+      const nextIndex = Math.min(
+        stages.length - 1,
+        Math.floor(nextProgress * stages.length),
+      )
+
+      setActiveIndex((currentIndex) =>
+        currentIndex === nextIndex
+          ? currentIndex
+          : nextIndex,
+      )
+
+      frameRef.current =
+        window.requestAnimationFrame(animate)
+    }
+
+    calculateProgress()
+
+    frameRef.current =
+      window.requestAnimationFrame(animate)
+
+    window.addEventListener(
+      'scroll',
+      calculateProgress,
+      { passive: true },
+    )
+
+    window.addEventListener(
+      'resize',
+      calculateProgress,
+    )
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener(
+        'scroll',
+        calculateProgress,
+      )
+
+      window.removeEventListener(
+        'resize',
+        calculateProgress,
+      )
+
+      if (frameRef.current) {
+        window.cancelAnimationFrame(
+          frameRef.current,
+        )
+      }
     }
   }, [])
 
   useEffect(() => {
+    const element = sectionRef.current
+
+    if (!element) {
+      return undefined
+    }
+
     function handleMouseMove(event) {
-      const element = sectionRef.current
-
-      if (!element) {
-        return
-      }
-
       const rect = element.getBoundingClientRect()
 
       const x =
@@ -510,29 +567,55 @@ export default function Visibility() {
         ((event.clientY - rect.top) / rect.height - 0.5) * 2
 
       setMouse({
-        x: Math.max(-1, Math.min(1, x)),
-        y: Math.max(-1, Math.min(1, y)),
+        x: clamp(x, -1, 1),
+        y: clamp(y, -1, 1),
       })
     }
 
     function handleMouseLeave() {
-      setMouse({ x: 0, y: 0 })
+      setMouse({
+        x: 0,
+        y: 0,
+      })
     }
 
-    const element = sectionRef.current
+    element.addEventListener(
+      'mousemove',
+      handleMouseMove,
+    )
 
-    if (!element) {
-      return undefined
-    }
-
-    element.addEventListener('mousemove', handleMouseMove)
-    element.addEventListener('mouseleave', handleMouseLeave)
+    element.addEventListener(
+      'mouseleave',
+      handleMouseLeave,
+    )
 
     return () => {
-      element.removeEventListener('mousemove', handleMouseMove)
-      element.removeEventListener('mouseleave', handleMouseLeave)
+      element.removeEventListener(
+        'mousemove',
+        handleMouseMove,
+      )
+
+      element.removeEventListener(
+        'mouseleave',
+        handleMouseLeave,
+      )
     }
   }, [])
+
+  const timelineProgress =
+    scrollProgress * stages.length
+
+  const stageProgress =
+    timelineProgress - activeIndex
+
+  const normalizedStageProgress =
+    clamp(stageProgress, 0, 1)
+
+  const stageAngle =
+    normalizedStageProgress * 8 - 4
+
+  const stageDepth =
+    normalizedStageProgress * 80
 
   return (
     <section
@@ -542,6 +625,14 @@ export default function Visibility() {
       }`}
       id="visibilidade"
       aria-labelledby="visibility-title"
+      style={{
+        '--mouse-x': mouse.x,
+        '--mouse-y': mouse.y,
+        '--scroll-progress': scrollProgress,
+        '--stage-progress': normalizedStageProgress,
+        '--stage-angle': `${stageAngle}deg`,
+        '--stage-depth': `${stageDepth}px`,
+      }}
     >
       <div className="visibility__sticky">
         <div className="visibility__world">
@@ -549,26 +640,73 @@ export default function Visibility() {
           <div className="visibility__fog visibility__fog--one" />
           <div className="visibility__fog visibility__fog--two" />
 
-          <div
-            className="visibility__camera"
-            style={{
-              '--mouse-x': mouse.x,
-              '--mouse-y': mouse.y,
-              '--progress': scrollProgress,
-            }}
-          >
-            <StageVisual
-              stage={activeStage}
-              mouse={mouse}
+          <div className="visibility__cursor-light" />
+
+          <div className="visibility__camera">
+            <div
+              className="visibility__stage-transition"
+              key={activeStage.id}
+            >
+              <StageVisual
+                stage={activeStage}
+                mouse={mouse}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="visibility__timeline" aria-hidden="true">
+          <div className="visibility__timeline-track">
+            <span
+              className="visibility__timeline-progress"
+              style={{
+                transform: `scaleY(${scrollProgress})`,
+              }}
             />
           </div>
+
+          {stages.map((stage, index) => {
+            const pointProgress =
+              index / (stages.length - 1)
+
+            const reached =
+              scrollProgress >= pointProgress
+
+            return (
+              <span
+                key={stage.id}
+                className={`visibility__timeline-point ${
+                  reached ? 'is-reached' : ''
+                } ${
+                  index === activeIndex
+                    ? 'is-active'
+                    : ''
+                }`}
+                style={{
+                  '--point-progress': pointProgress,
+                }}
+              >
+                <span />
+              </span>
+            )
+          })}
         </div>
 
         <div className="visibility__content">
           <header className="visibility__header">
+            <div className="visibility__eyebrow">
+              <span />
+              <strong>POR QUE PRESENÇA DIGITAL?</strong>
+            </div>
+
             <h2 id="visibility-title">
-              Sua presença começa
-              <span>antes do primeiro contato.</span>
+              <span className="visibility__headline-line">
+                Sua presença começa
+              </span>
+
+              <span className="visibility__headline-line visibility__headline-line--accent">
+                antes do primeiro contato.
+              </span>
             </h2>
 
             <p>
@@ -578,37 +716,43 @@ export default function Visibility() {
             </p>
           </header>
 
-          <div className="visibility__stage-copy">
-            <span className="visibility__stage-category">
-              {activeStage.category}
-            </span>
-
-            <h3 key={activeStage.id}>
-              {activeStage.title}
-            </h3>
-
-            <p
-              className="visibility__stage-question"
-              key={`question-${activeStage.id}`}
-            >
-              {activeStage.question}
-            </p>
-
-            <div
-              className="visibility__stage-detail"
-              key={`detail-${activeStage.id}`}
-            >
-              <p>{activeStage.context}</p>
+          <div
+            className="visibility__stage-copy"
+            key={activeStage.id}
+          >
+            <div className="visibility__stage-meta">
+              <span>{activeStage.category}</span>
 
               <span>
-                {activeStage.solution}
+                {activeStage.id === stages[stages.length - 1].id
+                  ? '06'
+                  : String(activeIndex + 1).padStart(2, '0')}
+                {' / 06'}
               </span>
+            </div>
+
+            <h3>{activeStage.title}</h3>
+
+            <p className="visibility__stage-question">
+              {splitWords(activeStage.question)}
+            </p>
+
+            <div className="visibility__stage-detail">
+              <p>{activeStage.context}</p>
+
+              <span>{activeStage.solution}</span>
             </div>
           </div>
 
           <div className="visibility__hint">
             <span>SCROLL TO EXPLORE</span>
+
             <i />
+          </div>
+
+          <div className="visibility__stage-label">
+            <span>ROUXINOL</span>
+            <strong>{activeStage.category}</strong>
           </div>
         </div>
       </div>
