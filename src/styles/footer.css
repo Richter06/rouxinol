@@ -1,0 +1,1402 @@
+/* =========================================================
+   ROUXINOL — FOOTER
+   ---------------------------------------------------------
+   Conceito: o último capítulo da experiência.
+   Editorial, autoral, digital, levemente brincalhão.
+   ========================================================= */
+
+.footer {
+  --footer-purple: var(--purple, #5b21b6);
+  --footer-purple-dark: var(--purple-dark, #35106f);
+  --footer-purple-deep: var(--purple-deep, #22083f);
+  --footer-yellow: var(--yellow, #f4d72f);
+  --footer-cream: var(--cream, #f5f0e6);
+  --footer-ink: var(--ink, #110b1a);
+
+  --footer-white-soft: rgba(245, 240, 230, 0.72);
+  --footer-white-faint: rgba(245, 240, 230, 0.38);
+  --footer-line: rgba(245, 240, 230, 0.16);
+
+  --footer-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --footer-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background: var(--footer-purple-deep);
+  color: var(--footer-cream);
+}
+
+/* =========================================================
+   ATMOSPHERE
+   ========================================================= */
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+
+  background:
+    radial-gradient(
+      circle at 76% 12%,
+      rgba(91, 33, 182, 0.5),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 10% 78%,
+      rgba(244, 215, 47, 0.055),
+      transparent 25%
+    );
+
+  pointer-events: none;
+}
+
+.footer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -5;
+
+  background: linear-gradient(
+    180deg,
+    var(--footer-purple-deep) 0%,
+    var(--footer-purple-dark) 100%
+  );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CURSOR LIGHT — técnica 12
+   ========================================================= */
+
+.footer__light {
+  position: absolute;
+  z-index: -1;
+
+  width: 34rem;
+  height: 34rem;
+
+  left: 0;
+  top: 0;
+
+  transform: translate3d(
+    calc(var(--light-x, 50%) - 50%),
+    calc(var(--light-y, 50%) - 50%),
+    0
+  );
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(244, 215, 47, 0.09) 0%,
+    rgba(244, 215, 47, 0.035) 30%,
+    transparent 70%
+  );
+
+  filter: blur(16px);
+  pointer-events: none;
+  opacity: 0;
+
+  transition: opacity 1s ease;
+}
+
+.footer.is-visible .footer__light {
+  opacity: 1;
+}
+
+/* =========================================================
+   FRAME
+   ---------------------------------------------------------
+   A rail não participa mais do grid.
+   Ela fica posicionada por cima, sem roubar espaço
+   horizontal do conteúdo.
+   ========================================================= */
+
+.footer__frame {
+  position: relative;
+}
+
+.footer__content {
+  min-width: 0;
+}
+
+/* =========================================================
+   LINHA DO TEMPO
+   ---------------------------------------------------------
+   Técnica 07 — reinterpretada como marcador editorial.
+   ========================================================= */
+
+.footer__rail {
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: clamp(1rem, 2.5vw, 3rem);
+
+  width: 12px;
+
+  z-index: 3;
+  pointer-events: none;
+
+  display: flex;
+  justify-content: center;
+
+  padding:
+    clamp(6rem, 10vw, 10rem)
+    0
+    clamp(3rem, 5vw, 5rem);
+}
+
+.footer__rail-track {
+  position: absolute;
+
+  top: clamp(6rem, 10vw, 10rem);
+  bottom: clamp(3rem, 5vw, 5rem);
+
+  width: 1px;
+
+  background: var(--footer-line);
+}
+
+.footer__rail-progress {
+  display: block;
+
+  width: 100%;
+  height: var(--rail-progress, 0%);
+
+  background: var(--footer-yellow);
+
+  transition: height 900ms var(--footer-ease);
+}
+
+.footer__rail-dots {
+  position: relative;
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+}
+
+.footer__rail-dot {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer__rail-dot-marker {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--footer-purple-deep);
+  border: 1px solid var(--footer-white-faint);
+
+  transition:
+    background 500ms var(--footer-ease),
+    border-color 500ms var(--footer-ease),
+    transform 500ms var(--footer-spring),
+    box-shadow 500ms var(--footer-ease);
+}
+
+.footer__rail-dot.is-active .footer__rail-dot-marker {
+  background: var(--footer-yellow);
+  border-color: var(--footer-yellow);
+
+  transform: scale(1.5);
+
+  box-shadow:
+    0 0 0 5px rgba(244, 215, 47, 0.12);
+}
+
+.footer__rail-dot-label {
+  position: absolute;
+
+  left: 18px;
+
+  white-space: nowrap;
+
+  color: var(--footer-white-faint);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+
+  opacity: 0;
+
+  transform: translateX(-6px);
+
+  transition:
+    opacity 450ms ease,
+    transform 450ms var(--footer-ease),
+    color 450ms ease;
+}
+
+.footer__rail-dot.is-active .footer__rail-dot-label {
+  opacity: 1;
+
+  transform: translateX(0);
+
+  color: var(--footer-yellow);
+}
+
+/* =========================================================
+   CLOSING
+   ========================================================= */
+
+.footer__closing {
+  width: min(1380px, calc(100% - 8vw));
+
+  margin: 0 auto;
+
+  padding:
+    clamp(6rem, 10vw, 10rem)
+    0
+    clamp(7rem, 11vw, 11rem);
+}
+
+.footer__closing-header {
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+
+  margin-bottom: clamp(3.5rem, 6vw, 6rem);
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  transition:
+    opacity 800ms ease,
+    transform 900ms var(--footer-ease);
+}
+
+.footer.is-visible .footer__closing-header {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer__eyebrow,
+.footer__group-title {
+  color: var(--footer-yellow);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 400;
+
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+}
+
+.footer__closing-line {
+  width: 46px;
+  height: 1px;
+
+  background: var(--footer-yellow);
+
+  transform-origin: left center;
+  transform: scaleX(0);
+
+  transition:
+    transform 900ms var(--footer-ease) 150ms;
+}
+
+.footer.is-visible .footer__closing-line {
+  transform: scaleX(1);
+}
+
+/* =========================================================
+   CLOSING GRID
+   ========================================================= */
+
+.footer__closing-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(280px, 0.65fr);
+
+  gap: clamp(4rem, 10vw, 10rem);
+
+  align-items: end;
+}
+
+.footer__statement-small {
+  margin: 0 0 1.8rem;
+
+  color: var(--footer-yellow);
+
+  font-family: 'DM Mono', monospace;
+  font-size: 0.57rem;
+
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+
+  opacity: 0;
+
+  transform: translateY(15px);
+
+  transition:
+    opacity 700ms ease 150ms,
+    transform 800ms var(--footer-ease) 150ms;
+}
+
+.footer.is-visible .footer__statement-small {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   CORTINA QUE REVELA — técnica 21
+   ========================================================= */
+
+.footer__curtain-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.footer__curtain {
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  background: linear-gradient(
+    100deg,
+    var(--footer-purple-deep) 45%,
+    var(--footer-purple) 100%
+  );
+
+  transform-origin: top;
+  transform: scaleY(1);
+
+  transition:
+    transform 950ms var(--footer-ease) 200ms;
+
+  pointer-events: none;
+}
+
+.footer.is-visible .footer__curtain {
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+/* =========================================================
+   GIANT STATEMENT
+   ---------------------------------------------------------
+   Preenchimento/reveal progressivo — técnica 04
+   ========================================================= */
+
+.footer__statement h2 {
+  max-width: 950px;
+
+  margin: 0;
+
+  color: var(--footer-cream);
+
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4rem, 9.5vw, 10.5rem);
+  font-weight: 500;
+
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+}
+
+.footer__reveal {
+  display: inline;
+}
+
+.footer__reveal-word {
+  display: inline-block;
+
+  margin-right: 0.18em;
+
+  opacity: 0;
+
+  transform: translateY(0.75em);
+
+  filter: blur(10px);
+
+  transition:
+    opacity 850ms ease,
+    transform 1000ms var(--footer-ease),
+    filter 1000ms var(--footer-ease);
+
+  transition-delay:
+    calc(520ms + var(--word-index) * 110ms);
+}
+
+.footer.is-visible .footer__reveal-word {
+  opacity: 1;
+
+  transform: translateY(0);
+
+  filter: blur(0);
+}
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.footer__statement-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.4em;
+
+  margin: 2.5rem 0 0;
+
+  color: var(--footer-white-soft);
+
+  font-family: 'DM Sans', sans-serif;
+
+  font-size: clamp(1.25rem, 2.1vw, 2rem);
+
+  line-height: 1.15;
+
+  letter-spacing: -0.035em;
+
+  opacity: 0;
+
+  transform: translateY(18px);
+
+  transition:
+    opacity 800ms ease 950ms,
+    transform 900ms var(--footer-ease) 950ms;
+}
+
+.footer.is-visible .footer__statement-subtitle {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.footer__statement-subtitle span {
+  color: var(--footer-yellow);
+
+  font-family: 'Playfair Display', serif;
+
+  font-style: italic;
+}
+
+/* =========================================================
+   CLOSING ACTION
+   ========================================================= */
+
+.footer__closing-action {
+  max-width: 340px;
+
+  padding-bottom: 0.5rem;
+
+  opacity: 0;
+
+  transform: translateY(24px);
+
+  transition:
+    opacity 900ms ease 700ms,
+    transform 1000ms var(--footer-ease) 700ms;
+}
+
+.footer.is-visible .footer__closing-action {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.footer__closing-note {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  margin-bottom: 1.6rem;
+
+  color: var(--footer-white-faint);
+
+  font-family: 'DM Mono', monospace;
+
+  font-size: 0.54rem;
+
+  letter-spacing: 0.1em;
+}
+
+.footer__status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: var(--footer-yellow);
+
+  box-shadow:
+    0 0 0 4px rgba(244, 215, 47, 0.08);
+
+  animation:
+    footer-status-pulse 2.4s ease-in-out infinite;
+
+  animation-play-state: paused;
+}
+
+.footer.is-in-view .footer__status-dot {
+  animation-play-state: running;
+}
+
+@keyframes footer-status-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.footer__closing-action > p {
+  margin: 0 0 2rem;
+
+  color: var(--footer-white-soft);
+
+  font-size: 0.88rem;
+
+  line-height: 1.75;
+}
+
+/* =========================================================
+   PRIMARY LINK
+   ---------------------------------------------------------
+   Técnicas 14 + 30
+   ========================================================= */
+
+.footer__primary-link {
+  --mx: 0px;
+  --my: 0px;
+
+  position: relative;
+
+  display: block;
+
+  padding: 3px;
+
+  border: 1px solid rgba(244, 215, 47, 0.7);
+
+  background: var(--footer-yellow);
+
+  text-decoration: none;
+
+  transform:
+    translate3d(var(--mx), var(--my), 0);
+
+  transition:
+    transform 650ms var(--footer-spring);
+}
+
+.footer__primary-link:hover,
+.footer__primary-link:focus-visible {
+  transform:
+    translate3d(var(--mx), var(--my), 0)
+    scale(1.015);
+}
+
+.footer__primary-link:active {
+  transform:
+    translate3d(var(--mx), var(--my), 0)
+    scale(0.96);
+
+  transition:
+    transform 220ms ease;
+}
+
+.footer__primary-link-face {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 1.05rem 1.15rem;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  color: var(--footer-ink);
+
+  font-family: 'DM Mono', monospace;
+
+  font-size: 0.6rem;
+  font-weight: 400;
+
+  letter-spacing: 0.1em;
+
+  transition:
+    color 350ms ease;
+}
+
+.footer__primary-link-face::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+
+  background: var(--footer-purple);
+
+  transform: translateY(101%);
+
+  transition:
+    transform 550ms var(--footer-ease);
+}
+
+.footer__primary-link:hover .footer__primary-link-face,
+.footer__primary-link:focus-visible .footer__primary-link-face {
+  color: var(--footer-cream);
+}
+
+.footer__primary-link:hover .footer__primary-link-face::before,
+.footer__primary-link:focus-visible .footer__primary-link-face::before {
+  transform: translateY(0);
+}
+
+.footer__primary-arrow {
+  font-size: 1.15rem;
+
+  transition:
+    transform 450ms var(--footer-ease);
+}
+
+.footer__primary-link:hover .footer__primary-arrow,
+.footer__primary-link:focus-visible .footer__primary-arrow {
+  transform: translate(4px, -4px);
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.footer__divider {
+  width: min(1380px, calc(100% - 8vw));
+
+  height: 1px;
+
+  margin: 0 auto;
+
+  background: var(--footer-line);
+
+  transform-origin: left center;
+  transform: scaleX(0);
+
+  transition:
+    transform 1.2s var(--footer-ease);
+}
+
+.footer.is-visible .footer__divider {
+  transform: scaleX(1);
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.footer__navigation {
+  width: min(1380px, calc(100% - 8vw));
+
+  margin: 0 auto;
+
+  padding: 5.5rem 0 6.5rem;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(240px, 1.1fr)
+    minmax(360px, 1.1fr)
+    minmax(220px, 0.6fr);
+
+  gap: clamp(3rem, 6vw, 7rem);
+
+  opacity: 0;
+
+  transform: translateY(20px);
+
+  transition:
+    opacity 900ms ease 100ms,
+    transform 1000ms var(--footer-ease) 100ms;
+}
+
+.footer.is-visible .footer__navigation {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+/* =========================================================
+   BRAND COLUMN
+   ========================================================= */
+
+.footer__brand-column {
+  max-width: 350px;
+}
+
+.footer__wordmark {
+  display: inline-block;
+
+  color: var(--footer-cream);
+
+  font-family: 'DM Sans', sans-serif;
+
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 600;
+
+  line-height: 0.85;
+
+  letter-spacing: -0.085em;
+
+  transition:
+    color 300ms ease,
+    transform 500ms var(--footer-ease);
+}
+
+.footer__wordmark:hover,
+.footer__wordmark:focus-visible {
+  color: var(--footer-yellow);
+
+  transform: translateX(5px);
+}
+
+.footer__brand-meta {
+  display: flex;
+  align-items: flex-start;
+
+  margin-top: 2rem;
+}
+
+.footer__brand-meta p {
+  max-width: 250px;
+
+  margin: 0;
+
+  color: var(--footer-white-faint);
+
+  font-size: 0.78rem;
+
+  line-height: 1.65;
+}
+
+/* =========================================================
+   LINK GROUPS
+   ---------------------------------------------------------
+   Faixas que se montam — técnica 06 adaptada.
+   ========================================================= */
+
+.footer__link-groups {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(120px, 1fr));
+
+  gap: 3rem;
+}
+
+.footer__link-group,
+.footer__contact-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer__group-title {
+  display: block;
+
+  margin-bottom: 1.5rem;
+}
+
+.footer__link-group nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 0.75rem;
+}
+
+.footer__link {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  color: var(--footer-white-soft);
+
+  font-size: 0.82rem;
+
+  line-height: 1.4;
+
+  transition:
+    color 250ms ease,
+    transform 350ms var(--footer-ease);
+}
+
+.footer__link-mask {
+  position: relative;
+
+  display: inline-block;
+
+  overflow: hidden;
+}
+
+.footer__link-strip {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  background: var(--footer-yellow);
+
+  transform-origin: left;
+
+  transform: scaleX(1);
+
+  transition:
+    transform 500ms var(--footer-ease);
+
+  transition-delay:
+    calc(80ms + var(--strip-index) * 55ms);
+}
+
+.footer.is-visible .footer__link-strip {
+  transform: scaleX(0);
+}
+
+.footer__link-text {
+  display: inline-block;
+
+  opacity: 0;
+
+  transform: translateY(60%);
+
+  transition:
+    opacity 400ms ease,
+    transform 500ms var(--footer-ease);
+
+  transition-delay:
+    calc(180ms + var(--strip-index) * 55ms);
+}
+
+.footer.is-visible .footer__link-text {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.footer__link-arrow {
+  color: var(--footer-yellow);
+
+  opacity: 0;
+
+  transform: translate(-4px, 4px);
+
+  transition:
+    opacity 250ms ease,
+    transform 350ms var(--footer-ease);
+}
+
+.footer__link:hover,
+.footer__link:focus-visible {
+  color: var(--footer-yellow);
+
+  transform: translateX(4px);
+}
+
+.footer__link:hover .footer__link-arrow,
+.footer__link:focus-visible .footer__link-arrow {
+  opacity: 1;
+
+  transform: translate(0, 0);
+}
+
+/* =========================================================
+   CONTACT COLUMN
+   ========================================================= */
+
+.footer__contact-link {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  color: var(--footer-cream);
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.04em;
+
+  transition:
+    color 250ms ease,
+    transform 400ms var(--footer-ease);
+}
+
+.footer__contact-link span {
+  color: var(--footer-yellow);
+
+  font-family: 'DM Sans', sans-serif;
+
+  font-size: 1rem;
+
+  transition:
+    transform 400ms var(--footer-ease);
+}
+
+.footer__contact-link:hover,
+.footer__contact-link:focus-visible {
+  color: var(--footer-yellow);
+
+  transform: translateX(4px);
+}
+
+.footer__contact-link:hover span,
+.footer__contact-link:focus-visible span {
+  transform: translate(3px, -3px);
+}
+
+.footer__contact-description {
+  max-width: 220px;
+
+  margin-top: 0.8rem;
+
+  color: var(--footer-white-faint);
+
+  font-size: 0.72rem;
+
+  line-height: 1.6;
+}
+
+/* =========================================================
+   BRAND STAGE
+   ---------------------------------------------------------
+   A identidade domina a tela.
+   ========================================================= */
+
+.footer__brand-stage {
+  position: relative;
+
+  width: min(1380px, calc(100% - 8vw));
+
+  margin: 0 auto;
+
+  border-top: 1px solid var(--footer-line);
+
+  overflow: hidden;
+}
+
+.footer__brand-stage-inner {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+
+  position: relative;
+
+  min-height: clamp(210px, 28vw, 400px);
+
+  transform:
+    perspective(1400px)
+    rotateX(var(--tilt-x))
+    rotateY(var(--tilt-y));
+
+  transition:
+    transform 500ms var(--footer-ease);
+
+  transform-style: preserve-3d;
+}
+
+.footer__brand-stage-top {
+  position: absolute;
+
+  top: 1.2rem;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: var(--footer-white-faint);
+
+  font-family: 'DM Mono', monospace;
+
+  font-size: 0.5rem;
+
+  letter-spacing: 0.09em;
+}
+
+.footer__brand-stage-top span:last-child {
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+}
+
+.footer__brand-stage-top i {
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: var(--footer-yellow);
+}
+
+.footer__giant-word {
+  position: absolute;
+
+  left: -0.06em;
+  bottom: -0.03em;
+
+  color: rgba(245, 240, 230, 0.055);
+
+  font-family: 'DM Sans', sans-serif;
+
+  font-size: clamp(6rem, 19vw, 21rem);
+
+  font-weight: 600;
+
+  letter-spacing: -0.11em;
+
+  line-height: 0.72;
+
+  user-select: none;
+
+  white-space: nowrap;
+
+  transform: translateY(0.08em);
+
+  transition:
+    color 1.4s ease,
+    transform 1.5s var(--footer-ease);
+}
+
+.footer.is-visible .footer__giant-word {
+  color: rgba(245, 240, 230, 0.09);
+
+  transform: translateY(0);
+}
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.footer__bottom {
+  width: min(1380px, calc(100% - 8vw));
+
+  margin: 0 auto;
+
+  padding: 1.25rem 0 1.5rem;
+
+  border-top: 1px solid var(--footer-line);
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1.5fr
+    auto;
+
+  gap: 2rem;
+
+  align-items: center;
+
+  color: var(--footer-white-faint);
+
+  font-family: 'DM Mono', monospace;
+
+  font-size: 0.5rem;
+
+  letter-spacing: 0.08em;
+
+  line-height: 1.5;
+}
+
+.footer__bottom span:nth-child(2) {
+  text-align: center;
+}
+
+.footer__bottom a {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  color: var(--footer-cream);
+
+  transition:
+    color 250ms ease,
+    transform 350ms var(--footer-ease);
+}
+
+.footer__bottom a span {
+  color: var(--footer-yellow);
+
+  font-size: 0.9rem;
+
+  transition:
+    transform 350ms var(--footer-ease);
+}
+
+.footer__bottom a:hover,
+.footer__bottom a:focus-visible {
+  color: var(--footer-yellow);
+
+  transform: translateY(-2px);
+}
+
+.footer__bottom a:hover span,
+.footer__bottom a:focus-visible span {
+  transform: translateY(-3px);
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .footer__rail {
+    display: none;
+  }
+
+  .footer__closing-grid {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+  .footer__closing-action {
+    max-width: 440px;
+  }
+
+  .footer__navigation {
+    grid-template-columns:
+      1fr
+      1fr;
+  }
+
+  .footer__contact-column {
+    grid-column: 2;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 720px) {
+  .footer__closing,
+  .footer__navigation,
+  .footer__brand-stage,
+  .footer__bottom,
+  .footer__divider {
+    width: calc(100% - 2.5rem);
+  }
+
+  .footer__closing {
+    padding:
+      5.5rem
+      0
+      6rem;
+  }
+
+  .footer__closing-header {
+    margin-bottom: 3.2rem;
+  }
+
+  .footer__statement h2 {
+    font-size: clamp(3.7rem, 17vw, 6rem);
+
+    line-height: 0.86;
+  }
+
+  .footer__statement-subtitle {
+    font-size: 1.15rem;
+  }
+
+  .footer__closing-action {
+    max-width: none;
+  }
+
+  .footer__navigation {
+    grid-template-columns: 1fr;
+
+    gap: 3.8rem;
+
+    padding:
+      4rem
+      0
+      5rem;
+  }
+
+  .footer__contact-column {
+    grid-column: auto;
+  }
+
+  .footer__link-groups {
+    gap: 2rem;
+  }
+
+  .footer__brand-stage-inner {
+    min-height: 150px;
+  }
+
+  .footer__brand-stage-top {
+    font-size: 0.44rem;
+  }
+
+  .footer__brand-stage-top span:last-child {
+    display: none;
+  }
+
+  .footer__giant-word {
+    font-size: 22vw;
+  }
+
+  .footer__bottom {
+    grid-template-columns: 1fr;
+
+    gap: 0.7rem;
+
+    padding:
+      1.2rem
+      0
+      1.5rem;
+  }
+
+  .footer__bottom span:nth-child(2) {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .footer__closing,
+  .footer__navigation,
+  .footer__brand-stage,
+  .footer__bottom,
+  .footer__divider {
+    width: calc(100% - 2rem);
+  }
+
+  .footer__closing {
+    padding-top: 4.5rem;
+  }
+
+  .footer__statement h2 {
+    font-size: 18vw;
+  }
+
+  .footer__statement-small {
+    font-size: 0.52rem;
+  }
+
+  .footer__wordmark {
+    font-size: 3rem;
+  }
+
+  .footer__link-groups {
+    grid-template-columns:
+      1fr
+      1fr;
+  }
+
+  .footer__link {
+    font-size: 0.78rem;
+  }
+
+  .footer__brand-stage-inner {
+    min-height: 120px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .footer *,
+  .footer *::before,
+  .footer *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .footer__closing-header,
+  .footer__statement-small,
+  .footer__reveal-word,
+  .footer__statement-subtitle,
+  .footer__closing-action,
+  .footer__navigation,
+  .footer__divider,
+  .footer__link-text {
+    opacity: 1 !important;
+
+    transform: none !important;
+
+    filter: none !important;
+  }
+
+  .footer__closing-line {
+    transform: scaleX(1) !important;
+  }
+
+  .footer__rail-progress {
+    height: 100% !important;
+  }
+
+  .footer__link-strip {
+    transform: scaleX(0) !important;
+  }
+
+  .footer__curtain {
+    transform: scaleY(0) !important;
+  }
+
+  .footer__brand-stage-inner {
+    transform: none !important;
+  }
+
+  .footer__light {
+    display: none;
+  }
+}
+
+/* =========================================================
+   TOUCH
+   ========================================================= */
+
+@media (pointer: coarse) {
+  .footer__light {
+    display: none;
+  }
+
+  .footer__link-arrow {
+    display: none;
+  }
+}
