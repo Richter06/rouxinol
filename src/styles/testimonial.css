@@ -1,4 +1,6 @@
 .testimonial {
+  --t-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: relative;
   overflow: hidden;
   background: var(--cream);
@@ -65,7 +67,41 @@
 
 
 /* =========================================================
+   TÍTULO: MÁSCARA QUE REVELA (linha a linha)
+========================================================= */
+
+.testimonial__line {
+  display: block;
+  overflow: hidden;
+
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.testimonial__line > span,
+.testimonial__line > em {
+  display: inline-block;
+
+  transform: translateY(112%);
+
+  transition: transform 1.05s var(--t-ease);
+}
+
+.testimonial__line:nth-child(2) > em {
+  transition-delay: 0.14s;
+}
+
+.testimonial.is-visible .testimonial__line > span,
+.testimonial.is-visible .testimonial__line > em {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
    3D WHEEL
+   As variáveis abaixo são lidas pelo JS (posição, giro,
+   escala e opacidade dos cards laterais em cada breakpoint).
+   O transform/opacity/filter dos cards é escrito pelo JS.
 ========================================================= */
 
 .testimonial__stage {
@@ -85,6 +121,13 @@
 }
 
 .testimonial__wheel {
+  --spread: 365;
+  --side-y: 35;
+  --side-ry: 22;
+  --side-rz: 3;
+  --side-scale: 0.86;
+  --side-opacity: 0.82;
+
   position: relative;
   width: 100%;
   height: 560px;
@@ -142,130 +185,60 @@
   transform-origin: center center;
 
   user-select: none;
+  -webkit-user-select: none;
+
+  /* permite rolar a página na vertical e arrastar na horizontal */
+  touch-action: pan-y;
 
   pointer-events: auto;
 
   appearance: none;
   -webkit-appearance: none;
 
-  transition:
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.65s ease,
-    filter 0.65s ease,
-    box-shadow 0.65s ease;
+  /* transform, opacity e filter são animados pelo JS (mola) */
+  transition: box-shadow 0.65s ease;
 
-  will-change: transform;
+  will-change: transform, opacity;
 
   outline: none;
 }
 
-
-/* =========================================================
-   CENTRO
-========================================================= */
-
 .testimonial-card--center {
-  z-index: 10;
-
-  transform:
-    translate(-50%, -50%)
-    translate3d(0, 0, 220px)
-    rotateY(0deg)
-    rotateX(0deg)
-    rotateZ(0deg)
-    scale(1);
-
-  opacity: 1;
-
-  filter: none;
+  cursor: default;
 
   box-shadow:
     0 45px 100px rgba(23, 22, 20, 0.16),
     0 12px 30px rgba(23, 22, 20, 0.08);
-
-  cursor: default;
 }
 
+/* luz suave que segue o cursor, atrás do conteúdo */
+.testimonial-card::before {
+  content: '';
 
-/* =========================================================
-   ESQUERDA
-========================================================= */
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 
-.testimonial-card--left {
-  z-index: 5;
+  border-radius: inherit;
 
-  transform:
-    translate(-50%, -50%)
-    translate3d(-365px, 35px, -100px)
-    rotateY(22deg)
-    rotateX(2deg)
-    rotateZ(-3deg)
-    scale(0.86);
+  background:
+    radial-gradient(
+      380px circle at var(--mx, 50%) var(--my, 30%),
+      color-mix(in srgb, var(--yellow) 34%, transparent),
+      transparent 62%
+    );
 
-  opacity: 0.82;
+  opacity: 0;
 
-  filter: saturate(0.8);
+  transition: opacity 0.5s ease;
+
+  pointer-events: none;
 }
 
-
-/* =========================================================
-   DIREITA
-========================================================= */
-
-.testimonial-card--right {
-  z-index: 5;
-
-  transform:
-    translate(-50%, -50%)
-    translate3d(365px, 35px, -100px)
-    rotateY(-22deg)
-    rotateX(2deg)
-    rotateZ(3deg)
-    scale(0.86);
-
-  opacity: 0.82;
-
-  filter: saturate(0.8);
-}
-
-
-/* =========================================================
-   HOVER
-========================================================= */
-
-.testimonial-card--left:hover {
-  transform:
-    translate(-50%, -50%)
-    translate3d(-350px, 25px, -50px)
-    rotateY(18deg)
-    rotateX(2deg)
-    rotateZ(-2deg)
-    scale(0.89);
-
-  opacity: 1;
-  filter: saturate(1);
-}
-
-.testimonial-card--right:hover {
-  transform:
-    translate(-50%, -50%)
-    translate3d(350px, 25px, -50px)
-    rotateY(-18deg)
-    rotateX(2deg)
-    rotateZ(2deg)
-    scale(0.89);
-
-  opacity: 1;
-  filter: saturate(1);
-}
-
-.testimonial-card--center:hover {
-  transform:
-    translate(-50%, -50%)
-    translate3d(0, -8px, 240px)
-    rotateY(0deg)
-    rotateX(0deg)
-    scale(1.015);
+@media (hover: hover) and (pointer: fine) {
+  .testimonial-card:hover::before {
+    opacity: 1;
+  }
 }
 
 
@@ -317,6 +290,8 @@
 
   line-height: 0.8;
   letter-spacing: -0.08em;
+
+  font-variant-numeric: tabular-nums;
 }
 
 .testimonial-card__result span {
@@ -332,7 +307,7 @@
 
 
 /* =========================================================
-   QUOTE
+   QUOTE: REVELAÇÃO PALAVRA POR PALAVRA
 ========================================================= */
 
 .testimonial-card__quote {
@@ -370,6 +345,27 @@
 
   line-height: 1.18;
   letter-spacing: -0.02em;
+}
+
+.testimonial-card__word {
+  display: inline-block;
+}
+
+.testimonial.is-visible .testimonial-card--center .testimonial-card__word {
+  animation: testimonial-word 0.75s var(--t-ease) both;
+  animation-delay: calc(var(--i) * 26ms + 180ms);
+}
+
+@keyframes testimonial-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
@@ -454,7 +450,7 @@
 
 
 /* =========================================================
-   DETAILS
+   DETAILS (troca com máscara a cada depoimento)
 ========================================================= */
 
 .testimonial__details {
@@ -481,13 +477,24 @@
   letter-spacing: 0.14em;
 }
 
-.testimonial__details-label span {
+.testimonial__details-dot {
   width: 6px;
   height: 6px;
+
+  flex: 0 0 auto;
 
   border-radius: 50%;
 
   background: var(--yellow);
+}
+
+.testimonial__details-count {
+  margin-left: 6px;
+
+  color: #b0aaa3;
+
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
 }
 
 .testimonial__details-content {
@@ -495,7 +502,10 @@
 }
 
 .testimonial__details-content h3 {
+  overflow: hidden;
+
   margin: 0 0 12px;
+  padding-bottom: 0.14em;
 
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.7rem, 3vw, 2.5rem);
@@ -503,6 +513,10 @@
   font-weight: 500;
 
   letter-spacing: -0.035em;
+}
+
+.testimonial__details-content h3 span {
+  display: inline-block;
 }
 
 .testimonial__details-content p {
@@ -515,41 +529,50 @@
   line-height: 1.7;
 }
 
+.testimonial.is-visible .testimonial__details-content h3 span {
+  animation: testimonial-rise 0.9s var(--t-ease) both;
+}
+
+.testimonial.is-visible .testimonial__details-content p {
+  animation: testimonial-fade 0.9s var(--t-ease) 0.12s both;
+}
+
+@keyframes testimonial-rise {
+  from {
+    transform: translateY(110%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes testimonial-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 /* =========================================================
    ENTRADA DA SEÇÃO
+   (o palco não usa mais fade: os cards entram pelo scroll)
 ========================================================= */
 
 .testimonial__header {
   opacity: 0;
 
-  transform: translateY(30px);
-
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
+  transition: opacity 0.8s ease;
 }
 
 .testimonial.is-visible .testimonial__header {
   opacity: 1;
-
-  transform: translateY(0);
-}
-
-.testimonial__stage {
-  opacity: 0;
-
-  transform: translateY(45px);
-
-  transition:
-    opacity 0.9s ease 0.1s,
-    transform 0.9s ease 0.1s;
-}
-
-.testimonial.is-visible .testimonial__stage {
-  opacity: 1;
-
-  transform: translateY(0);
 }
 
 .testimonial__details {
@@ -590,52 +613,15 @@
   }
 
   .testimonial__wheel {
+    --spread: 275;
+    --side-scale: 0.82;
+
     height: 500px;
   }
 
   .testimonial-card {
     width: min(390px, 48vw);
     min-height: 460px;
-  }
-
-  .testimonial-card--left {
-    transform:
-      translate(-50%, -50%)
-      translate3d(-275px, 35px, -100px)
-      rotateY(22deg)
-      rotateX(2deg)
-      rotateZ(-3deg)
-      scale(0.82);
-  }
-
-  .testimonial-card--right {
-    transform:
-      translate(-50%, -50%)
-      translate3d(275px, 35px, -100px)
-      rotateY(-22deg)
-      rotateX(2deg)
-      rotateZ(3deg)
-      scale(0.82);
-  }
-
-  .testimonial-card--left:hover {
-    transform:
-      translate(-50%, -50%)
-      translate3d(-265px, 25px, -50px)
-      rotateY(18deg)
-      rotateX(2deg)
-      rotateZ(-2deg)
-      scale(0.85);
-  }
-
-  .testimonial-card--right:hover {
-    transform:
-      translate(-50%, -50%)
-      translate3d(265px, 25px, -50px)
-      rotateY(-18deg)
-      rotateX(2deg)
-      rotateZ(2deg)
-      scale(0.85);
   }
 
   .testimonial__details {
@@ -670,6 +656,13 @@
   }
 
   .testimonial__wheel {
+    --spread: 185;
+    --side-y: 45;
+    --side-ry: 25;
+    --side-rz: 4;
+    --side-scale: 0.78;
+    --side-opacity: 0.55;
+
     height: 490px;
   }
 
@@ -680,58 +673,6 @@
     padding: 25px;
 
     border-radius: 24px;
-  }
-
-  .testimonial-card--left {
-    transform:
-      translate(-50%, -50%)
-      translate3d(-185px, 45px, -100px)
-      rotateY(25deg)
-      rotateX(2deg)
-      rotateZ(-4deg)
-      scale(0.78);
-
-    opacity: 0.55;
-  }
-
-  .testimonial-card--right {
-    transform:
-      translate(-50%, -50%)
-      translate3d(185px, 45px, -100px)
-      rotateY(-25deg)
-      rotateX(2deg)
-      rotateZ(4deg)
-      scale(0.78);
-
-    opacity: 0.55;
-  }
-
-  .testimonial-card--left:hover {
-    transform:
-      translate(-50%, -50%)
-      translate3d(-175px, 35px, -60px)
-      rotateY(20deg)
-      rotateX(2deg)
-      rotateZ(-3deg)
-      scale(0.81);
-  }
-
-  .testimonial-card--right:hover {
-    transform:
-      translate(-50%, -50%)
-      translate3d(175px, 35px, -60px)
-      rotateY(-20deg)
-      rotateX(2deg)
-      rotateZ(3deg)
-      scale(0.81);
-  }
-
-  .testimonial-card--center:hover {
-    transform:
-      translate(-50%, -50%)
-      translate3d(0, -6px, 220px)
-      rotateY(0deg)
-      scale(1.01);
   }
 
   .testimonial-card__result strong {
@@ -758,6 +699,10 @@
   }
 
   .testimonial__wheel {
+    --spread: 150;
+    --side-y: 48;
+    --side-scale: 0.74;
+
     height: 455px;
   }
 
@@ -766,26 +711,6 @@
     min-height: 420px;
 
     padding: 22px;
-  }
-
-  .testimonial-card--left {
-    transform:
-      translate(-50%, -50%)
-      translate3d(-150px, 48px, -100px)
-      rotateY(25deg)
-      rotateX(2deg)
-      rotateZ(-4deg)
-      scale(0.74);
-  }
-
-  .testimonial-card--right {
-    transform:
-      translate(-50%, -50%)
-      translate3d(150px, 48px, -100px)
-      rotateY(-25deg)
-      rotateX(2deg)
-      rotateZ(4deg)
-      scale(0.74);
   }
 
   .testimonial-card__top {
@@ -825,14 +750,26 @@
 
 @media (prefers-reduced-motion: reduce) {
   .testimonial__header,
-  .testimonial__stage,
   .testimonial__details {
     opacity: 1;
     transform: none;
     transition: none;
   }
 
-  .testimonial-card {
+  .testimonial__line > span,
+  .testimonial__line > em {
+    transform: none;
+    transition: none;
+  }
+
+  .testimonial.is-visible .testimonial-card--center .testimonial-card__word,
+  .testimonial.is-visible .testimonial__details-content h3 span,
+  .testimonial.is-visible .testimonial__details-content p {
+    animation: none;
+  }
+
+  .testimonial-card,
+  .testimonial-card::before {
     transition: none;
   }
 }
