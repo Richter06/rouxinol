@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-
 import '../styles/hero.css'
+
+const HERO_VIDEO = '/assets/videos/hero.mp4'
 
 const words = [
   'aparecer',
@@ -8,34 +9,6 @@ const words = [
   'vender',
   'organizar',
   'começar',
-]
-
-const services = [
-  {
-    id: 'site',
-    label: 'SITE',
-    position: 'top-left',
-  },
-  {
-    id: 'loja',
-    label: 'LOJA',
-    position: 'top-right',
-  },
-  {
-    id: 'catalogo',
-    label: 'CATÁLOGO',
-    position: 'middle-left',
-  },
-  {
-    id: 'sistema',
-    label: 'SISTEMA',
-    position: 'middle-right',
-  },
-  {
-    id: 'solucao',
-    label: 'SUA IDEIA',
-    position: 'bottom',
-  },
 ]
 
 export default function Hero() {
@@ -62,15 +35,27 @@ export default function Hero() {
 
   return (
     <section
-      className={`hero ${
-        isLoaded ? 'is-loaded' : ''
-      }`}
+      className={`hero ${isLoaded ? 'is-loaded' : ''}`}
       aria-labelledby="hero-title"
     >
       <div
         className="hero__background"
         aria-hidden="true"
       >
+        <video
+          className="hero__video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        >
+          <source
+            src={HERO_VIDEO}
+            type="video/mp4"
+          />
+        </video>
+
         <div className="hero__wash" />
         <div className="hero__grain" />
       </div>
@@ -95,6 +80,7 @@ export default function Hero() {
         <div className="hero__intro">
           <p className="hero__bird">
             UM PASSARINHO
+
             <span>ME CONTOU.</span>
           </p>
 
@@ -103,8 +89,10 @@ export default function Hero() {
             id="hero-title"
           >
             Que seu negócio
+
             <span className="hero__title-accent">
               quer{' '}
+
               <span className="hero__word-slot">
                 <span
                   key={words[wordIndex]}
@@ -119,6 +107,7 @@ export default function Hero() {
 
           <p className="hero__subtitle">
             E ele provavelmente estava certo.
+
             <span>
               A gente só veio ajudar.
             </span>
@@ -139,43 +128,6 @@ export default function Hero() {
               ↗
             </span>
           </a>
-        </div>
-
-        <div
-          className="hero__network"
-          aria-hidden="true"
-        >
-          <div className="hero__network-orbit hero__network-orbit--outer" />
-          <div className="hero__network-orbit hero__network-orbit--inner" />
-
-          <div className="hero__network-line hero__network-line--one" />
-          <div className="hero__network-line hero__network-line--two" />
-          <div className="hero__network-line hero__network-line--three" />
-          <div className="hero__network-line hero__network-line--four" />
-          <div className="hero__network-line hero__network-line--five" />
-
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className={`hero__service hero__service--${service.position}`}
-            >
-              <span className="hero__service-dot" />
-
-              <span className="hero__service-label">
-                {service.label}
-              </span>
-            </div>
-          ))}
-
-          <div className="hero__network-center">
-            <span className="hero__network-center-bird">
-              R
-            </span>
-
-            <span className="hero__network-center-name">
-              ROUXINOL
-            </span>
-          </div>
         </div>
 
         <div className="hero__bottom">
