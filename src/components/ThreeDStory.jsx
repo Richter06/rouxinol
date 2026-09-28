@@ -28,7 +28,7 @@ const MODELS = [
     id: 'phone',
     path: '/assets/3d/phone.glb',
     eyebrow: 'NA PALMA DA MÃO',
-    title: 'E CONTINUA COM ELE.',
+    title: 'EM QUALQUER LUGAR.',
     description:
       'Porque a experiência não termina quando a tela muda.',
   },
@@ -36,10 +36,10 @@ const MODELS = [
   {
     id: 'microwave',
     path: '/assets/3d/microwave.glb',
-    eyebrow: 'QUASE QUALQUER LUGAR',
-    title: 'ATÉ ONDE NÃO PRECISA.',
+    eyebrow: 'NO MICRO-ONDAS???',
+    title: 'OK, QUASE QUALQUER LUGAR.',
     description:
-      'Tá bom. No micro-ondas ainda não. Mas você entendeu a ideia.',
+      'No micro-ondas ainda não. Mas você entendeu a ideia.',
   },
 ]
 

@@ -1,865 +1,576 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Html, useGLTF, useProgress } from '@react-three/drei'
+import * as THREE from 'three'
 
 import '../styles/visibility.css'
 
-/**
- * Cada estágio carrega, além do conteúdo, um nível de intensidade visual.
- *
- * Isso é o que garante RITMO: nem todo estágio precisa da mesma quantidade
- * de partículas, cubos e camadas atmosféricas competindo pela atenção.
- *
- * quiet  -> o objeto é o único protagonista. Sem partículas, poucos cubos.
- * medium -> protagonista + apoio discreto.
- * rich   -> clímax da seção. Todas as camadas aparecem juntas.
- */
-const stages = [
+const PLANET_PATH = '/assets/3d/purple_planet.glb'
+
+const topics = [
   {
-    id: 'presence',
-    title: 'Aparecer.',
-    question:
-      'As pessoas procuram pelo que você faz e não encontram.',
-    context:
-      'Seu negócio pode ser bom. O problema é que, se ele não aparece, para muita gente ele simplesmente não existe.',
-    answer:
-      'Vamos dar um lugar para o seu negócio ser encontrado.',
+    id: 'appear',
+    label: 'APARECER',
+    title: 'Ser encontrado começa antes do primeiro contato.',
+    text: 'Uma presença digital clara cria um lugar para o seu negócio existir, ser descoberto e passar confiança.',
     solution: 'LANDING PAGE OU SITE',
-    visual: 'search',
-    intensity: 'quiet',
   },
-
   {
-    id: 'organization',
-    title: 'Encontrar.',
-    question:
-      'Você sabe que tem tudo anotado em algum lugar. Só não sabe em qual.',
-    context:
-      'Planilhas, cadernos, mensagens e aquela informação importante que está “com alguém”. Uma hora isso cobra a conta.',
-    answer:
-      'Talvez esteja na hora de parar de procurar informação dentro do próprio negócio.',
+    id: 'organize',
+    label: 'ORGANIZAR',
+    title: 'Informação boa não deveria ficar espalhada.',
+    text: 'Sistemas sob medida colocam clientes, produtos, pedidos e rotina no mesmo lugar, sem transformar seu negócio em uma caça ao tesouro.',
     solution: 'SISTEMA',
-    visual: 'system',
-    intensity: 'medium',
   },
-
   {
-    id: 'processes',
-    title: 'Simplificar.',
-    question:
-      'Você ainda perde tempo fazendo a mesma coisa toda semana.',
-    context:
-      'Copiar, conferir, responder, anotar, procurar, repetir. Pequenas tarefas parecem inofensivas até somarem um dia inteiro.',
-    answer:
-      'Se uma máquina pode fazer a parte chata, deixe ela fazer a parte chata.',
+    id: 'automate',
+    label: 'AUTOMATIZAR',
+    title: 'A parte repetitiva pode deixar de ser sua parte.',
+    text: 'Automação e ferramentas ajudam a tirar do caminho tarefas que consomem tempo sem precisar consumir sua atenção.',
     solution: 'AUTOMAÇÃO E FERRAMENTAS',
-    visual: 'process',
-    intensity: 'quiet',
   },
-
   {
-    id: 'data',
-    title: 'Enxergar.',
-    question:
-      'Você tem números. Só não consegue enxergar o que eles estão dizendo.',
-    context:
-      'Vendas, clientes, pedidos e resultados existem. Mas quando tudo fica espalhado, até uma pergunta simples vira investigação.',
-    answer:
-      'Seus números não precisam parecer um interrogatório.',
+    id: 'see',
+    label: 'ENXERGAR',
+    title: 'Seus números podem contar uma história melhor.',
+    text: 'Dashboards transformam dados espalhados em uma visão simples para entender resultados e tomar decisões.',
     solution: 'DASHBOARD',
-    visual: 'data',
-    intensity: 'medium',
   },
-
   {
-    id: 'sales',
-    title: 'Conectar.',
-    question:
-      'Você tem coisa boa para vender, mas parece que ninguém está olhando.',
-    context:
-      'O produto está lá. O preço está lá. Você está lá. E mesmo assim, parece que o cliente passou reto.',
-    answer:
-      'Talvez seu produto precise de uma experiência melhor para chegar até ele.',
+    id: 'sell',
+    label: 'VENDER',
+    title: 'Produto bom merece uma experiência à altura.',
+    text: 'Catálogos e lojas digitais deixam seus produtos mais fáceis de descobrir, entender e escolher.',
     solution: 'CATÁLOGO OU LOJA',
-    visual: 'commerce',
-    intensity: 'medium',
   },
-
   {
-    id: 'custom',
-    title: 'Criar.',
-    question:
-      'Você tem uma ideia que não cabe em nenhuma ferramenta pronta.',
-    context:
-      'Você explica o que precisa e sempre aparece alguém dizendo que existe uma plataforma para isso. Só que nenhuma resolve exatamente o seu problema.',
-    answer:
-      'Então talvez seja a ferramenta que esteja errada para o problema.',
+    id: 'create',
+    label: 'CRIAR',
+    title: 'Nem toda ideia precisa caber numa ferramenta pronta.',
+    text: 'Quando o problema é diferente, a solução também pode ser. Criamos experiências e ferramentas pensadas para o que você realmente precisa.',
     solution: 'PROJETO PERSONALIZADO',
-    visual: 'network',
-    intensity: 'rich',
   },
 ]
 
-const PARTICLE_COUNT = 34
-const CUBE_COUNT = 10
+const orbitConfig = [
+  {
+    radiusX: 4.05,
+    radiusY: 1.7,
+    radiusZ: 1.35,
+    speed: 0.115,
+    phase: 0.15,
+  },
+  {
+    radiusX: 3.45,
+    radiusY: 1.45,
+    radiusZ: 1.9,
+    speed: -0.085,
+    phase: 1.75,
+  },
+  {
+    radiusX: 4.35,
+    radiusY: 1.95,
+    radiusZ: 0.9,
+    speed: 0.075,
+    phase: 3.2,
+  },
+  {
+    radiusX: 3.2,
+    radiusY: 1.3,
+    radiusZ: 1.55,
+    speed: -0.105,
+    phase: 4.45,
+  },
+  {
+    radiusX: 4.55,
+    radiusY: 2.1,
+    radiusZ: 1.15,
+    speed: 0.06,
+    phase: 5.4,
+  },
+  {
+    radiusX: 3.75,
+    radiusY: 1.6,
+    radiusZ: 2.05,
+    speed: -0.07,
+    phase: 6.15,
+  },
+]
 
-const INTENSITY = {
-  quiet: { particles: 0, cubes: 0 },
-  medium: { particles: 14, cubes: 4 },
-  rich: { particles: 34, cubes: 10 },
-}
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max)
-}
-
-function createParticles() {
-  return Array.from({ length: PARTICLE_COUNT }, (_, index) => ({
-    id: `particle-${index}`,
-    x: `${(index * 37.17) % 100}%`,
-    y: `${(index * 61.73) % 100}%`,
-    z: Math.round(((index * 83) % 100) - 50),
-    size: 2 + ((index * 13) % 4),
-    delay: `${(index % 8) * -0.7}s`,
-    duration: `${5 + (index % 6)}s`,
-  }))
-}
-
-function createCubes() {
-  return Array.from({ length: CUBE_COUNT }, (_, index) => ({
-    id: `cube-${index}`,
-    x: `${10 + ((index * 47) % 80)}%`,
-    y: `${8 + ((index * 31) % 78)}%`,
-    z: -260 + ((index * 83) % 520),
-    size: 16 + ((index * 17) % 34),
-    rotateX: (index * 41) % 360,
-    rotateY: (index * 67) % 360,
-    rotateZ: (index * 23) % 360,
-    delay: `${(index % 6) * -0.9}s`,
-  }))
-}
-
-const particles = createParticles()
-const cubes = createCubes()
-
-/**
- * Texto que se preenche — inspirado na referência 04 (Não Codei).
- *
- * A revelação ocupa praticamente todo o intervalo do estágio,
- * evitando que as últimas palavras fiquem esperando até a troca.
- */
-function FillText({ text, progress }) {
-  const words = text.split(' ')
-  const total = words.length
-  const span = 1.15
+function LoadingPlanet() {
+  const { progress } = useProgress()
 
   return (
-    <>
-      {words.map((word, index) => {
-        const cursor = progress * (total - 1 + span)
-
-        const reveal = clamp(
-          (cursor - index + (span - 1)) / span,
-          0,
-          1,
-        )
-
-        return (
-          <span
-            key={`${word}-${index}`}
-            className="visibility__word"
-            style={{
-              opacity: 0.22 + reveal * 0.78,
-              transform: `translateY(${(1 - reveal) * 7}px) rotateX(${
-                (1 - reveal) * -8
-              }deg)`,
-            }}
-          >
-            {word}
-          </span>
-        )
-      })}
-    </>
-  )
-}
-
-function Particles({ stage, count }) {
-  if (count <= 0) {
-    return null
-  }
-
-  return (
-    <div
-      className={`visibility__particles visibility__particles--${stage}`}
-      aria-hidden="true"
-    >
-      {particles.slice(0, count).map((particle) => (
-        <span
-          key={particle.id}
-          className="visibility__particle"
-          style={{
-            '--x': particle.x,
-            '--y': particle.y,
-            '--z': `${particle.z}px`,
-            '--size': `${particle.size}px`,
-            '--delay': particle.delay,
-            '--duration': particle.duration,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function Cubes({ stage, count }) {
-  if (count <= 0) {
-    return null
-  }
-
-  return (
-    <div
-      className={`visibility__cubes visibility__cubes--${stage}`}
-      aria-hidden="true"
-    >
-      {cubes.slice(0, count).map((cube) => (
-        <span
-          key={cube.id}
-          className="visibility__cube"
-          style={{
-            '--x': cube.x,
-            '--y': cube.y,
-            '--z': `${cube.z}px`,
-            '--size': `${cube.size}px`,
-            '--rx': `${cube.rotateX}deg`,
-            '--ry': `${cube.rotateY}deg`,
-            '--rz': `${cube.rotateZ}deg`,
-            '--delay': cube.delay,
-          }}
-        >
-          <span className="visibility__cube-face visibility__cube-face--front" />
-          <span className="visibility__cube-face visibility__cube-face--back" />
-          <span className="visibility__cube-face visibility__cube-face--left" />
-          <span className="visibility__cube-face visibility__cube-face--right" />
-          <span className="visibility__cube-face visibility__cube-face--top" />
-          <span className="visibility__cube-face visibility__cube-face--bottom" />
-        </span>
-      ))}
-    </div>
-  )
-}
-
-function SearchVisual() {
-  return (
-    <div className="visibility__visual-object visibility__visual-object--search">
-      <div className="visibility__search-window">
-        <div className="visibility__window-top">
-          <span />
-          <span />
-          <span />
-          <small>buscar</small>
-        </div>
-
-        <div className="visibility__search-bar">
-          <span className="visibility__search-icon">⌕</span>
-          <span>negócio perto de mim</span>
-        </div>
-
-        <div className="visibility__search-result">
-          <div className="visibility__result-image" />
-
-          <div>
-            <strong>Seu negócio</strong>
-            <span>Presença digital</span>
-            <small>★★★★★</small>
-          </div>
-
-          <b>↗</b>
-        </div>
-      </div>
-
-      <div className="visibility__floating-tag visibility__floating-tag--one">
-        ENCONTRADO
-      </div>
-
-      <div className="visibility__floating-tag visibility__floating-tag--two">
-        + PRESENÇA
-      </div>
-    </div>
-  )
-}
-
-function SystemVisual() {
-  return (
-    <div className="visibility__visual-object visibility__visual-object--system">
-      <div className="visibility__system-core">
-        <span>ROUXINOL</span>
-        <strong>SEU NEGÓCIO</strong>
-      </div>
-
-      <div className="visibility__system-node visibility__system-node--one">
-        CLIENTES
-      </div>
-
-      <div className="visibility__system-node visibility__system-node--two">
-        PRODUTOS
-      </div>
-
-      <div className="visibility__system-node visibility__system-node--three">
-        PEDIDOS
-      </div>
-
-      <div className="visibility__system-node visibility__system-node--four">
-        ROTINA
-      </div>
-
-      <span className="visibility__system-line visibility__system-line--one" />
-      <span className="visibility__system-line visibility__system-line--two" />
-      <span className="visibility__system-line visibility__system-line--three" />
-      <span className="visibility__system-line visibility__system-line--four" />
-    </div>
-  )
-}
-
-function ProcessVisual() {
-  return (
-    <div className="visibility__visual-object visibility__visual-object--process">
-      <div className="visibility__process-column visibility__process-column--one">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
-
-      <div className="visibility__process-arrow">→</div>
-
-      <div className="visibility__process-column visibility__process-column--two">
-        <span />
-        <span />
-        <span />
-      </div>
-
-      <div className="visibility__process-core">
-        <span>1</span>
-        <strong>AÇÃO</strong>
-        <small>AUTOMÁTICA</small>
-      </div>
-    </div>
-  )
-}
-
-function DataVisual() {
-  return (
-    <div className="visibility__visual-object visibility__visual-object--data">
-      <div className="visibility__data-grid">
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-        <span className="visibility__data-bar" />
-      </div>
-
-      <div className="visibility__data-card">
-        <small>VISÃO GERAL</small>
-        <strong>84,7%</strong>
-        <span>crescimento</span>
-      </div>
-
-      <div className="visibility__data-orbit">
-        <span />
-        <span />
-        <span />
-      </div>
-    </div>
-  )
-}
-
-function CommerceVisual() {
-  return (
-    <div className="visibility__visual-object visibility__visual-object--commerce">
-      <div className="visibility__commerce-card visibility__commerce-card--back">
-        <span />
-        <span />
-        <span />
-      </div>
-
-      <div className="visibility__commerce-card visibility__commerce-card--front">
-        <div className="visibility__commerce-image" />
-
-        <div className="visibility__commerce-copy">
-          <small>CATÁLOGO</small>
-          <strong>Seu produto</strong>
-          <span>R$ 149,90</span>
-        </div>
-
-        <button type="button">VER PRODUTO</button>
-      </div>
-    </div>
-  )
-}
-
-function NetworkVisual({ mouse }) {
-  const rotateX = mouse.y * -7
-  const rotateY = mouse.x * 10
-
-  return (
-    <div
-      className="visibility__network-scene"
-      style={{
-        '--network-rotate-x': `${rotateX}deg`,
-        '--network-rotate-y': `${rotateY}deg`,
-      }}
-    >
-      <div className="visibility__network-space">
-        <div className="visibility__network-node visibility__network-node--center">
-          <span>R</span>
-        </div>
-
-        <div className="visibility__network-node visibility__network-node--one">
-          <span>01</span>
-        </div>
-
-        <div className="visibility__network-node visibility__network-node--two">
-          <span>02</span>
-        </div>
-
-        <div className="visibility__network-node visibility__network-node--three">
-          <span>03</span>
-        </div>
-
-        <div className="visibility__network-node visibility__network-node--four">
-          <span>04</span>
-        </div>
-
-        <div className="visibility__network-node visibility__network-node--five">
-          <span>05</span>
-        </div>
-
-        <span className="visibility__network-line visibility__network-line--one" />
-        <span className="visibility__network-line visibility__network-line--two" />
-        <span className="visibility__network-line visibility__network-line--three" />
-        <span className="visibility__network-line visibility__network-line--four" />
-        <span className="visibility__network-line visibility__network-line--five" />
-
-        <span className="visibility__network-ring visibility__network-ring--one" />
-        <span className="visibility__network-ring visibility__network-ring--two" />
-      </div>
-
-      <div className="visibility__network-caption">
-        <span>EXPLORE THE SPACE</span>
-        <strong>YOUR IDEA</strong>
-      </div>
-    </div>
-  )
-}
-
-function StageVisual({ stage, mouse }) {
-  const counts = INTENSITY[stage.intensity] ?? INTENSITY.medium
-
-  return (
-    <div className="visibility__visual">
-      <div className="visibility__visual-grid" />
-
-      <div className="visibility__visual-depth">
-        <span className="visibility__depth-ring visibility__depth-ring--one" />
-        <span className="visibility__depth-ring visibility__depth-ring--two" />
-        <span className="visibility__depth-ring visibility__depth-ring--three" />
-      </div>
-
-      <Particles stage={stage.visual} count={counts.particles} />
-      <Cubes stage={stage.visual} count={counts.cubes} />
-
+    <Html center>
       <div
-        className="visibility__visual-camera"
-        style={{
-          '--mouse-x': mouse.x,
-          '--mouse-y': mouse.y,
-        }}
+        className="visibility__planet-loader"
+        aria-live="polite"
       >
-        {stage.visual === 'search' && <SearchVisual />}
-        {stage.visual === 'system' && <SystemVisual />}
-        {stage.visual === 'process' && <ProcessVisual />}
-        {stage.visual === 'data' && <DataVisual />}
-        {stage.visual === 'commerce' && <CommerceVisual />}
-        {stage.visual === 'network' && <NetworkVisual mouse={mouse} />}
+        <span />
+        <strong>{Math.round(progress)}%</strong>
       </div>
-    </div>
+    </Html>
   )
 }
 
-function StageTransition({ stage, mouse }) {
+function PlanetModel() {
+  const { scene } = useGLTF(PLANET_PATH)
+  const planetRef = useRef(null)
+
+  const fit = useMemo(() => {
+    scene.updateWorldMatrix(true, true)
+
+    const box = new THREE.Box3().setFromObject(scene)
+    const size = box.getSize(new THREE.Vector3())
+    const center = box.getCenter(new THREE.Vector3())
+
+    const maxSize =
+      Math.max(size.x, size.y, size.z) || 1
+
+    const scale = 2.75 / maxSize
+
+    return {
+      scale,
+      position: [
+        -center.x * scale,
+        -center.y * scale,
+        -center.z * scale,
+      ],
+    }
+  }, [scene])
+
+  useFrame((state, delta) => {
+    if (!planetRef.current) {
+      return
+    }
+
+    const pointerX = state.pointer.x
+    const pointerY = state.pointer.y
+    const elapsed = state.clock.elapsedTime
+
+    const targetRotationX =
+      pointerY * -0.09 +
+      Math.sin(elapsed * 0.45) * 0.012
+
+    const targetRotationY =
+      elapsed * 0.055 +
+      pointerX * 0.12
+
+    const targetRotationZ =
+      pointerX * -0.025
+
+    planetRef.current.rotation.x =
+      THREE.MathUtils.damp(
+        planetRef.current.rotation.x,
+        targetRotationX,
+        3.2,
+        delta,
+      )
+
+    planetRef.current.rotation.y =
+      THREE.MathUtils.damp(
+        planetRef.current.rotation.y,
+        targetRotationY,
+        2.8,
+        delta,
+      )
+
+    planetRef.current.rotation.z =
+      THREE.MathUtils.damp(
+        planetRef.current.rotation.z,
+        targetRotationZ,
+        3.2,
+        delta,
+      )
+
+    planetRef.current.position.y =
+      THREE.MathUtils.damp(
+        planetRef.current.position.y,
+        Math.sin(elapsed * 0.7) * 0.055,
+        2.8,
+        delta,
+      )
+  })
+
   return (
-    <div className="visibility__stage-transition" key={stage.id}>
-      <StageVisual stage={stage} mouse={mouse} />
-    </div>
+    <group ref={planetRef}>
+      <group
+        scale={fit.scale}
+        position={fit.position}
+      >
+        <primitive object={scene} />
+      </group>
+    </group>
+  )
+}
+
+useGLTF.preload(PLANET_PATH)
+
+function OrbitPath({
+  radiusX,
+  rotation = [Math.PI / 2.7, 0, 0],
+  opacity = 0.22,
+}) {
+  return (
+    <mesh rotation={rotation}>
+      <torusGeometry
+        args={[
+          radiusX,
+          0.006,
+          8,
+          96,
+        ]}
+      />
+
+      <meshBasicMaterial
+        color="#f4d72f"
+        transparent
+        opacity={opacity}
+      />
+    </mesh>
+  )
+}
+
+function OrbitBubble({
+  topic,
+  index,
+  selected,
+  onSelect,
+}) {
+  const groupRef = useRef(null)
+  const [hovered, setHovered] = useState(false)
+
+  const config = orbitConfig[index]
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) {
+      return
+    }
+
+    const time =
+      state.clock.elapsedTime * config.speed +
+      config.phase
+
+    const x =
+      Math.cos(time) * config.radiusX
+
+    const y =
+      Math.sin(time) * config.radiusY
+
+    const z =
+      Math.sin(time) * config.radiusZ
+
+    const targetX =
+      x + state.pointer.x * 0.08
+
+    const targetY =
+      y + state.pointer.y * 0.06
+
+    groupRef.current.position.x =
+      THREE.MathUtils.damp(
+        groupRef.current.position.x,
+        targetX,
+        5,
+        delta,
+      )
+
+    groupRef.current.position.y =
+      THREE.MathUtils.damp(
+        groupRef.current.position.y,
+        targetY,
+        5,
+        delta,
+      )
+
+    groupRef.current.position.z =
+      THREE.MathUtils.damp(
+        groupRef.current.position.z,
+        z,
+        5,
+        delta,
+      )
+
+    const targetScale = selected
+      ? 1.22
+      : hovered
+        ? 1.1
+        : 1
+
+    const scale =
+      THREE.MathUtils.damp(
+        groupRef.current.scale.x,
+        targetScale,
+        7,
+        delta,
+      )
+
+    groupRef.current.scale.setScalar(scale)
+  })
+
+  return (
+    <group ref={groupRef}>
+      <Html
+        center
+        distanceFactor={7}
+        zIndexRange={[30, 0]}
+      >
+        <button
+          type="button"
+          className={`visibility__bubble ${
+            selected ? 'is-selected' : ''
+          } ${
+            hovered ? 'is-hovered' : ''
+          }`}
+          aria-label={`Explorar ${topic.label}`}
+          aria-pressed={selected}
+          onClick={(event) => {
+            event.stopPropagation()
+            onSelect(topic.id)
+          }}
+          onPointerEnter={() =>
+            setHovered(true)
+          }
+          onPointerLeave={() =>
+            setHovered(false)
+          }
+        >
+          <span className="visibility__bubble-dot" />
+
+          <strong>
+            {topic.label}
+          </strong>
+        </button>
+      </Html>
+    </group>
+  )
+}
+
+function PlanetScene({
+  selectedId,
+  onSelect,
+}) {
+  return (
+    <Canvas
+      dpr={[1, 1.5]}
+      camera={{
+        position: [0, 0, 9],
+        fov: 42,
+      }}
+      gl={{
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      }}
+      onPointerMissed={() =>
+        onSelect(null)
+      }
+    >
+      <ambientLight intensity={1.4} />
+
+      <directionalLight
+        position={[4, 5, 5]}
+        intensity={2.1}
+      />
+
+      <pointLight
+        position={[-3, 1, 4]}
+        intensity={18}
+        distance={12}
+        color="#f4d72f"
+      />
+
+      <pointLight
+        position={[3, -2, 2]}
+        intensity={10}
+        distance={10}
+        color="#5b21b6"
+      />
+
+      <Suspense
+        fallback={<LoadingPlanet />}
+      >
+        <group>
+          <OrbitPath
+            radiusX={3.55}
+            opacity={0.15}
+          />
+
+          <OrbitPath
+            radiusX={4.25}
+            rotation={[
+              Math.PI / 2.25,
+              0.15,
+              0.1,
+            ]}
+            opacity={0.1}
+          />
+
+          <PlanetModel />
+
+          {topics.map((topic, index) => (
+            <OrbitBubble
+              key={topic.id}
+              topic={topic}
+              index={index}
+              selected={
+                selectedId === topic.id
+              }
+              onSelect={onSelect}
+            />
+          ))}
+        </group>
+      </Suspense>
+    </Canvas>
   )
 }
 
 export default function Visibility() {
-  const sectionRef = useRef(null)
-  const targetProgressRef = useRef(0)
-  const smoothProgressRef = useRef(0)
-  const frameRef = useRef(null)
+  const [selectedId, setSelectedId] =
+    useState(null)
 
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
-  const [scrollProgress, setScrollProgress] = useState(0)
-
-  const activeStage = stages[activeIndex]
-
-  useEffect(() => {
-    const element = sectionRef.current
-
-    if (!element) {
-      return undefined
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting)
-      },
-      {
-        threshold: 0.08,
-      },
-    )
-
-    observer.observe(element)
-
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const element = sectionRef.current
-
-    if (!element) {
-      return undefined
-    }
-
-    function calculateProgress() {
-      const rect = element.getBoundingClientRect()
-      const total = rect.height - window.innerHeight
-
-      if (total <= 0) {
-        targetProgressRef.current = 0
-        return
-      }
-
-      targetProgressRef.current = clamp(
-        -rect.top / total,
-        0,
-        1,
-      )
-    }
-
-    function animate() {
-      const target = targetProgressRef.current
-      const current = smoothProgressRef.current
-      const difference = target - current
-
-      smoothProgressRef.current += difference * 0.18
-
-      if (Math.abs(difference) < 0.0001) {
-        smoothProgressRef.current = target
-      }
-
-      const nextProgress = smoothProgressRef.current
-
-      setScrollProgress(nextProgress)
-
-      const nextIndex = Math.min(
-        stages.length - 1,
-        Math.floor(nextProgress * stages.length),
-      )
-
-      setActiveIndex((currentIndex) =>
-        currentIndex === nextIndex
-          ? currentIndex
-          : nextIndex,
-      )
-
-      frameRef.current =
-        window.requestAnimationFrame(animate)
-    }
-
-    calculateProgress()
-
-    frameRef.current =
-      window.requestAnimationFrame(animate)
-
-    window.addEventListener(
-      'scroll',
-      calculateProgress,
-      { passive: true },
-    )
-
-    window.addEventListener(
-      'resize',
-      calculateProgress,
-    )
-
-    return () => {
-      window.removeEventListener(
-        'scroll',
-        calculateProgress,
-      )
-
-      window.removeEventListener(
-        'resize',
-        calculateProgress,
-      )
-
-      if (frameRef.current) {
-        window.cancelAnimationFrame(
-          frameRef.current,
-        )
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const element = sectionRef.current
-
-    if (!element) {
-      return undefined
-    }
-
-    function handleMouseMove(event) {
-      const rect = element.getBoundingClientRect()
-
-      const x =
-        ((event.clientX - rect.left) /
-          rect.width -
-          0.5) *
-        2
-
-      const y =
-        ((event.clientY - rect.top) /
-          rect.height -
-          0.5) *
-        2
-
-      setMouse({
-        x: clamp(x, -1, 1),
-        y: clamp(y, -1, 1),
-      })
-    }
-
-    function handleMouseLeave() {
-      setMouse({ x: 0, y: 0 })
-    }
-
-    function handleTouchMove(event) {
-      const touch = event.touches[0]
-
-      if (!touch) {
-        return
-      }
-
-      const rect = element.getBoundingClientRect()
-
-      const x =
-        ((touch.clientX - rect.left) /
-          rect.width -
-          0.5) *
-        2
-
-      const y =
-        ((touch.clientY - rect.top) /
-          rect.height -
-          0.5) *
-        2
-
-      setMouse({
-        x: clamp(x, -1, 1) * 0.5,
-        y: clamp(y, -1, 1) * 0.5,
-      })
-    }
-
-    element.addEventListener(
-      'mousemove',
-      handleMouseMove,
-    )
-
-    element.addEventListener(
-      'mouseleave',
-      handleMouseLeave,
-    )
-
-    element.addEventListener(
-      'touchmove',
-      handleTouchMove,
-      { passive: true },
-    )
-
-    element.addEventListener(
-      'touchend',
-      handleMouseLeave,
-    )
-
-    return () => {
-      element.removeEventListener(
-        'mousemove',
-        handleMouseMove,
-      )
-
-      element.removeEventListener(
-        'mouseleave',
-        handleMouseLeave,
-      )
-
-      element.removeEventListener(
-        'touchmove',
-        handleTouchMove,
-      )
-
-      element.removeEventListener(
-        'touchend',
-        handleMouseLeave,
-      )
-    }
-  }, [])
-
-  const timelineProgress =
-    scrollProgress * stages.length
-
-  const stageProgress =
-    timelineProgress - activeIndex
-
-  const normalizedStageProgress = clamp(
-    stageProgress,
-    0,
-    1,
-  )
-
-  const stageAngle =
-    normalizedStageProgress * 8 - 4
-
-  const stageDepth =
-    normalizedStageProgress * 80
+  const selectedTopic =
+    topics.find(
+      (topic) =>
+        topic.id === selectedId,
+    ) ?? null
 
   return (
     <section
-      ref={sectionRef}
-      className={`visibility ${
-        isVisible ? 'is-visible' : ''
-      }`}
+      className="visibility"
       id="visibilidade"
       aria-labelledby="visibility-title"
-      style={{
-        '--mouse-x': mouse.x,
-        '--mouse-y': mouse.y,
-        '--scroll-progress': scrollProgress,
-        '--stage-progress': normalizedStageProgress,
-        '--stage-angle': `${stageAngle}deg`,
-        '--stage-depth': `${stageDepth}px`,
-      }}
     >
       <div className="visibility__sticky">
         <div className="visibility__world">
-          <div className="visibility__stars" />
-          <div className="visibility__fog visibility__fog--one" />
-          <div className="visibility__fog visibility__fog--two" />
-          <div className="visibility__cursor-light" />
-
-          <div className="visibility__camera">
-            <StageTransition
-              stage={activeStage}
-              mouse={mouse}
-            />
-          </div>
-        </div>
-
-        <div
-          className="visibility__timeline"
-          aria-hidden="true"
-        >
-          <div className="visibility__timeline-track">
-            <span
-              className="visibility__timeline-progress"
-              style={{
-                transform: `scaleY(${scrollProgress})`,
-              }}
-            />
-          </div>
-
-          {stages.map((stage, index) => {
-            const pointProgress =
-              index / (stages.length - 1)
-
-            const reached =
-              scrollProgress >= pointProgress
-
-            return (
-              <span
-                key={stage.id}
-                className={`visibility__timeline-point ${
-                  reached ? 'is-reached' : ''
-                } ${
-                  index === activeIndex
-                    ? 'is-active'
-                    : ''
-                }`}
-                style={{
-                  '--point-progress': pointProgress,
-                }}
-              >
-                <span />
-              </span>
-            )
-          })}
-        </div>
-
-        <div className="visibility__content">
-          <header className="visibility__header">
-            <div className="visibility__eyebrow">
-              <span />
-              <strong>
-                POR QUE PRESENÇA DIGITAL?
-              </strong>
-            </div>
-
-            <h2 id="visibility-title">
-              <span className="visibility__headline-line">
-                Sua presença começa
-              </span>
-
-              <span className="visibility__headline-line visibility__headline-line--accent">
-                antes do primeiro contato.
-              </span>
-            </h2>
-
-            <p>
-              Não basta ter algo bom para oferecer. É preciso criar um
-              caminho para que as pessoas encontrem, entendam e escolham.
-            </p>
-          </header>
+          <div
+            className="visibility__stars"
+            aria-hidden="true"
+          />
 
           <div
-            className="visibility__stage-copy"
-            key={activeStage.id}
+            className="visibility__fog visibility__fog--one"
+            aria-hidden="true"
+          />
+
+          <div
+            className="visibility__fog visibility__fog--two"
+            aria-hidden="true"
+          />
+
+          <div
+            className="visibility__cursor-light"
+            aria-hidden="true"
+          />
+
+          <div
+            className="visibility__canvas"
+            aria-hidden="true"
           >
-            <h3>{activeStage.title}</h3>
+            <PlanetScene
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
+          </div>
 
-            <p className="visibility__stage-question">
-              <FillText
-                text={activeStage.question}
-                progress={normalizedStageProgress}
-              />
-            </p>
+          <div className="visibility__content">
+            <header className="visibility__header">
+              <div className="visibility__eyebrow">
+                <span />
 
-            <div className="visibility__stage-detail">
-              <p>{activeStage.context}</p>
-              <span>{activeStage.solution}</span>
+                <strong>
+                  O QUE VOCÊ QUER COLOCAR EM ÓRBITA?
+                </strong>
+              </div>
+
+              <h2 id="visibility-title">
+                <span className="visibility__headline-line">
+                  Sua presença pode
+                </span>
+
+                <span className="visibility__headline-line visibility__headline-line--accent">
+                  ir muito além.
+                </span>
+              </h2>
+
+              <p>
+                Explore as possibilidades ao redor
+                do seu negócio. Clique em uma órbita
+                para descobrir onde podemos chegar.
+              </p>
+            </header>
+
+            <div
+              className={`visibility__topic-info ${
+                selectedTopic
+                  ? 'is-open'
+                  : ''
+              }`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {selectedTopic ? (
+                <>
+                  <div className="visibility__topic-meta">
+                    <span>
+                      {selectedTopic.label}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="visibility__topic-close"
+                      onClick={() =>
+                        setSelectedId(null)
+                      }
+                      aria-label="Fechar informações"
+                    >
+                      FECHAR
+                    </button>
+                  </div>
+
+                  <h3>
+                    {selectedTopic.title}
+                  </h3>
+
+                  <p>
+                    {selectedTopic.text}
+                  </p>
+
+                  <strong>
+                    {selectedTopic.solution}
+                  </strong>
+                </>
+              ) : (
+                <div className="visibility__topic-empty">
+                  <span>
+                    EXPLORE AS ÓRBITAS
+                  </span>
+
+                  <p>
+                    Escolha uma possibilidade
+                    para saber mais.
+                  </p>
+                </div>
+              )}
             </div>
-          </div>
 
-          <div className="visibility__hint">
-            <span>SCROLL TO EXPLORE</span>
-            <i />
-          </div>
+            <div
+              className="visibility__stage-label"
+              aria-hidden="true"
+            >
+              <span>ROUXINOL</span>
+              <strong>VISIBILIDADE</strong>
+            </div>
 
-          <div className="visibility__stage-label">
-            <span>ROUXINOL</span>
+            <div
+              className="visibility__hint"
+              aria-hidden="true"
+            >
+              <span>
+                MOVE · EXPLORE · CLICK
+              </span>
+
+              <i />
+            </div>
           </div>
         </div>
       </div>
