@@ -1148,10 +1148,11 @@ export default function ThreeDStory() {
 
           <h2 id="three-story-title">
 
-            Em qualquer lugar.
+            Esteja onde estiver
 
             <span>
-              Em qualquer formato.
+
+            O seu publico.
             </span>
 
           </h2>
